@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>調査システムPWA プロトタイプ</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;--panel:#ffffff;--line:#d7dde8;--text:#1f2937;--muted:#6b7280;
+      --main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;
+      --record:#f8fafc;--registered:#eefaf1;--editing:#fff7ed;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text)}
+    header{height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 18px;position:sticky;top:0;z-index:20}
+    header h1{font-size:17px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:#fff}.ok{color:var(--green)}.warn{color:var(--orange)}
+    .app{display:flex;min-height:calc(100vh - 56px)}
+    .side{width:245px;background:#fff;border-right:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:10px}
+    .project-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;cursor:pointer}.project-card.active{border-color:var(--main);background:var(--main2)}
+    .project-card strong{display:block;font-size:13px}.project-card span{font-size:12px;color:var(--muted)}
+    .main{flex:1;min-width:0}.toolbar{padding:14px 18px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{margin:0;font-size:19px}.tabs{display:flex;gap:6px;margin-top:14px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:10px 10px 0 0;padding:9px 14px;cursor:pointer;white-space:nowrap}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:16px 18px 28px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.03);overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 10px;font-size:13px;cursor:pointer}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{padding:4px 7px;font-size:12px}.btn.danger{border-color:#fecaca;color:var(--red);background:#fff5f5}
+    .hint{font-size:12px;color:var(--muted);line-height:1.6}.table-wrap{overflow:auto}.finish-table{border-collapse:separate;border-spacing:0;min-width:980px;width:100%;font-size:13px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;vertical-align:top;background:#fff}.finish-table th{position:sticky;top:0;background:#eef2f7;z-index:5;padding:8px;text-align:center;font-weight:700}.finish-table th:first-child,.finish-table td:first-child{position:sticky;left:0;z-index:6}.finish-table th:nth-child(2),.finish-table td:nth-child(2){position:sticky;left:82px;z-index:6}.finish-table th:first-child,.finish-table th:nth-child(2){z-index:7}.room-no{width:82px;background:#f8fafc!important}.room-name{width:130px;background:#f8fafc!important}.part{width:145px;min-width:145px}.cell{min-height:58px;padding:6px;display:flex;flex-direction:column;gap:5px}.cell input{width:100%;border:1px solid transparent;border-radius:7px;padding:6px;background:transparent;font-size:13px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--editing)}.cell-meta{display:flex;align-items:center;justify-content:space-between;gap:4px;min-height:20px}.tag{font-size:11px;border-radius:999px;padding:2px 6px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.tag.wait{background:#fff7ed;color:#9a3412}.simple-list{padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;background:#fbfcff}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:5px 9px;font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}.stat{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff}.stat b{display:block;font-size:24px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:10px;text-align:left}.data-table th{background:#f8fafc}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:100px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.sync-row:last-child{border-bottom:0}.mobile-note{display:none}
+    @media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);flex-direction:row;overflow:auto}.project-card{min-width:210px}.grid{grid-template-columns:1fr 1fr}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;overflow:auto;gap:8px}.room-item{min-width:160px}.mobile-note{display:block}.tabs{position:sticky;top:56px;background:var(--bg);z-index:15;padding-top:6px}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>調査システムPWA プロトタイプ</h1>
+    <span class="pill ok" id="onlinePill">オンライン</span>
+    <span class="pill warn" id="unsyncedPill">未同期 0件</span>
+    <span class="hint">※画面検証用。入力内容はブラウザ内だけに保存されます。</span>
+  </header>
+
+  <div class="app">
+    <aside class="side">
+      <button class="btn primary" onclick="addProject()">＋ 新規案件</button>
+      <div class="project-card active">
+        <strong>26070101 ○○マンション改修工事</strong>
+        <span>調査日：2026/07/01 / 写真 3枚</span>
+      </div>
+      <div class="project-card">
+        <strong>26070102 △△ビル調査</strong>
+        <span>端末未保存 / サンプル表示</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="toolbar">
+        <div class="case-title">
+          <div>
+            <h2>26070101　○○マンション改修工事</h2>
+            <div class="hint">編集中：小田原　/　他メンバー：閲覧・写真追加</div>
+          </div>
+          <div>
+            <button class="btn ghost" onclick="toggleOnline()">オンライン切替</button>
+            <button class="btn primary" onclick="syncNow()">今すぐ同期</button>
+          </div>
+        </div>
+        <nav class="tabs">
+          <button class="tab active" data-tab="finish" onclick="showTab('finish')">仕上表</button>
+          <button class="tab" data-tab="materials" onclick="showTab('materials')">建材リスト</button>
+          <button class="tab" data-tab="photos" onclick="showTab('photos')">写真</button>
+          <button class="tab" data-tab="samples" onclick="showTab('samples')">試料</button>
+          <button class="tab" data-tab="board" onclick="showTab('board')">電子看板</button>
+          <button class="tab" data-tab="sync" onclick="showTab('sync')">同期</button>
+          <button class="tab" data-tab="export" onclick="showTab('export')">出力・設定</button>
+        </nav>
+      </div>
+
+      <section class="content" id="finish">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>仕上表</h3>
+              <div class="hint mobile-note">スマホでは横スクロールで表を確認できます。</div>
+            </div>
+            <div>
+              <button class="btn small" onclick="addRoom()">＋ 部屋追加</button>
+              <button class="btn small" onclick="copyFirstRoom()">部屋コピー</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="finish-table" id="finishTable"></table>
+          </div>
+          <div class="simple-list" id="simpleList"></div>
+        </div>
+        <p class="hint">入力後、［登録］を押したものだけ建材レコードに入り、建材リストへ表示されます。何も押さないものは「記録のみ」です。</p>
+      </section>
+
+      <section class="content" id="materials" style="display:none">
+        <div class="panel">
+          <div class="panel-head"><h3>建材リスト</h3><span class="hint">登録済建材のみ表示</span></div>
+          <div class="table-wrap"><table class="data-table" id="materialsTable"></table></div>
+        </div>
+      </section>
+
+      <section class="content" id="photos" style="display:none">
+        <div class="panel photo-layout">
+          <div class="room-list" id="photoRooms"></div>
+          <div class="photo-area">
+            <div class="panel-head" style="padding:0 0 10px;border:0;background:transparent">
+              <h3 id="photoTitle">101 玄関</h3>
+              <div><button class="btn primary" onclick="addPhoto(false)">＋ 写真追加</button><button class="btn" onclick="addPhoto(true)">電子看板で撮影</button></div>
+            </div>
+            <div class="hint">写真担当は仕上表を編集せず、部屋ごとに写真を追加する想定です。</div>
+            <div class="photo-grid" id="photoGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content" id="samples" style="display:none">
+        <div class="panel">
+          <div class="panel-head"><h3>試料</h3><button class="btn small" onclick="createSample()">建材から試料作成</button></div>
+          <table class="data-table" id="samplesTable"></table>
+        </div>
+      </section>
+
+      <section class="content" id="board" style="display:none">
+        <div class="panel" style="max-width:620px">
+          <div class="panel-head"><h3>電子看板</h3><button class="btn primary" onclick="addPhoto(true)">この内容で撮影</button></div>
+          <div style="padding:18px">
+            <div style="border:3px double #111;background:#fff;padding:18px;max-width:460px">
+              <div style="font-size:22px;font-weight:700;text-align:center;margin-bottom:14px">調査写真</div>
+              <table class="data-table">
+                <tr><th>件名</th><td>○○マンション改修工事</td></tr>
+                <tr><th>部屋</th><td id="boardRoom">101 玄関</td></tr>
+                <tr><th>部位</th><td>壁</td></tr>
+                <tr><th>建材</th><td id="boardMat">石膏ボードA</td></tr>
+                <tr><th>日付</th><td>2026/07/01</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content" id="sync" style="display:none">
+        <div class="grid">
+          <div class="stat"><span class="hint">仕上表変更</span><b id="syncFinish">0</b></div>
+          <div class="stat"><span class="hint">写真アップロード待ち</span><b id="syncPhotos">0</b></div>
+          <div class="stat"><span class="hint">建材変更</span><b id="syncMaterials">0</b></div>
+          <div class="stat"><span class="hint">競合</span><b>0</b></div>
+        </div>
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-head"><h3>同期キュー</h3><button class="btn primary" onclick="syncNow()">同期する</button></div>
+          <div id="syncList"></div>
+        </div>
+      </section>
+
+      <section class="content" id="export" style="display:none">
+        <div class="panel">
+          <div class="panel-head"><h3>出力・設定</h3></div>
+          <div style="padding:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn">建材リストCSV出力</button>
+            <button class="btn">試料CSV出力</button>
+            <button class="btn">写真一覧出力</button>
+            <button class="btn">Excel報告書用データ出力</button>
+            <button class="btn">案件バックアップ</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+const parts = ['天井','壁','床','巾木','建具','備考'];
+let online = true;
+let activePhotoRoom = 'r1';
+let materialSeq = 1;
+let inputSeq = 1;
+let state = {
+  rooms:[
+    {id:'r1', no:'101', name:'玄関'},
+    {id:'r2', no:'101', name:'洋室'},
+    {id:'r3', no:'102', name:'廊下'}
+  ],
+  cells:{
+    'r1|壁': {text:'石膏ボード', status:'record_only'},
+    'r1|床': {text:'タタミ', status:'record_only'},
+    'r2|天井': {text:'岩綿吸音板', status:'record_only'},
+    'r2|床': {text:'Pタイル', status:'record_only'},
+    'r3|壁': {text:'ケイカル板', status:'record_only'}
+  },
+  materials:[], photos:[
+    {roomId:'r1', type:'全景'}, {roomId:'r1', type:'看板'}, {roomId:'r2', type:'床'}
+  ], samples:[], queue:[]
+};
+function key(roomId, part){return roomId+'|'+part}
+function nextSuffix(base){
+  const letters = state.materials.filter(m=>m.base===base).map(m=>m.suffix).filter(Boolean).sort();
+  if(!letters.length) return 'A';
+  const last = letters[letters.length-1].charCodeAt(0);
+  return last>=90 ? 'Z' : String.fromCharCode(last+1);
+}
+function registerCell(roomId, part){
+  const k = key(roomId, part); const c = state.cells[k]; if(!c || !c.text.trim()) return;
+  const raw = c.text.trim().replace(/[0-9９]$/,'');
+  const suffix = nextSuffix(raw);
+  const mat = {id:'R'+String(materialSeq++).padStart(3,'0'), inputId:inputSeq++, base:raw, suffix, name:raw+suffix, usages:[]};
+  state.materials.push(mat);
+  state.cells[k] = {...c, text:mat.name, status:'registered', materialId:mat.id, base:raw, suffix};
+  addQueue('建材登録', mat.name);
+  renderAll();
+}
+function unregisterCell(roomId, part){
+  const k = key(roomId, part); const c = state.cells[k]; if(!c || !c.materialId) return;
+  const m = state.materials.find(x=>x.id===c.materialId);
+  state.materials = state.materials.filter(x=>x.id!==c.materialId);
+  state.cells[k] = {text:m?m.base:c.text, status:'record_only'};
+  addQueue('登録解除', c.text);
+  renderAll();
+}
+function setCell(roomId, part, value){
+  const k = key(roomId, part); const v = value.trim();
+  if(!v){ delete state.cells[k]; addQueue('仕上表変更', '空欄'); renderAll(); return; }
+  const numeric = state.materials.find(m => String(m.inputId) === v || m.id === v.toUpperCase());
+  if(numeric){ state.cells[k] = {text:numeric.name, status:'registered', materialId:numeric.id, base:numeric.base, suffix:numeric.suffix}; }
+  else if(/[9９]$/.test(v)){ state.cells[k] = {text:v.replace(/[9９]$/,''), status:'record_only'}; registerCell(roomId, part); return; }
+  else if(/[A-ZＡ-Ｚ]$/.test(v)){ const base = v.slice(0,-1); const suffix = v.slice(-1).toUpperCase(); const mat = {id:'R'+String(materialSeq++).padStart(3,'0'), inputId:inputSeq++, base, suffix, name:base+suffix, usages:[]}; state.materials.push(mat); state.cells[k]={text:mat.name,status:'registered',materialId:mat.id,base,suffix}; }
+  else { state.cells[k] = {text:v, status:'record_only'}; }
+  addQueue('仕上表変更', v); renderAll();
+}
+function addQueue(type, detail){ state.queue.push({type, detail, time:new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}); }
+function renderFinish(){
+  let html='<tr><th class="room-no">部屋No.</th><th class="room-name">部屋名</th>'+parts.map(p=>`<th class="part">${p}</th>`).join('')+'</tr>';
+  for(const r of state.rooms){
+    html += `<tr><td class="room-no"><div class="cell"><b>${r.no}</b></div></td><td class="room-name"><div class="cell">${r.name}</div></td>`;
+    for(const p of parts){
+      const c = state.cells[key(r.id,p)] || {text:'',status:'blank'};
+      const klass = c.status==='registered'?'registered':(c.text?'record':'');
+      const tag = c.status==='registered'?`<span class="tag reg">登録済 ${c.materialId}</span>`:(c.text?'<span class="tag rec">記録のみ</span>':'');
+      const btn = c.status==='registered'?`<button class="btn small danger" onclick="unregisterCell('${r.id}','${p}')">解除</button>`:(c.text?`<button class="btn small primary" onclick="registerCell('${r.id}','${p}')">登録</button>`:'');
+      html += `<td><div class="cell ${klass}"><input value="${escapeHtml(c.text||'')}" onfocus="this.parentElement.classList.add('editing')" onblur="this.parentElement.classList.remove('editing');setCell('${r.id}','${p}',this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"><div class="cell-meta">${tag}${btn}</div></div></td>`;
+    }
+    html += '</tr>';
+  }
+  document.getElementById('finishTable').innerHTML=html;
+  const chips = state.materials.map(m=>`<span class="material-chip">【${m.id} / ${m.inputId}】${m.name}</span>`).join('') || '<span class="hint">登録済建材はまだありません</span>';
+  document.getElementById('simpleList').innerHTML=chips;
+}
+function renderMaterials(){
+  let rows = '<tr><th>入力ID</th><th>建材ID</th><th>建材名</th><th>使用箇所</th><th>採取数</th><th>分析</th><th>操作</th></tr>';
+  for(const m of state.materials){
+    const usages=[];
+    for(const r of state.rooms){ for(const p of parts){ const c=state.cells[key(r.id,p)]; if(c&&c.materialId===m.id) usages.push(`${r.no}${r.name} ${p}`); }}
+    rows += `<tr><td>${m.inputId}</td><td>${m.id}</td><td>${m.name}</td><td>${usages.join('、')||'-'}</td><td><input style="width:55px" value="1"></td><td><select><option>未</option><option>要</option><option>不要</option><option>含有</option><option>不検出</option></select></td><td><button class="btn small" onclick="createSample('${m.id}')">試料</button></td></tr>`;
+  }
+  document.getElementById('materialsTable').innerHTML = rows;
+}
+function renderPhotos(){
+  document.getElementById('photoRooms').innerHTML = state.rooms.map(r=>`<div class="room-item ${r.id===activePhotoRoom?'active':''}" onclick="activePhotoRoom='${r.id}';renderPhotos()"><b>${r.no} ${r.name}</b><br><span class="hint">写真 ${state.photos.filter(p=>p.roomId===r.id).length}枚</span></div>`).join('');
+  const r = state.rooms.find(x=>x.id===activePhotoRoom);
+  document.getElementById('photoTitle').textContent = r ? `${r.no} ${r.name}` : '部屋';
+  document.getElementById('boardRoom').textContent = r ? `${r.no} ${r.name}` : '';
+  const mats = state.materials[0]; document.getElementById('boardMat').textContent = mats?mats.name:'未選択';
+  const photos = state.photos.filter(p=>p.roomId===activePhotoRoom);
+  document.getElementById('photoGrid').innerHTML = photos.map((p,i)=>`<div class="photo-box">${p.type}<br>写真 ${i+1}<br><span>未同期</span></div>`).join('') || '<div class="hint">まだ写真がありません</div>';
+}
+function renderSamples(){
+  let rows='<tr><th>試料ID</th><th>建材</th><th>採取場所</th><th>採取部位</th><th>結果</th></tr>';
+  for(const s of state.samples){const m=state.materials.find(x=>x.id===s.materialId); rows+=`<tr><td>${s.id}</td><td>${m?m.name:'-'}</td><td>${s.place}</td><td>${s.part}</td><td>未</td></tr>`}
+  document.getElementById('samplesTable').innerHTML=rows;
+}
+function renderSync(){
+  const photoWait = state.photos.length;
+  document.getElementById('unsyncedPill').textContent = `未同期 ${state.queue.length + photoWait}件`;
+  document.getElementById('syncFinish').textContent = state.queue.filter(q=>q.type.includes('仕上表')).length;
+  document.getElementById('syncMaterials').textContent = state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length;
+  document.getElementById('syncPhotos').textContent = photoWait;
+  document.getElementById('syncList').innerHTML = state.queue.length ? state.queue.map(q=>`<div class="sync-row"><span>${q.type}：${escapeHtml(q.detail)}</span><span class="hint">${q.time}</span></div>`).join('') : '<div class="sync-row"><span class="hint">同期待ちはありません</span></div>';
+}
+function renderAll(){ renderFinish(); renderMaterials(); renderPhotos(); renderSamples(); renderSync(); }
+function showTab(id){ document.querySelectorAll('.content').forEach(x=>x.style.display='none'); document.getElementById(id).style.display='block'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id)); if(id==='sync') renderSync(); }
+function addRoom(){ const n=state.rooms.length+101; state.rooms.push({id:'r'+Date.now(), no:String(n), name:'新規部屋'}); addQueue('部屋追加', String(n)); renderAll(); }
+function copyFirstRoom(){ const src=state.rooms[0], id='r'+Date.now(); state.rooms.push({id,no:'コピー',name:'コピー部屋'}); for(const p of parts){const c=state.cells[key(src.id,p)]; if(c) state.cells[key(id,p)]={...c, status:c.status==='registered'?'registered':'record_only'};} addQueue('部屋コピー','101玄関'); renderAll(); }
+function addPhoto(board){ state.photos.push({roomId:activePhotoRoom,type:board?'看板':'写真'}); addQueue('写真追加', board?'看板':'写真'); renderAll(); }
+function createSample(materialId){ const mId = materialId || (state.materials[0]&&state.materials[0].id); if(!mId) return alert('登録済建材がありません'); const id='26070101-'+String(state.samples.length+1).padStart(2,'0'); state.samples.push({id, materialId:mId, place:'101 玄関', part:'壁'}); addQueue('試料作成', id); renderAll(); showTab('samples'); }
+function toggleOnline(){ online=!online; const p=document.getElementById('onlinePill'); p.textContent=online?'オンライン':'オフライン'; p.className='pill '+(online?'ok':'warn'); }
+function syncNow(){ if(!online) return alert('オフラインです。通信復帰後に同期します。'); state.queue=[]; alert('同期しました（プロトタイプ表示）'); renderAll(); }
+function addProject(){ alert('新規案件作成は画面検証用のため未実装です'); }
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+renderAll();
+</script>
+</body>
+</html>
