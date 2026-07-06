@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.9.3</title>
+<title>調査システムPWA プロトタイプ v1.0.0</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -810,6 +810,31 @@ input[list]::-webkit-calendar-picker-indicator{
   padding:0!important;
 }
 
+
+
+/* v1.0.0 material record list */
+.material-list-panel{overflow:hidden}
+.material-list-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
+.material-table-wrap{overflow:auto;max-height:calc(100vh - 165px)}
+.material-record-table{min-width:1540px;font-size:11.5px;border-collapse:separate;border-spacing:0}
+.material-record-table th,.material-record-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 5px;vertical-align:middle;background:#fff;white-space:nowrap}
+.material-record-table th{position:sticky;top:0;z-index:5;background:var(--head);text-align:center;font-weight:700}
+.material-record-table .mat-no{width:44px;text-align:center;position:sticky;left:0;z-index:4;background:#f8fafc;font-weight:700}
+.material-record-table th.mat-no{z-index:7;background:var(--head)}
+.material-record-table .input-id{width:48px;text-align:center}
+.material-record-table .mat-part{min-width:130px;max-width:180px;white-space:normal;line-height:1.25}
+.material-record-table .mat-name{min-width:150px;font-weight:700;white-space:normal;line-height:1.25}
+.material-record-table .mat-place{min-width:160px;max-width:240px;white-space:normal;line-height:1.25}
+.material-record-table .mat-note input{width:180px}
+.material-record-table input,.material-record-table select{height:26px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:2px 5px;font-size:11.5px;max-width:100%}
+.material-record-table .sample-check{text-align:center}
+.material-record-table .sample-date input{width:112px}
+.material-record-table .ops{min-width:150px}
+.material-record-table .merge-select{width:82px;margin-right:4px}
+.material-record-table .muted-cell{color:#94a3b8;text-align:center}
+.material-record-table tr.merged-row,.material-record-table tr.deleted-row{display:none}
+@media(max-width:850px){.material-table-wrap{max-height:calc(100vh - 200px)}.material-record-table{font-size:11px}}
+
 </style>
 </head>
 <body>
@@ -860,7 +885,20 @@ input[list]::-webkit-calendar-picker-indicator{
       </div>
     </section>
 
-    <section class="content" id="materials" style="display:none"><div class="panel"><div class="panel-head"><h3>建材リスト</h3><span class="hint">対象建材だけ表示</span></div><table class="data-table" id="materialsTable"></table></div></section>
+    <section class="content" id="materials" style="display:none">
+      <div class="panel material-list-panel">
+        <div class="panel-head">
+          <h3>建材リスト</h3>
+          <span class="hint">仕上表 → 建材レコード → リスト表示。部位/使用箇所は建材IDで集計。</span>
+        </div>
+        <div class="material-list-toolbar">
+          <span class="pill">有効建材 <b id="activeMaterialCount">0</b>件</span>
+          <span class="hint">建材IDは内部保持。試料No.〜分析備考は隠し扱い。</span>
+          <button class="btn small" onclick="renderMaterials()">レコード再集計</button>
+        </div>
+        <div class="material-table-wrap"><table class="data-table material-record-table" id="materialsTable"></table></div>
+      </div>
+    </section>
     <section class="content" id="photos" style="display:none"><div class="panel"><div class="panel-head"><h3>写真</h3><div><button class="btn small primary" onclick="addPhoto(false)">＋ 写真</button><button class="btn small" onclick="addPhoto(true)">＋ 看板写真</button></div></div><div class="photo-layout"><div class="room-list" id="photoRooms"></div><div class="photo-area"><h3 id="photoTitle">部屋</h3><div class="hint">写真担当は部屋を選んで写真を追加</div><div class="photo-grid" id="photoGrid"></div></div></div></div></section>
     <section class="content" id="samples" style="display:none"><div class="panel"><div class="panel-head"><h3>試料</h3><button class="btn small primary" onclick="createSample()">＋ 試料作成</button></div><table class="data-table" id="samplesTable"></table></div></section>
     <section class="content" id="sync" style="display:none"><div class="panel"><div class="panel-head"><h3>同期状態</h3><button class="btn small primary" onclick="syncNow()">今すぐ同期</button></div><div class="sync-row"><span>仕上表変更</span><b id="syncFinish">0</b></div><div class="sync-row"><span>建材変更</span><b id="syncMaterials">0</b></div><div class="sync-row"><span>写真アップロード待ち</span><b id="syncPhotos">0</b></div><div id="syncList"></div></div></section>
@@ -869,13 +907,13 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.9.3<br>・建材名/部位候補の設定タブ追加<br>・部位別入力アシスト<br>・簡易リスト固定表示の調整<br>・ヘッダーを案件名表示に整理<br>・入口ページ方式に変更<br>・コピー列ボタンのセル内表示を修正<br>・部屋No.操作ボタン、ID見出し、その他部位列を調整</div></div></div></aside>
+<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v1.0.0<br>・建材リストを建材レコード方式へ変更<br>・仕上表→建材レコード→建材リストの集計表示を追加<br>・部位/使用箇所を建材ID単位で集計<br>・レベル/分析要否/採取情報の編集欄を追加<br>・統合/削除のプロトタイプ操作を追加</div></div></div></aside>
 
 <div class="update-modal" id="updateModal"><div class="update-card"><h3>最新版に更新</h3><div class="hint" id="updateMessage">アプリ本体のキャッシュだけ削除して最新版を読み込みます。<br>案件データや未同期データは削除しません。</div><div class="update-actions"><button class="btn" onclick="hideUpdatePrompt()">キャンセル</button><a class="btn primary" id="hardReloadLink" href="./app.html" onclick="confirmAppUpdate(event)">更新する</a></div></div></div>
 <datalist id="materialSuggest"></datalist>
 <datalist id="partSuggest"></datalist>
 <script>
-const APP_VERSION='0.9.3';
+const APP_VERSION='1.0.0';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -1258,6 +1296,240 @@ function renderFinish(){
   container.innerHTML=html;
   container.classList.add('v89-fixed4','v92-fixed','v93-fixed');
   document.getElementById('matCount').textContent=state.materials.length;
+  {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
+  document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
+  container.classList.toggle('color-mode',colorMode);
+  setTimeout(updateStickyOffsets, 0);
+}
+
+
+
+/* v1.0.0 建材レコード方式 */
+function isActiveMaterial(m){return m && m.active!==false && !m.deleted && !m.mergedTo}
+function activeMaterials(){return state.materials.filter(isActiveMaterial)}
+function uniqueList(arr){return [...new Set(arr.filter(x=>String(x||'').trim()).map(x=>String(x).trim()))]}
+function todayISO(){const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function materialById(id){return state.materials.find(m=>m.id===id)}
+function escapeAttr(s){return esc(s).replace(/'/g,'&#39;')}
+function collectMaterialUsage(materialId){
+  const parts=[]; const places=[];
+  for(const r of allRooms()){
+    for(const area of ['外部','内部']){
+      const fixed=area==='外部'?externalParts:internalParts;
+      for(let line=0;line<roomLineCount(r);line++){
+        for(const p of fixed){
+          const c=getCell(r.id,area,p,'name',line);
+          if(c.materialId===materialId){parts.push(p); places.push(r.no||r.name||r.floor)}
+        }
+        for(const slot of otherSlots){
+          const c=getCell(r.id,area,slot,'name',line);
+          if(c.materialId===materialId){
+            const pc=getCell(r.id,area,slot,'part',line);
+            parts.push(pc.text||slot);
+            places.push(r.no||r.name||r.floor);
+          }
+        }
+      }
+    }
+  }
+  return {parts:uniqueList(parts), places:uniqueList(places)};
+}
+function ensureMaterialRecordDefaults(m,usage){
+  if(!m)return;
+  if(m.active===undefined)m.active=true;
+  if(m.level===undefined)m.level='-';
+  if(m.analysisNeed===undefined)m.analysisNeed='未調査';
+  if(m.sampleCount===undefined)m.sampleCount='0';
+  if(m.samplePlaces===undefined)m.samplePlaces=['','',''];
+  if(m.samplePart===undefined)m.samplePart='';
+  if(m.sampleChecked===undefined)m.sampleChecked=false;
+  if(m.sampleDate===undefined)m.sampleDate='';
+  if(m.sampleNo===undefined)m.sampleNo='';
+  if(m.analysisResult===undefined)m.analysisResult='';
+  if(m.analysisNote===undefined)m.analysisNote='';
+  if(usage){
+    if(usage.places.length===1){
+      const n=Math.max(1,Math.min(3,Number(m.sampleCount||0)));
+      for(let i=0;i<n;i++){ if(!m.samplePlaces[i])m.samplePlaces[i]=usage.places[0]; }
+    }
+    if(usage.parts.length===1 && !m.samplePart)m.samplePart=usage.parts[0];
+  }
+}
+function syncMaterialRecordsFromFinishSheet(){
+  for(const m of state.materials){
+    const usage=collectMaterialUsage(m.id);
+    m.usageParts=usage.parts;
+    m.usagePlaces=usage.places;
+    ensureMaterialRecordDefaults(m,usage);
+  }
+  return activeMaterials();
+}
+function joinRecord(arr){return uniqueList(arr).join('、') || '-'}
+function selectOptions(values,current,allowBlank=false){
+  const opts=[]; if(allowBlank)opts.push(`<option value=""></option>`);
+  uniqueList(values).forEach(v=>opts.push(`<option value="${escapeAttr(v)}" ${String(current||'')===String(v)?'selected':''}>${esc(v)}</option>`));
+  return opts.join('');
+}
+function levelSelect(m){return `<select onchange="updateMaterialRecord('${m.id}','level',this.value)">${['-','1','2','3'].map(v=>`<option ${m.level===v?'selected':''}>${v}</option>`).join('')}</select>`}
+function analysisNeedSelect(m){return `<select onchange="updateMaterialRecord('${m.id}','analysisNeed',this.value)">${['採取・分析','目視','みなし','対象外','未調査'].map(v=>`<option ${m.analysisNeed===v?'selected':''}>${v}</option>`).join('')}</select>`}
+function sampleCountSelect(m){return `<select onchange="updateMaterialRecord('${m.id}','sampleCount',this.value)">${['0','1','2','3'].map(v=>`<option ${String(m.sampleCount)===v?'selected':''}>${v}</option>`).join('')}</select>`}
+function samplePlaceSelect(m,index){const vals=(m.usagePlaces&&m.usagePlaces.length?m.usagePlaces:['-']); return `<select onchange="updateMaterialSamplePlace('${m.id}',${index},this.value)">${selectOptions(vals,m.samplePlaces[index],true)}</select>`}
+function samplePartSelect(m){const vals=(m.usageParts&&m.usageParts.length?m.usageParts:['-']); return `<select onchange="updateMaterialRecord('${m.id}','samplePart',this.value)">${selectOptions(vals,m.samplePart,true)}</select>`}
+function mergeTargetSelect(m,records){
+  const opts=records.filter(x=>x.id!==m.id).map(x=>`<option value="${x.id}">${esc(x.inputId+' '+x.name)}</option>`).join('');
+  return `<select class="merge-select" id="mergeTo_${m.id}"><option value="">統合先</option>${opts}</select>`;
+}
+function updateMaterialRecord(id,field,value){
+  const m=materialById(id); if(!m)return; remember();
+  m[field]=value;
+  if(field==='sampleCount')autoFillSamplePlaces(m);
+  addQueue('建材レコード変更',`${m.name} ${field}`);
+  renderAll();
+}
+function updateMaterialSamplePlace(id,index,value){
+  const m=materialById(id); if(!m)return; remember();
+  ensureMaterialRecordDefaults(m);
+  m.samplePlaces[index]=value;
+  addQueue('採取場所変更',m.name);
+  renderAll();
+}
+function autoFillSamplePlaces(m){
+  ensureMaterialRecordDefaults(m);
+  const n=Math.max(0,Math.min(3,Number(m.sampleCount||0)));
+  if((m.usagePlaces||[]).length===1){
+    for(let i=0;i<n;i++)m.samplePlaces[i]=m.usagePlaces[0];
+  }
+}
+function toggleSampleChecked(id,checked){
+  const m=materialById(id); if(!m)return; remember();
+  m.sampleChecked=checked;
+  if(checked)m.sampleDate=todayISO();
+  addQueue('採取チェック',m.name);
+  renderAll();
+}
+function mNote(id,value){const m=materialById(id); if(m){remember();m.note=normalizeInput(value); addQueue('調査備考',m.name); renderAll()}}
+function renderMaterials(){
+  const records=syncMaterialRecordsFromFinishSheet();
+  const cnt=document.getElementById('activeMaterialCount'); if(cnt)cnt.textContent=records.length;
+  let rows='<tr><th class="mat-no">建材No.</th><th>入力ID</th><th>部位</th><th>建材名称</th><th>建材使用箇所</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>操作</th></tr>';
+  records.forEach((m,i)=>{
+    ensureMaterialRecordDefaults(m,{parts:m.usageParts||[],places:m.usagePlaces||[]});
+    rows+=`<tr>
+      <td class="mat-no">${i+1}</td>
+      <td class="input-id">${esc(m.inputId)}</td>
+      <td class="mat-part">${esc(joinRecord(m.usageParts))}</td>
+      <td class="mat-name">${esc(m.name)}</td>
+      <td class="mat-place">${esc(joinRecord(m.usagePlaces))}</td>
+      <td>${levelSelect(m)}</td>
+      <td>${analysisNeedSelect(m)}</td>
+      <td class="mat-note"><input value="${escapeAttr(m.note||'')}" onblur="mNote('${m.id}',this.value)" placeholder="調査備考"></td>
+      <td>${sampleCountSelect(m)}</td>
+      <td>${samplePlaceSelect(m,0)}</td>
+      <td>${samplePlaceSelect(m,1)}</td>
+      <td>${samplePlaceSelect(m,2)}</td>
+      <td>${samplePartSelect(m)}</td>
+      <td class="sample-check"><input type="checkbox" ${m.sampleChecked?'checked':''} onchange="toggleSampleChecked('${m.id}',this.checked)"></td>
+      <td class="sample-date"><input type="date" value="${esc(m.sampleDate||'')}" onchange="updateMaterialRecord('${m.id}','sampleDate',this.value)"></td>
+      <td class="ops">${mergeTargetSelect(m,records)}<button class="btn small" onclick="mergeMaterialRecord('${m.id}')">統合</button> <button class="btn small" onclick="deleteMaterialRecord('${m.id}')">削除</button></td>
+    </tr>`;
+  });
+  if(!records.length)rows+='<tr><td colspan="16" class="muted-cell">対象建材はまだありません</td></tr>';
+  const table=document.getElementById('materialsTable'); if(table)table.innerHTML=rows;
+}
+function replaceCellMaterial(roomId,area,part,line,mat){
+  setRaw(roomId,area,part,'id',{text:String(mat.inputId),status:'id',materialId:mat.id},line);
+  setRaw(roomId,area,part,'name',{text:mat.name,status:'registered',materialId:mat.id,base:mat.base,suffix:mat.suffix,cellId:cellKey(roomId,area,part,line,'name')},line);
+}
+function forEachMaterialUse(materialId,fn){
+  for(const r of allRooms()){
+    for(const area of ['外部','内部']){
+      const fixed=area==='外部'?externalParts:internalParts;
+      for(let line=0;line<roomLineCount(r);line++){
+        for(const p of fixed){const c=getCell(r.id,area,p,'name',line); if(c.materialId===materialId)fn(r,area,p,line,false)}
+        for(const slot of otherSlots){const c=getCell(r.id,area,slot,'name',line); if(c.materialId===materialId)fn(r,area,slot,line,true)}
+      }
+    }
+  }
+}
+function clearMaterialFromFinishSheet(materialId){
+  forEachMaterialUse(materialId,(r,area,part,line,isOther)=>{
+    delete state.cells[cellKey(r.id,area,part,line,'id')];
+    delete state.cells[cellKey(r.id,area,part,line,'name')];
+    if(isOther)delete state.cells[cellKey(r.id,area,part,line,'part')];
+  });
+}
+function compactMaterialSuffixes(){
+  const groups={};
+  activeMaterials().forEach(m=>{const base=m.base||splitMaterialName(m.name).base; (groups[base]=groups[base]||[]).push(m)});
+  Object.keys(groups).forEach(base=>{
+    groups[base].sort((a,b)=>Number(a.inputId)-Number(b.inputId));
+    groups[base].forEach((m,i)=>{
+      const suffix=String.fromCharCode(65+i);
+      m.base=base; m.suffix=suffix; m.name=base+suffix;
+    });
+  });
+  for(const r of allRooms()){
+    for(const area of ['外部','内部']){
+      const fixed=area==='外部'?externalParts:internalParts;
+      for(let line=0;line<roomLineCount(r);line++){
+        for(const p of [...fixed,...otherSlots]){
+          const c=getCell(r.id,area,p,'name',line);
+          if(c.materialId){const m=materialById(c.materialId); if(m&&isActiveMaterial(m)){replaceCellMaterial(r.id,area,p,line,m)}}
+        }
+      }
+    }
+  }
+}
+function mergeNotes(target,source){
+  const notes=uniqueList([...(String(target.note||'').split('、')),...(String(source.note||'').split('、'))].map(x=>x.trim()).filter(Boolean));
+  target.note=notes.join('、');
+}
+function mergeMaterialRecord(fromId){
+  const from=materialById(fromId); const sel=document.getElementById('mergeTo_'+fromId); const to=sel?materialById(sel.value):null;
+  if(!from||!to)return alert('統合先を選んでください');
+  if(!confirm(`${from.name} を ${to.name} に統合します。仕上表上の該当セルも統合先に置換します。`))return;
+  remember();
+  forEachMaterialUse(from.id,(r,area,part,line)=>replaceCellMaterial(r.id,area,part,line,to));
+  mergeNotes(to,from);
+  from.active=false; from.mergedTo=to.id; from.mergedAt=new Date().toISOString();
+  selectedMaterialId=to.id;
+  compactMaterialSuffixes();
+  addQueue('建材統合',`${from.name} → ${to.name}`);
+  renderAll();
+}
+function deleteMaterialRecord(id){
+  const m=materialById(id); if(!m)return;
+  if(!confirm(`${m.name} を建材リストから外し、仕上表上の該当セルも空にします。`))return;
+  remember();
+  clearMaterialFromFinishSheet(id);
+  m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
+  if(selectedMaterialId===id)selectedMaterialId=null;
+  compactMaterialSuffixes();
+  addQueue('建材削除',m.name);
+  renderAll();
+}
+function nextSuffix(base){
+  const letters=activeMaterials().filter(m=>m.base===base).map(m=>m.suffix).sort();
+  if(!letters.length)return 'A';
+  const code=letters[letters.length-1].charCodeAt(0);
+  return code>=90?'Z':String.fromCharCode(code+1);
+}
+function resolveId(value){
+  const v=normalizeInput(value).toUpperCase(); if(!v)return null;
+  return activeMaterials().find(m=>String(m.inputId)===v || m.id===v || m.id.replace('R','')===v);
+}
+function findMaterialByName(name){const n=normalizeInput(name); return activeMaterials().find(m=>normalizeInput(m.name)===n)}
+function renderSimpleItems(){const mats=activeMaterials(); return mats.length?mats.map(m=>`<button class="simple-item ${colorMode?'mat-color-'+materialColorIndex(m.id):''} ${selectedMaterialId===m.id?'selected':''}" onclick="selectMaterial('${m.id}')">【${m.inputId}】${esc(m.name)}</button>`).join(''):'<span class="hint">登録済建材はまだありません</span>'}
+function renderMaterialDetailCompact(){const m=activeMaterials().find(x=>x.id===selectedMaterialId); if(!m)return ''; return `<div class="material-detail-compact"><b>【${m.inputId}】${esc(m.name)}</b><span>使用箇所：${esc(joinRecord((collectMaterialUsage(m.id).places)))}</span><span>調査備考：${esc(m.note||'未入力')}</span><button class="btn small" onclick="editMaterialNote('${m.id}')">備考編集</button></div>`;}
+function usageOf(m){const u=collectMaterialUsage(m.id); return u.places.map(p=>p).join('、') || '-'}
+function renderFinish(){
+  renderSectionToggles();
+  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
+  const parts=activeFinishArea==='外部'?externalParts:internalParts;
+  let html=renderFinishAreaTabs()+renderSimpleListBlock()+renderUnifiedTable(activeFinishArea,parts);
+  container.innerHTML=html;
+  container.classList.add('v89-fixed4','v92-fixed','v93-fixed');
+  document.getElementById('matCount').textContent=activeMaterials().length;
   {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
   document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
   container.classList.toggle('color-mode',colorMode);
