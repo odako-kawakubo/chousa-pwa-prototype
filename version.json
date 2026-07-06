@@ -1,5 +1,6 @@
 {
-  "version": "0.8.5",
-  "app": "app-v0.8.5.html",
-  "label": "調査システムPWA プロトタイプ v0.8.5"
+  "latestVersion": "0.8.9",
+  "latestFile": "app-v0.8.9.html",
+  "updatedAt": "2026-07-06",
+  "note": "v8.9 fixed4: 外部/内部タブ、建材チップバー、固定表示調整"
 }
