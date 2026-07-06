@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.7.0</title>
+<title>調査システムPWA プロトタイプ v0.8.0</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -66,20 +66,59 @@
 .simple-item.mat-color-7{border-color:#cbd5e1}
 .cell-id-hint{display:none}
 
+
+/* v0.8.0 tuning */
+header{height:44px;padding:0 10px;gap:8px}
+header h1{font-size:14px;max-width:48vw;overflow:hidden;text-overflow:ellipsis}
+.app{min-height:calc(100vh - 44px)}
+.side.closed{width:0;padding:0;border-right:0}
+.toolbar{top:44px;padding:7px 12px 0}
+.case-title h2{font-size:15px}.compact-actions{justify-content:flex-end}
+.tabs{margin-top:7px}
+.tab{padding:6px 11px;font-size:12.5px}
+.finish-fixed-status{top:91px;padding:5px 12px}
+.content{padding:8px 12px 22px}
+.table-wrap{max-height:calc(100vh - 150px)}
+.simple-list-row td{position:sticky;top:26px;z-index:25;background:#fff9d7!important;box-shadow:0 1px 0 var(--line),0 -1px 0 var(--line)}
+.simple-list-box{max-height:88px;overflow:auto}
+.simple-list-head{position:sticky;top:0;background:#fff9d7;z-index:2}
+.simple-list-items{display:grid;grid-template-columns:repeat(6,max-content);align-items:start;gap:5px 6px;padding-right:8px}
+.simple-item{white-space:nowrap}
+.color-mode .mat-color-0,.simple-item.mat-color-0{background:#dbeafe!important;border-color:#93c5fd!important}
+.color-mode .mat-color-1,.simple-item.mat-color-1{background:#dcfce7!important;border-color:#86efac!important}
+.color-mode .mat-color-2,.simple-item.mat-color-2{background:#fef3c7!important;border-color:#fcd34d!important}
+.color-mode .mat-color-3,.simple-item.mat-color-3{background:#fae8ff!important;border-color:#e879f9!important}
+.color-mode .mat-color-4,.simple-item.mat-color-4{background:#ffe4e6!important;border-color:#fda4af!important}
+.color-mode .mat-color-5,.simple-item.mat-color-5{background:#ccfbf1!important;border-color:#5eead4!important}
+.color-mode .mat-color-6,.simple-item.mat-color-6{background:#ede9fe!important;border-color:#c4b5fd!important}
+.color-mode .mat-color-7,.simple-item.mat-color-7{background:#ffedd5!important;border-color:#fdba74!important}
+.room-add-btn.focused{outline:2px solid var(--main);background:#dbeafe}
+.settings-wrap{display:grid;grid-template-columns:1fr 320px;gap:14px;padding:14px}
+.settings-box{border:1px solid var(--line);border-radius:12px;background:#fff;padding:12px;min-width:0}
+.settings-box h4{margin:0 0 8px}
+.settings-add{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.settings-add input{height:30px;border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+.data-table.compact{font-size:12px}
+.data-table.compact th,.data-table.compact td{padding:5px 6px}
+.data-table.compact input{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px}
+.data-table.compact input:focus{border-color:var(--main);background:#fff;outline:none}
+.part-candidate-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.part-chip{border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:#f8fafc;font-size:12px}
+@media(max-width:850px){.settings-wrap{grid-template-columns:1fr}.simple-list-items{grid-template-columns:repeat(2,max-content)}header h1{max-width:42vw}.table-wrap{max-height:calc(100vh - 188px)}}
+
 </style>
 </head>
 <body>
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
-  <h1>調査システムPWA プロトタイプ</h1>
-  <span class="pill">v0.7.0</span>
+  <h1>26070101　○○マンション改修工事</h1>
+  <span class="pill">v0.8.0</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">未同期 0件</span>
-  <span class="hint">仕上表 v6 調整</span>
+  
 </header>
 <div class="app">
   <aside class="side closed" id="side">
-    <button class="side-toggle" onclick="toggleSide()">☰</button>
     <div class="side-body">
       <button class="btn primary" onclick="alert('新規案件は未実装です')">＋ 新規案件</button>
       <div class="project-card active"><strong>26070101 ○○マンション改修工事</strong><span>調査日：2026/07/01 / 写真 3枚</span></div>
@@ -88,8 +127,7 @@
   </aside>
   <main class="main">
     <div class="toolbar">
-      <div class="case-title">
-        <div class="title-line"><button class="btn small" onclick="toggleSide()">← 案件一覧</button><h2>26070101　○○マンション改修工事</h2></div>
+      <div class="case-title compact-actions">
         <div><button class="btn ghost" onclick="toggleOnline()">オンライン切替</button><button class="btn" onclick="openDrawer()">操作</button><button class="btn primary" onclick="syncNow()">同期</button></div>
       </div>
       <nav class="tabs">
@@ -98,6 +136,7 @@
         <button class="tab" data-tab="photos" onclick="showTab('photos')">写真</button>
         <button class="tab" data-tab="samples" onclick="showTab('samples')">試料</button>
         <button class="tab" data-tab="sync" onclick="showTab('sync')">同期</button>
+        <button class="tab" data-tab="settings" onclick="showTab('settings')">設定</button>
       </nav>
     </div>
 
@@ -122,24 +161,40 @@
     <section class="content" id="photos" style="display:none"><div class="panel"><div class="panel-head"><h3>写真</h3><div><button class="btn small primary" onclick="addPhoto(false)">＋ 写真</button><button class="btn small" onclick="addPhoto(true)">＋ 看板写真</button></div></div><div class="photo-layout"><div class="room-list" id="photoRooms"></div><div class="photo-area"><h3 id="photoTitle">部屋</h3><div class="hint">写真担当は部屋を選んで写真を追加</div><div class="photo-grid" id="photoGrid"></div></div></div></div></section>
     <section class="content" id="samples" style="display:none"><div class="panel"><div class="panel-head"><h3>試料</h3><button class="btn small primary" onclick="createSample()">＋ 試料作成</button></div><table class="data-table" id="samplesTable"></table></div></section>
     <section class="content" id="sync" style="display:none"><div class="panel"><div class="panel-head"><h3>同期状態</h3><button class="btn small primary" onclick="syncNow()">今すぐ同期</button></div><div class="sync-row"><span>仕上表変更</span><b id="syncFinish">0</b></div><div class="sync-row"><span>建材変更</span><b id="syncMaterials">0</b></div><div class="sync-row"><span>写真アップロード待ち</span><b id="syncPhotos">0</b></div><div id="syncList"></div></div></section>
+    <section class="content" id="settings" style="display:none"><div class="panel"><div class="panel-head"><h3>設定</h3><span class="hint">旧システムの設定シート相当</span></div><div class="settings-wrap"><div class="settings-box"><h4>建材名候補</h4><div class="hint">部位 / 種別 / 建材名で管理。仕上表の建材名称入力時に候補表示します。</div><div class="settings-add"><input id="addMatPart" placeholder="部位"><input id="addMatType" placeholder="種別" value="追加"><input id="addMatName" placeholder="建材名"><button class="btn small primary" onclick="addMaterialCandidate()">追加</button></div><table class="data-table compact" id="materialCandidatesTable"></table></div><div class="settings-box"><h4>部位候補</h4><div class="hint">その他1/その他2の部位欄で候補表示します。入力した部位も案件内候補に追加されます。</div><div class="settings-add"><input id="addPartName" placeholder="部位"><button class="btn small primary" onclick="addPartCandidate()">追加</button></div><div class="part-candidate-list" id="partCandidatesList"></div></div></div></section>
   </main>
 </div>
 
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">更新確認</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.7.0<br>・簡易リストを外部/内部の間に戻す<br>・【入力ID】建材名表示<br>・選択中建材の強調表示<br>・カラー表示ON/OFF<br>・調査備考の表示/編集</div></div></div></aside>
+<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">更新確認</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.8.0<br>・建材名/部位候補の設定タブ追加<br>・部位別入力アシスト<br>・簡易リスト固定表示の調整<br>・ヘッダーを案件名表示に整理</div></div></div></aside>
 
 <div class="update-modal" id="updateModal"><div class="update-card"><h3>更新があります</h3><div class="hint">新しいバージョンがある場合はここで更新確認を出す想定です。<br>今回は表示確認用です。</div><div class="update-actions"><button class="btn" onclick="hideUpdatePrompt()">いいえ</button><button class="btn primary" onclick="location.reload()">はい、更新する</button></div></div></div>
+<datalist id="materialSuggest"></datalist>
+<datalist id="partSuggest"></datalist>
 <script>
-const APP_VERSION='0.7.0';
-let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='r1', selectedMaterialId=null, colorMode=false;
+const APP_VERSION='0.8.0';
+let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='r1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 const externalParts=['床 犬走','外壁','屋根','軒裏'];
 const internalParts=['床','巾木','壁','天井'];
 const otherSlots=['その他1','その他2'];
 const ROOM_LINES=[0,1];
+const defaultMaterialCandidates=[
+ ['床 犬走','デフォルト','コンクリート'],
+ ['外壁','デフォルト','仕上塗材'],['外壁','デフォルト','スレート波板'],['外壁','デフォルト','スレートボード'],['外壁','デフォルト','押出成型セメント板'],['外壁','デフォルト','窯業系サイディング'],['外壁','デフォルト','コンクリート'],['外壁','デフォルト','鉄板'],
+ ['屋根','デフォルト','アスファルトシングル'],['屋根','デフォルト','波板スレート'],['屋根','デフォルト','アスファルト防水'],['屋根','デフォルト','防水シート'],['屋根','デフォルト','瓦'],
+ ['軒裏','デフォルト','ケイカル板'],['軒裏','デフォルト','木材類'],['軒裏','デフォルト','スレートボード'],['軒裏','デフォルト','断熱材'],['軒裏','デフォルト','ウレタン断熱'],['軒裏','デフォルト','煙突断熱材'],
+ ['床','デフォルト','ビニル床タイル'],['床','デフォルト','ビニル床シート'],['床','デフォルト','防水シート'],['床','デフォルト','アスファルト防水'],['床','デフォルト','タイル'],['床','デフォルト','磁器タイル'],['床','デフォルト','畳'],['床','デフォルト','木材類'],['床','デフォルト','カーペットタイル'],['床','デフォルト','人研ぎ石'],
+ ['巾木','デフォルト','ソフト巾木'],['巾木','デフォルト','木材類'],
+ ['壁','デフォルト','石こうボード'],['壁','デフォルト','仕上塗材'],['壁','デフォルト','砂壁'],['壁','デフォルト','ジュラク吹付'],['壁','デフォルト','プラスター塗'],['壁','デフォルト','コンクリート'],['壁','デフォルト','磁器タイル'],['壁','デフォルト','壁紙'],['壁','デフォルト','有孔ボード'],['壁','デフォルト','スタイロフォーム'],['壁','デフォルト','吹付材'],['壁','デフォルト','窯業系サイディング'],['壁','デフォルト','押出成型セメント板'],['壁','デフォルト','木材類'],['壁','デフォルト','フレキシブルボード'],['壁','デフォルト','その他パネルボード'],
+ ['天井','デフォルト','石こうボード'],['天井','デフォルト','ジプトーン'],['天井','デフォルト','岩綿吸音板'],['天井','デフォルト','けい酸カルシウム板第1種'],['天井','デフォルト','スレートボード'],['天井','デフォルト','木毛板'],['天井','デフォルト','有孔ボード'],['天井','デフォルト','成形板'],['天井','デフォルト','木材類'],['天井','デフォルト','吹付材'],['天井','デフォルト','吹付けロックウール'],['天井','デフォルト','吹付けパーライト'],['天井','デフォルト','吹付けバーミキュライト'],['天井','デフォルト','屋根用折板石綿含有断熱材'],['天井','デフォルト','コンクリート'],['天井','デフォルト','フレキシブルボード'],['天井','デフォルト','その他パネルボード'],
+ ['その他','デフォルト','シーリング'],['その他','デフォルト','ガスケット'],['その他','デフォルト','パッキン'],['その他','デフォルト','防水紙'],['その他','デフォルト','キャンバス'],['その他','デフォルト','耐火二層管'],['その他','デフォルト','保温材'],['その他','デフォルト','石綿セメント管'],['その他','デフォルト','石綿セメント円筒'],['その他','デフォルト','けい酸カルシウム板第2種'],['その他','デフォルト','耐火被覆板'],['その他','デフォルト','煙突断熱材'],['その他','デフォルト','吹付材'],['その他','デフォルト','仕上塗材'],['その他','デフォルト','石綿布']
+];
+const defaultPartCandidates=['その他','床','巾木','壁','天井','外壁','屋根','軒裏','配管','梁','柱','床下','壁部','窓枠','貫通部'];
+
 const collapsed={'外部':false,'内部':false};
 const state={
  rooms:[{id:'r1',floor:'外部',no:'外部',name:'',lines:2},{id:'r2',floor:'1階',no:'1-1',name:'踏込',lines:2},{id:'r3',floor:'1階',no:'1-2',name:'廊下',lines:2},{id:'r4',floor:'1階',no:'1-3',name:'洋室',lines:2}],
- cells:{}, materials:[], photos:[{roomId:'r2',type:'全景'},{roomId:'r2',type:'看板'},{roomId:'r3',type:'床'}], samples:[], queue:[]
+ cells:{}, materials:[], materialCandidates:defaultMaterialCandidates.map(x=>({part:x[0],type:x[1],name:x[2]})), partCandidates:[...defaultPartCandidates], projectMaterialCandidates:[], projectPartCandidates:[], photos:[{roomId:'r2',type:'全景'},{roomId:'r2',type:'看板'},{roomId:'r3',type:'床'}], samples:[], queue:[]
 };
 function seed(){
  setName('r1','外部','外壁','仕上塗材',true); setName('r1','外部','軒裏','仕上塗材',true);
@@ -162,17 +217,17 @@ function registerName(roomId,area,part,line=0,shouldRender=true){const c=getCell
 function applyMaterialToCell(roomId,area,part,line,mat){setRaw(roomId,area,part,'id',{text:String(mat.inputId),status:'id'},line); setRaw(roomId,area,part,'name',{text:mat.name,status:'registered',materialId:mat.id,base:mat.base,suffix:mat.suffix,cellId:cellKey(roomId,area,part,line,'name')},line)}
 function resolveId(value){const v=normalizeInput(value).toUpperCase(); if(!v)return null; return state.materials.find(m=>String(m.inputId)===v || m.id===v || m.id.replace('R','')===v)}
 function onIdBlur(roomId,area,part,line,value){const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,part,line,'id')]; renderAll(); return} const m=resolveId(v); if(m){applyMaterialToCell(roomId,area,part,line,m); selectedMaterialId=m.id; addQueue('ID呼び出し',m.name)}else{setRaw(roomId,area,part,'id',{text:v,status:'unknown'},line); addQueue('ID入力',v)} renderAll();}
-function onNameBlur(roomId,area,part,line,value){const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,part,line,'name')]; delete state.cells[cellKey(roomId,area,part,line,'id')]; renderAll(); return} const existing=findMaterialByName(v); if(existing){applyMaterialToCell(roomId,area,part,line,existing); selectedMaterialId=existing.id; addQueue('既存建材呼び出し',existing.name); renderAll(); return} if(/[9]$/.test(v)){setRaw(roomId,area,part,'name',{text:v,status:'record_only'},line); registerName(roomId,area,part,line,true); return} if(/[A-Z]$/.test(v)){const parsed=splitMaterialName(v); const mat=createMaterial(parsed.base,parsed.suffix,'英字指定'); applyMaterialToCell(roomId,area,part,line,mat); selectedMaterialId=mat.id; addQueue('建材登録',mat.name); renderAll(); return} setRaw(roomId,area,part,'name',{text:v,status:'record_only',cellId:cellKey(roomId,area,part,line,'name')},line); addQueue('仕上表変更',v); renderAll();}
-function onPartBlur(roomId,area,slot,line,value){const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,slot,line,'part')]}else{setRaw(roomId,area,slot,'part',{text:v,status:'part_only'},line); addQueue('その他部位',v)} renderAll();}
+function onNameBlur(roomId,area,part,line,value){const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,part,line,'name')]; delete state.cells[cellKey(roomId,area,part,line,'id')]; renderAll(); return} const existing=findMaterialByName(v); if(existing){applyMaterialToCell(roomId,area,part,line,existing); selectedMaterialId=existing.id; addProjectMaterialCandidate(partForSuggest(roomId,area,part,line),existing.name); addQueue('既存建材呼び出し',existing.name); renderAll(); return} if(/[9]$/.test(v)){setRaw(roomId,area,part,'name',{text:v,status:'record_only'},line); registerName(roomId,area,part,line,true); return} if(/[A-Z]$/.test(v)){const parsed=splitMaterialName(v); const mat=createMaterial(parsed.base,parsed.suffix,'英字指定'); applyMaterialToCell(roomId,area,part,line,mat); selectedMaterialId=mat.id; addProjectMaterialCandidate(partForSuggest(roomId,area,part,line),mat.name); addQueue('建材登録',mat.name); renderAll(); return} setRaw(roomId,area,part,'name',{text:v,status:'record_only',cellId:cellKey(roomId,area,part,line,'name')},line); addProjectMaterialCandidate(partForSuggest(roomId,area,part,line),v); addQueue('仕上表変更',v); renderAll();}
+function onPartBlur(roomId,area,slot,line,value){const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,slot,line,'part')]}else{setRaw(roomId,area,slot,'part',{text:v,status:'part_only'},line); addPartCandidateValue(v); addQueue('その他部位',v)} renderAll();}
 function renderIdInput(roomId,area,part,line=0){const c=getCell(roomId,area,part,'id',line); return `<div class="cell"><input class="id-input" placeholder="ID" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing')" onblur="this.parentElement.classList.remove('editing');onIdBlur('${roomId}','${area}','${part}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"></div>`}
-function renderNameInput(roomId,area,part,line=0){const c=getCell(roomId,area,part,'name',line); const colorClass=c.materialId?`mat-color-${materialColorIndex(c.materialId)}`:''; const selected=c.materialId&&selectedMaterialId===c.materialId?'selected-match':''; const note=c.materialId&&(state.materials.find(m=>m.id===c.materialId)||{}).note?'has-note':''; const klass=[c.status==='registered'?'registered':(c.text?'record':''), colorMode&&c.materialId?colorClass:'', selected, note].join(' '); const btn=(c.text&&c.status==='record_only')?`<button class="btn small primary register-btn" onclick="registerName('${roomId}','${area}','${part}',${line},true)">登録</button>`:''; const cid=cellKey(roomId,area,part,line,'name'); const focus=c.materialId?`selectMaterial('${c.materialId}')`:''; return `<div class="cell ${klass}" data-cell-id="${esc(cid)}" onclick="${focus}"><input placeholder="建材名称" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing');${focus}" onblur="this.parentElement.classList.remove('editing');onNameBlur('${roomId}','${area}','${part}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}" oncontextmenu="openNoteForCell('${roomId}','${area}','${part}',${line});return false;">${btn}</div>`}
-function renderPartInput(roomId,area,slot,line=0){const c=getCell(roomId,area,slot,'part',line); return `<div class="cell"><input placeholder="部位" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing')" onblur="this.parentElement.classList.remove('editing');onPartBlur('${roomId}','${area}','${slot}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"></div>`}
-function headerFor(area,parts){return `<tr><th class="floor">階</th><th class="room-no">部屋No.</th><th class="room-name">部屋名</th>${parts.map(p=>`<th class="id-col">建材ID</th><th class="name-col">${p}</th>`).join('')}${otherSlots.map(o=>`<th class="id-col">建材ID</th><th class="other-part">${o} 部位</th><th class="other-name">${o}</th>`).join('')}</tr>`}
+function renderNameInput(roomId,area,part,line=0){const c=getCell(roomId,area,part,'name',line); const colorClass=c.materialId?`mat-color-${materialColorIndex(c.materialId)}`:''; const selected=c.materialId&&selectedMaterialId===c.materialId?'selected-match':''; const note=c.materialId&&(state.materials.find(m=>m.id===c.materialId)||{}).note?'has-note':''; const klass=[c.status==='registered'?'registered':(c.text?'record':''), colorMode&&c.materialId?colorClass:'', selected, note].join(' '); const btn=(c.text&&c.status==='record_only')?`<button class="btn small primary register-btn" onclick="registerName('${roomId}','${area}','${part}',${line},true)">登録</button>`:''; const cid=cellKey(roomId,area,part,line,'name'); const focus=c.materialId?`selectMaterial('${c.materialId}')`:''; return `<div class="cell ${klass}" data-cell-id="${esc(cid)}" onclick="${focus}"><input list="materialSuggest" placeholder="建材名称" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing');updateMaterialSuggest('${roomId}','${area}','${part}',${line});${focus}" oninput="updateMaterialSuggest('${roomId}','${area}','${part}',${line},this.value)" onblur="this.parentElement.classList.remove('editing');onNameBlur('${roomId}','${area}','${part}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}" oncontextmenu="openNoteForCell('${roomId}','${area}','${part}',${line});return false;">${btn}</div>`}
+function renderPartInput(roomId,area,slot,line=0){const c=getCell(roomId,area,slot,'part',line); return `<div class="cell"><input list="partSuggest" placeholder="部位" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing');updatePartSuggest()" oninput="updatePartSuggest(this.value)" onblur="this.parentElement.classList.remove('editing');onPartBlur('${roomId}','${area}','${slot}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"></div>`}
+function headerFor(area,parts){return `<tr><th class="floor">階</th><th class="room-no">部屋No.</th><th class="room-name">部屋名</th>${parts.map(p=>`<th class="id-col">建材ID</th><th class="name-col">${p}</th>`).join('')}${otherSlots.map(o=>`<th class="id-col">建材ID</th><th class="other-part">部位</th><th class="other-name">${o}</th>`).join('')}</tr>`}
 function sectionRow(name,colspan){const cls=name==='外部'?' external':(name==='内部'?' internal':''); return `<tr class="section-row${cls}"><td colspan="${colspan}"><div class="section-title">${name}</div></td></tr>`}
 function roomLineCount(r){return r.lines||2}
 function isLastRoom(r){return state.rooms[state.rooms.length-1]&&state.rooms[state.rooms.length-1].id===r.id}
 function renderFloorCell(r){const add=isLastRoom(r)?`<button class="room-add-btn" title="次の階を追加" onclick="addNextFloor('${r.id}')">▼</button>`:''; return `<div class="room-control"><input value="${esc(r.floor)}" onblur="updateRoom('${r.id}','floor',this.value)">${add}</div>`}
-function renderRoomNoCell(r){const title=isLastRoom(r)?'次の部屋を追加':'この部屋の入力行を追加'; return `<div class="room-control"><input value="${esc(r.no)}" onblur="updateRoom('${r.id}','no',this.value)"><button class="room-add-btn" title="${title}" onclick="roomNoDown('${r.id}')">▼</button></div>`}
+function renderRoomNoCell(r){const title=isLastRoom(r)?'次の部屋を追加':'この部屋の入力行を追加'; return `<div class="room-control"><input value="${esc(r.no)}" onblur="updateRoom('${r.id}','no',this.value)"><button class="room-add-btn" data-roomdown="${r.id}" title="${title}" onclick="roomNoDown('${r.id}')">▼</button></div>`}
 function renderRoomNameCell(r){return `<div class="room-control"><input value="${esc(r.name)}" placeholder="部屋名" onblur="updateRoom('${r.id}','name',this.value)"></div>`}
 function renderSection(area,parts){const colspan=3+parts.length*2+otherSlots.length*3; let html=sectionRow(area,colspan); if(collapsed[area])return html; html+=headerFor(area,parts); for(const r of state.rooms){for(let line=0;line<roomLineCount(r);line++){html+=`<tr class="${line===0?'room-start':'room-sub'} area-${area==='外部'?'external':'internal'}">`; if(line===0){const span=roomLineCount(r); html+=`<td class="floor" rowspan="${span}">${renderFloorCell(r)}</td><td class="room-no" rowspan="${span}">${renderRoomNoCell(r)}</td><td class="room-name" rowspan="${span}">${renderRoomNameCell(r)}</td>`} for(const p of parts){html+=`<td>${renderIdInput(r.id,area,p,line)}</td><td>${renderNameInput(r.id,area,p,line)}</td>`} for(const o of otherSlots){html+=`<td>${renderIdInput(r.id,area,o,line)}</td><td>${renderPartInput(r.id,area,o,line)}</td><td>${renderNameInput(r.id,area,o,line)}</td>`} html+='</tr>'}} return html;}
 function renderSimpleListRow(){const colspan=3+internalParts.length*2+otherSlots.length*3; return `<tr class="simple-list-row"><td colspan="${colspan}"><div class="simple-list-box"><div class="simple-list-head"><b>簡易リスト</b><span class="tag">${state.materials.length}件</span></div><div class="simple-list-items" id="simpleListItems">${renderSimpleItems()}</div>${renderSelectedDetail()}</div></td></tr>`}
@@ -180,6 +235,85 @@ function renderSimpleItems(){return state.materials.length?state.materials.map(m
 function renderSelectedDetail(){const m=state.materials.find(x=>x.id===selectedMaterialId); if(!m)return '<div class="simple-detail"><span class="hint">建材を選択すると使用箇所と調査備考を表示します</span></div>'; return `<div class="simple-detail"><b>選択中：【${m.inputId}】${esc(m.name)}</b><span>使用箇所：${esc(usageOf(m))}</span><span>調査備考：${esc(m.note||'未入力')}</span><button class="btn small" onclick="editMaterialNote('${m.id}')">備考編集</button></div>`}
 function renderFinish(){renderSectionToggles(); let html=renderSection('外部',externalParts); html+=renderSimpleListRow(); html+=renderSection('内部',internalParts); document.getElementById('finishTable').innerHTML=html; document.getElementById('matCount').textContent=state.materials.length; document.getElementById('recordCount').textContent=countRecordOnly(); document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF'; document.getElementById('finishTable').classList.toggle('color-mode',colorMode);}
 function renderSectionToggles(){const el=document.getElementById('sectionToggles'); if(!el)return; el.innerHTML=['外部','内部'].map(n=>`<button class="section-toggle ${collapsed[n]?'closed':''}" onclick="toggleSection('${n}')">${collapsed[n]?'▶':'▼'} ${n}</button>`).join('')}
+
+
+function partForSuggest(roomId,area,part,line){
+  if(otherSlots.includes(part)){
+    const custom=getCell(roomId,area,part,'part',line).text;
+    return custom || 'その他';
+  }
+  return part;
+}
+function addProjectMaterialCandidate(part,name){
+  const n=normalizeInput(name); if(!n)return;
+  const p=normalizeInput(part||'その他');
+  if(!state.projectMaterialCandidates.some(x=>normalizeInput(x.part)===p && normalizeInput(x.name)===n)){
+    state.projectMaterialCandidates.push({part:p,type:'案件入力',name:n});
+  }
+}
+function addPartCandidateValue(name){
+  const n=normalizeInput(name); if(!n)return;
+  if(!state.partCandidates.some(x=>normalizeInput(x)===n)) state.partCandidates.push(n);
+  if(!state.projectPartCandidates.some(x=>normalizeInput(x)===n)) state.projectPartCandidates.push(n);
+}
+function candidateMatchesPart(c,part){
+  const p=normalizeInput(part||'その他');
+  const cp=normalizeInput(c.part||'その他');
+  return cp===p || cp==='その他' || p==='その他';
+}
+function uniqueByName(list){
+  const seen=new Set(); const out=[];
+  for(const item of list){const key=normalizeInput(item.name||item); if(!key||seen.has(key))continue; seen.add(key); out.push(item)}
+  return out;
+}
+function materialSuggestionsFor(part,filter=''){
+  const f=normalizeInput(filter);
+  const registered=state.materials.map(m=>({part:'登録済',type:'登録済',name:m.name,label:`【${m.inputId}】${m.name}`}));
+  const project=state.projectMaterialCandidates.filter(c=>candidateMatchesPart(c,part));
+  const master=state.materialCandidates.filter(c=>candidateMatchesPart(c,part));
+  return uniqueByName([...registered,...project,...master]).filter(c=>!f || normalizeInput(c.name).includes(f) || normalizeInput(c.label||'').includes(f)).slice(0,40);
+}
+function updateMaterialSuggest(roomId,area,part,line,filter=''){
+  const p=partForSuggest(roomId,area,part,line);
+  const dl=document.getElementById('materialSuggest'); if(!dl)return;
+  dl.innerHTML=materialSuggestionsFor(p,filter).map(c=>`<option value="${esc(c.name)}" label="${esc((c.label||c.name)+' / '+(c.part||p))}"></option>`).join('');
+}
+function updatePartSuggest(filter=''){
+  const f=normalizeInput(filter);
+  const dl=document.getElementById('partSuggest'); if(!dl)return;
+  const list=[...state.partCandidates];
+  dl.innerHTML=list.filter(x=>!f||normalizeInput(x).includes(f)).map(x=>`<option value="${esc(x)}"></option>`).join('');
+}
+function addMaterialCandidate(){
+  const part=normalizeInput(document.getElementById('addMatPart').value||'その他');
+  const type=normalizeInput(document.getElementById('addMatType').value||'追加');
+  const name=normalizeInput(document.getElementById('addMatName').value||'');
+  if(!name)return alert('建材名を入力してください');
+  state.materialCandidates.push({part,type,name});
+  document.getElementById('addMatName').value='';
+  renderSettings();
+}
+function updateMaterialCandidate(i,field,value){
+  if(!state.materialCandidates[i])return;
+  state.materialCandidates[i][field]=normalizeInput(value);
+}
+function addPartCandidate(){
+  const name=normalizeInput(document.getElementById('addPartName').value||'');
+  if(!name)return alert('部位を入力してください');
+  addPartCandidateValue(name);
+  document.getElementById('addPartName').value='';
+  renderSettings();
+}
+function renderSettings(){
+  const mt=document.getElementById('materialCandidatesTable');
+  if(mt){
+    let rows='<tr><th>部位</th><th>種別</th><th>建材名</th></tr>';
+    state.materialCandidates.forEach((c,i)=>{rows+=`<tr><td><input value="${esc(c.part)}" onblur="updateMaterialCandidate(${i},'part',this.value)"></td><td><input value="${esc(c.type)}" onblur="updateMaterialCandidate(${i},'type',this.value)"></td><td><input value="${esc(c.name)}" onblur="updateMaterialCandidate(${i},'name',this.value)"></td></tr>`});
+    mt.innerHTML=rows;
+  }
+  const pl=document.getElementById('partCandidatesList');
+  if(pl)pl.innerHTML=state.partCandidates.map(x=>`<span class="part-chip">${esc(x)}</span>`).join('');
+}
 
 function countRecordOnly(){let n=0; for(const k in state.cells){const c=state.cells[k]; if(c.status==='record_only'&&c.text)n++} return n}
 function selectMaterial(id){selectedMaterialId=id; renderAll()}
@@ -193,13 +327,13 @@ function mNote(id,value){const m=state.materials.find(x=>x.id===id); if(m){m.not
 function renderPhotos(){document.getElementById('photoRooms').innerHTML=state.rooms.map(r=>`<div class="room-item ${r.id===activePhotoRoom?'active':''}" onclick="activePhotoRoom='${r.id}';renderPhotos()"><b>${esc(r.no)} ${esc(r.name||r.floor)}</b><br><span class="hint">写真 ${state.photos.filter(p=>p.roomId===r.id).length}枚</span></div>`).join(''); const r=state.rooms.find(x=>x.id===activePhotoRoom); document.getElementById('photoTitle').textContent=r?`${r.no} ${r.name||r.floor}`:'部屋'; const photos=state.photos.filter(p=>p.roomId===activePhotoRoom); document.getElementById('photoGrid').innerHTML=photos.map((p,i)=>`<div class="photo-box">${p.type}<br>写真 ${i+1}<br><span>未同期</span></div>`).join('')||'<div class="hint">まだ写真がありません</div>'}
 function renderSamples(){let rows='<tr><th>試料ID</th><th>建材</th><th>採取場所</th><th>採取部位</th><th>結果</th></tr>'; for(const s of state.samples){const m=state.materials.find(x=>x.id===s.materialId); rows+=`<tr><td>${s.id}</td><td>${m?m.name:'-'}</td><td>${s.place}</td><td>${s.part}</td><td>未</td></tr>`} document.getElementById('samplesTable').innerHTML=rows}
 function renderSync(){const photoWait=state.photos.length; document.getElementById('unsyncedPill').textContent=`未同期 ${state.queue.length+photoWait}件`; const mini=document.getElementById('miniUnsynced'); if(mini)mini.textContent=state.queue.length+photoWait; document.getElementById('syncFinish').textContent=state.queue.filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')).length; document.getElementById('syncMaterials').textContent=state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length; document.getElementById('syncPhotos').textContent=photoWait; document.getElementById('syncList').innerHTML=state.queue.length?state.queue.map(q=>`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`).join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>'}
-function renderAll(){renderFinish();renderMaterials();renderPhotos();renderSamples();renderSync()}
+function renderAll(){renderFinish();renderMaterials();renderPhotos();renderSamples();renderSync();renderSettings()}
 function showTab(id){document.querySelectorAll('.content').forEach(x=>x.style.display='none'); document.getElementById(id).style.display='block'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));}
 function toggleSection(name){collapsed[name]=!collapsed[name]; renderFinish()}
 function updateRoom(id,field,value){const r=state.rooms.find(x=>x.id===id); if(!r)return; r[field]=normalizeInput(value); addQueue('部屋情報変更',`${r.no} ${r.name}`); renderAll()}
 function nextRoomNo(floor){const nums=state.rooms.filter(r=>r.floor===floor).map(r=>String(r.no||'').match(/^(\d+)-(\d+)$/)).filter(Boolean).map(m=>Number(m[2])); const floorNum=(String(floor).match(/\d+/)||['1'])[0]; const next=(nums.length?Math.max(...nums)+1:1); return `${floorNum}-${next}`}
 function nextFloorName(floor){const n=Number((String(floor).match(/\d+/)||['1'])[0])+1; return `${n}階`}
-function addRoomAfter(refId,floor,no,name=''){const idx=state.rooms.findIndex(r=>r.id===refId); const room={id:'r'+Date.now()+Math.random().toString(16).slice(2),floor,no,name,lines:2}; state.rooms.splice(idx+1,0,room); addQueue('部屋追加',`${no} ${name}`); renderAll()}
+function addRoomAfter(refId,floor,no,name=''){const idx=state.rooms.findIndex(r=>r.id===refId); const room={id:'r'+Date.now()+Math.random().toString(16).slice(2),floor,no,name,lines:2}; state.rooms.splice(idx+1,0,room); pendingRoomFocus=room.id; addQueue('部屋追加',`${no} ${name}`); renderAll(); setTimeout(()=>{const b=document.querySelector(`[data-roomdown="${pendingRoomFocus}"]`); if(b){b.focus();b.classList.add('focused');setTimeout(()=>b.classList.remove('focused'),650)}},0)}
 function roomNoDown(id){const r=state.rooms.find(x=>x.id===id); if(!r)return; if(isLastRoom(r)){addRoomAfter(id,r.floor,nextRoomNo(r.floor),'')}else{r.lines=roomLineCount(r)+1; addQueue('部屋内行追加',`${r.no} ${r.name}`); renderAll()}}
 function addNextFloor(id){const r=state.rooms.find(x=>x.id===id); if(!r)return; const nf=nextFloorName(r.floor); const nno=nextRoomNo(nf); addRoomAfter(id,nf,nno,'')}
 function addRoom(){const r=state.rooms[state.rooms.length-1]; addRoomAfter(r.id,r.floor,nextRoomNo(r.floor),'')}
