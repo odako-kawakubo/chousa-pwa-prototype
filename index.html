@@ -345,10 +345,9 @@ function syncNow(){if(!online)return alert('オフラインです。通信復帰
 function toggleSide(){document.getElementById('side').classList.toggle('closed')}
 function openDrawer(){document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('open')}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerBackdrop').classList.remove('open')}
-const APP_VERSION='0.8.1';
 function showUpdatePrompt(){
   const msg=document.getElementById('updateMessage');
-  if(msg){msg.innerHTML=`現在のバージョン：v${APP_VERSION}<br>最新版を読み込み直しますか？<br>未保存の入力がある場合は、先に入力を確定してください。`;}
+  if(msg){msg.innerHTML=`現在のバージョン：v${APP_VERSION}<br>最新版を読み込み直しますか？<br>未保存の入力がある場合は、先に入力を確定してください。`; }
   document.getElementById('updateModal').style.display='flex';
 }
 function hideUpdatePrompt(){document.getElementById('updateModal').style.display='none'}
