@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.10.1</title>
+<title>調査システムPWA プロトタイプ v0.10.2</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -835,7 +835,7 @@ input[list]::-webkit-calendar-picker-indicator{
 .material-record-table tr.merged-row,.material-record-table tr.deleted-row{display:none}
 @media(max-width:850px){.material-table-wrap{max-height:calc(100vh - 200px)}.material-record-table{font-size:11px}}
 
-/* v0.10.1 material record sheet */
+/* v0.10.2 material record sheet */
 .record-panel{overflow:hidden}
 .record-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
 .record-table-wrap{overflow:auto;max-height:calc(100vh - 165px)}
@@ -853,13 +853,33 @@ input[list]::-webkit-calendar-picker-indicator{
 @media(max-width:850px){.record-table-wrap{max-height:calc(100vh - 200px)}.record-table{font-size:11px}}
 
 
+/* v0.10.2 material list / record fixed headers and left columns */
+.material-table-wrap,.record-table-wrap{position:relative!important;}
+.material-record-table th{top:0!important;}
+.material-record-table .mat-no{position:sticky!important;left:0!important;z-index:6!important;background:#f8fafc!important;}
+.material-record-table .input-id{position:sticky!important;left:44px!important;z-index:6!important;background:#f8fafc!important;font-weight:700;text-align:center;}
+.material-record-table th.mat-no{z-index:9!important;background:var(--head)!important;}
+.material-record-table th.input-id{z-index:9!important;background:var(--head)!important;}
+.material-record-table .mat-name input{width:160px!important;min-width:150px!important;font-weight:700!important;}
+.material-record-table .disabled-cell{background:#f1f5f9!important;color:#94a3b8!important;}
+.material-record-table select:disabled,.material-record-table input:disabled{background:#eef2f7!important;color:#94a3b8!important;border-color:#e2e8f0!important;}
+.record-table th{top:0!important;}
+.record-table .rec-id{position:sticky!important;left:0!important;z-index:6!important;background:#f8fafc!important;}
+.record-table .rec-status{position:sticky!important;left:64px!important;z-index:6!important;background:#f8fafc!important;min-width:62px;}
+.record-table .rec-name{position:sticky!important;left:126px!important;z-index:6!important;background:#f8fafc!important;min-width:160px;}
+.record-table th.rec-id{z-index:9!important;background:var(--head)!important;}
+.record-table th.rec-status{z-index:9!important;background:var(--head)!important;}
+.record-table th.rec-name{z-index:9!important;background:var(--head)!important;}
+.record-table .system-memo{min-width:260px;max-width:360px;white-space:pre-wrap;line-height:1.35;font-size:10.8px;color:#334155;}
+
+
 </style>
 </head>
 <body>
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1>26070101　○○マンション改修工事</h1>
-  <span class="pill">v0.10.1</span>
+  <span class="pill">v0.10.2</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">同期待ち 0件</span>
   
@@ -933,13 +953,13 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.10.1<br>・内部バージョンをv0.10.1に整理<br>・設定横にレコードタブを追加<br>・建材リストの見出し行を削除<br>・建材リストを建材レコード方式へ変更<br>・仕上表→建材レコード→建材リストの集計表示を追加<br>・部位/使用箇所を建材ID単位で集計<br>・レベル/分析要否/採取情報の編集欄を追加<br>・統合/削除のプロトタイプ操作を追加</div></div></div></aside>
+<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.10.2<br>・内部バージョンをv0.10.2に整理<br>・設定横にレコードタブを追加<br>・建材リスト/レコードのヘッダーと左側を固定<br>・建材リストから建材名称変更に対応<br>・採取数に応じて採取場所をON/OFF<br>・分析の要否が採取・分析以外の場合は採取数を-に固定<br>・システムメモに名称変更/統合/削除/再採番を記録<br>・建材リストを建材レコード方式へ変更<br>・仕上表→建材レコード→建材リストの集計表示を追加<br>・部位/使用箇所を建材ID単位で集計<br>・レベル/分析要否/採取情報の編集欄を追加<br>・統合/削除のプロトタイプ操作を追加</div></div></div></aside>
 
 <div class="update-modal" id="updateModal"><div class="update-card"><h3>最新版に更新</h3><div class="hint" id="updateMessage">アプリ本体のキャッシュだけ削除して最新版を読み込みます。<br>案件データや未同期データは削除しません。</div><div class="update-actions"><button class="btn" onclick="hideUpdatePrompt()">キャンセル</button><a class="btn primary" id="hardReloadLink" href="./app.html" onclick="confirmAppUpdate(event)">更新する</a></div></div></div>
 <datalist id="materialSuggest"></datalist>
 <datalist id="partSuggest"></datalist>
 <script>
-const APP_VERSION='0.10.1';
+const APP_VERSION='0.10.2';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -1148,364 +1168,29 @@ function editMaterialNote(id){const m=state.materials.find(x=>x.id===id); if(!m)
 function openNoteForCell(roomId,area,part,line){const c=getCell(roomId,area,part,'name',line); if(c.materialId)editMaterialNote(c.materialId)}
 
 function usageOf(m){const arr=[]; for(const r of allRooms()){for(const area of ['外部','内部']){for(let line=0;line<roomLineCount(r);line++){for(const p of [...externalParts,...internalParts]){const c=getCell(r.id,area,p,'name',line); if(c.materialId===m.id)arr.push(`${r.no}${r.name} ${p}`)} for(const o of otherSlots){const c=getCell(r.id,area,o,'name',line); const part=getCell(r.id,area,o,'part',line); if(c.materialId===m.id)arr.push(`${r.no}${r.name} ${part.text||o}`)}}}} return arr.join('、')||'-'}
-function renderMaterials(){let rows='<tr><th>入力ID</th><th>建材ID</th><th>建材名</th><th>使用箇所</th><th>調査備考</th><th>採取数</th><th>採取場所</th><th>採取部位</th><th>分析</th><th>操作</th></tr>'; for(const m of state.materials){rows+=`<tr><td>${m.inputId}</td><td>${m.id}</td><td>${m.name}</td><td>${usageOf(m)}</td><td><input style="width:170px" value="${esc(m.note||'')}" onblur="mNote('${m.id}',this.value)"></td><td><input style="width:52px" value="1"></td><td><input style="width:110px" placeholder="候補表示"></td><td><input style="width:90px" placeholder="部位"></td><td><select><option>未</option><option>要</option><option>不要</option><option>含有</option><option>不検出</option></select></td><td><button class="btn small" onclick="createSample('${m.id}')">試料</button></td></tr>`} document.getElementById('materialsTable').innerHTML=rows}
-function mNote(id,value){const m=state.materials.find(x=>x.id===id); if(m){remember();m.note=value; addQueue('調査備考',m.name); renderAll()}}
-function renderPhotos(){document.getElementById('photoRooms').innerHTML=allRooms().map(r=>`<div class="room-item ${r.id===activePhotoRoom?'active':''}" onclick="activePhotoRoom='${r.id}';renderPhotos()"><b>${esc(r.no)} ${esc(r.name||r.floor)}</b><br><span class="hint">写真 ${state.photos.filter(p=>p.roomId===r.id).length}枚</span></div>`).join(''); const r=findRoom(activePhotoRoom); document.getElementById('photoTitle').textContent=r?`${r.no} ${r.name||r.floor}`:'部屋'; const photos=state.photos.filter(p=>p.roomId===activePhotoRoom); document.getElementById('photoGrid').innerHTML=photos.map((p,i)=>`<div class="photo-box">${p.type}<br>写真 ${i+1}<br><span>未同期</span></div>`).join('')||'<div class="hint">まだ写真がありません</div>'}
-function renderSamples(){let rows='<tr><th>試料ID</th><th>建材</th><th>採取場所</th><th>採取部位</th><th>結果</th></tr>'; for(const s of state.samples){const m=state.materials.find(x=>x.id===s.materialId); rows+=`<tr><td>${s.id}</td><td>${m?m.name:'-'}</td><td>${s.place}</td><td>${s.part}</td><td>未</td></tr>`} document.getElementById('samplesTable').innerHTML=rows}
-function renderSync(){const photoWait=state.photos.length; document.getElementById('unsyncedPill').textContent=`同期待ち ${state.queue.length+photoWait}件`; const mini=document.getElementById('miniUnsynced'); if(mini)mini.textContent=state.queue.length+photoWait; document.getElementById('syncFinish').textContent=state.queue.filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')).length; document.getElementById('syncMaterials').textContent=state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length; document.getElementById('syncPhotos').textContent=photoWait; document.getElementById('syncList').innerHTML=state.queue.length?state.queue.map(q=>`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`).join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>'}
-function renderAll(){renderFinish();renderMaterials();renderRecords();renderPhotos();renderSamples();renderSync();renderSettings();updateHistoryButtons()}
-function showTab(id){document.querySelectorAll('.content').forEach(x=>x.style.display='none'); document.getElementById(id).style.display='block'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));}
-function toggleSection(name){collapsed[name]=!collapsed[name]; renderFinish()}
-function updateRoom(id,field,value){const r=findRoom(id); if(!r)return; remember(); r[field]=normalizeInput(value); addQueue('部屋情報変更',`${r.no} ${r.name}`); renderAll()}
-function nextRoomNo(floor,area='内部'){if(area==='外部')return ''; if(floor==='階段'){const nums=roomsForArea(area).filter(r=>r.floor==='階段').map(r=>String(r.no||'').match(/^S-(\d+)$/)).filter(Boolean).map(m=>Number(m[1])); return `S-${(nums.length?Math.max(...nums)+1:1)}`;} if(floor==='屋上'){const nums=roomsForArea(area).filter(r=>r.floor==='屋上').map(r=>String(r.no||'').match(/^R-(\d+)$/)).filter(Boolean).map(m=>Number(m[1])); return `R-${(nums.length?Math.max(...nums)+1:1)}`;} const nums=roomsForArea(area).filter(r=>r.floor===floor).map(r=>String(r.no||'').match(/^(\d+)-(\d+)$/)).filter(Boolean).map(m=>Number(m[2])); const floorNum=(String(floor).match(/\d+/)||['1'])[0]; const next=(nums.length?Math.max(...nums)+1:1); return `${floorNum}-${next}`}
-function nextFloorName(){const nums=roomsForArea('内部').map(r=>normalFloorNumber(r.floor)).filter(Boolean); const n=(nums.length?Math.max(...nums)+1:1); return `${n}階`}
-function makeRoomId(area){return (area==='外部'?'e':'i')+Date.now()+Math.random().toString(16).slice(2)}
-function focusRoomNo(roomId,area){setTimeout(()=>{const input=document.querySelector(`[data-room-no-input="${roomId}"][data-area="${area}"]`); if(input){input.focus();input.select&&input.select();}},0)}
-function addRoomAfter(refId,floor,no,name='',area='内部'){remember(); const list=roomsForArea(area); const idx=list.findIndex(r=>r.id===refId); const room={id:makeRoomId(area),floor,no,name,lines:2}; list.splice(idx+1,0,room); pendingRoomFocus={id:room.id,area}; addQueue('部屋追加',`${area} ${no} ${name}`); renderAll(); focusRoomNo(room.id,area)}
-function addOneRoom(id,area='内部'){const r=findRoom(id); if(!r)return; const no=area==='外部'?'':nextRoomNo(r.floor,area); addRoomAfter(id,r.floor,no,'',area)}
-function addInputLine(id,area='内部'){const r=findRoom(id); if(!r)return; remember(); r.lines=roomLineCount(r)+1; addQueue('入力行追加',`${area} ${r.no} ${r.name}`); renderAll()}
-function addStairRoom(id){const r=findRoom(id); if(!r)return; addRoomAfter(id,'階段',nextRoomNo('階段','内部'),'','内部')}
-function addNextFloor(id,area='内部'){if(area!=='内部')return; remember(); const list=roomsForArea('内部'); const nf=nextFloorName(); const floorNum=(String(nf).match(/\d+/)||['1'])[0]; const insertIndex=list.findIndex(r=>r.id===id); const rooms=[]; for(let i=1;i<=10;i++)rooms.push({id:makeRoomId('内部'),floor:nf,no:`${floorNum}-${i}`,name:'',lines:2}); list.splice(insertIndex+1,0,...rooms); addQueue('階追加',`${nf} 10部屋`); renderAll(); focusRoomNo(rooms[0].id,'内部')}
-function addRoom(){const list=roomsForArea('内部'); const r=list[list.length-1]; addOneRoom(r.id,'内部')}
-function copyFirstRoom(){const list=roomsForArea('内部'); const src=list[0], id=makeRoomId('内部'); if(!src)return; remember(); list.push({id,floor:src.floor,no:'コピー',name:'コピー部屋',lines:src.lines||2}); for(const key in state.cells){if(key.startsWith(src.id+'|'))state.cells[key.replace(src.id,id)]={...state.cells[key]}} addQueue('部屋コピー',src.no); renderAll()}
-function addPhoto(board){remember();state.photos.push({roomId:activePhotoRoom,type:board?'看板':'写真'}); addQueue('写真追加',board?'看板':'写真'); renderAll()}
-function createSample(materialId){remember();const mId=materialId||(state.materials[0]&&state.materials[0].id); if(!mId)return alert('登録済建材がありません'); const id='26070101-'+String(state.samples.length+1).padStart(2,'0'); state.samples.push({id,materialId:mId,place:'101 玄関',part:'壁'}); addQueue('試料作成',id); renderAll(); showTab('samples')}
-function toggleOnline(){online=!online; const p=document.getElementById('onlinePill'); p.textContent=online?'オンライン':'オフライン'; p.className='pill '+(online?'ok':'warn')}
-function syncNow(){if(!online)return alert('オフラインです。通信復帰後に同期します。'); state.queue=[]; alert('同期しました（プロトタイプ表示）'); renderAll()}
-function toggleSide(){document.getElementById('side').classList.toggle('closed')}
-function openDrawer(){document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('open')}
-function closeDrawer(){document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerBackdrop').classList.remove('open')}
-function appUrlWithStamp(path){
-  const url = new URL(path || ('./app.html'), location.href);
-  url.searchParams.set('v', Date.now());
-  return url.toString();
-}
-async function fetchLatestInfo(){
-  try{
-    const res = await fetch('./version.json?ts=' + Date.now(), {cache:'no-store'});
-    if(!res.ok) throw new Error('version fetch failed');
-    return await res.json();
-  }catch(e){
-    return {version: APP_VERSION, app:'app.html'};
-  }
-}
-function showUpdatePrompt(){
-  const msg=document.getElementById('updateMessage');
-  if(msg){msg.innerHTML=`現在のバージョン：v${APP_VERSION}<br>最新版を確認しています...`; }
-  const link=document.getElementById('hardReloadLink');
-  if(link) link.href=appUrlWithStamp('./app.html');
-  document.getElementById('updateModal').style.display='flex';
-  fetchLatestInfo().then(info=>{
-    const latest = info.version || APP_VERSION;
-    const appPath = info.app || 'app.html';
-    const target = appUrlWithStamp('./' + appPath.replace(/^\.\//,''));
-    if(msg){
-      msg.innerHTML = latest === APP_VERSION
-        ? `現在のバージョン：v${APP_VERSION}<br>最新版です。アプリ本体キャッシュを削除して再読み込みしますか？`
-        : `現在のバージョン：v${APP_VERSION}<br>最新版：v${latest} があります。アプリ本体キャッシュを削除して開きますか？`;
-    }
-    if(link) link.href = target;
-  });
-}
-function hideUpdatePrompt(){document.getElementById('updateModal').style.display='none'}
-function confirmAppUpdate(event){
-  if(event){ event.preventDefault(); }
-  const link=document.getElementById('hardReloadLink');
-  const goUrl = link && link.href ? link.href : appUrlWithStamp('./app.html');
-  try{
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.getRegistrations().then(regs=>Promise.all(regs.map(r=>r.unregister().catch(()=>{})))).catch(()=>{});
-    }
-    if(window.caches){
-      caches.keys().then(names=>Promise.all(names.map(n=>caches.delete(n).catch(()=>{})))).catch(()=>{});
-    }
-  }catch(e){console.warn('update cache clear skipped',e)}
-  setTimeout(()=>{ location.href=goUrl; }, 50);
-}
-function esc(s){return String(s||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-
-
-// v0.8.9: 外部/内部を行固定ではなく仕上表内タブで切替
-let activeFinishArea = '外部';
-function switchFinishArea(area){
-  activeFinishArea = area;
-  renderFinish();
-}
-function renderFinishAreaTabs(){
-  return `<div class="finish-area-tabs">
-    <button class="finish-area-tab ${activeFinishArea==='外部'?'active':''}" onclick="switchFinishArea('外部')">外部</button>
-    <button class="finish-area-tab ${activeFinishArea==='内部'?'active':''}" onclick="switchFinishArea('内部')">内部</button>
-  </div>`;
-}
-function renderFinish(){
-  renderSectionToggles();
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  const parts=activeFinishArea==='外部'?externalParts:internalParts;
-  let html=renderFinishAreaTabs()+renderSimpleListBlock()+renderSectionTable(activeFinishArea,parts);
-  container.innerHTML=html;
-  document.getElementById('matCount').textContent=state.materials.length;
-  {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
-  document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
-  container.classList.toggle('color-mode',colorMode);
-  setTimeout(updateStickyOffsets, 0);
-}
-function updateStickyOffsets(){
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  if(!container)return;
-  const tabs=container.querySelector('.finish-area-tabs');
-  const bar=container.querySelector('.simple-list-block');
-  const tabH=tabs?Math.ceil(tabs.getBoundingClientRect().height):38;
-  const barH=bar?Math.ceil(bar.getBoundingClientRect().height):30;
-  container.style.setProperty('--area-tabs-height', tabH+'px');
-  container.style.setProperty('--material-bar-height', barH+'px');
-}
-function renderSectionToggles(){
-  const el=document.getElementById('sectionToggles');
-  if(!el)return;
-  el.innerHTML=`<button class="section-toggle ${collapsed['簡易リスト']?'closed':''}" onclick="toggleSection('簡易リスト')">${collapsed['簡易リスト']?'▶':'▼'} 簡易リスト</button>`;
-}
-
-
-
-// v0.8.9 fixed4: 項目名行を表のtheadに戻して列幅崩れを抑える
-function renderMaterialDetailCompact(){
-  const m=state.materials.find(x=>x.id===selectedMaterialId);
-  if(!m)return '';
-  return `<div class="material-detail-compact"><b>【${m.inputId}】${esc(m.name)}</b><span>使用箇所：${esc(usageOf(m))}</span><span>調査備考：${esc(m.note||'未入力')}</span><button class="btn small" onclick="editMaterialNote('${m.id}')">備考編集</button></div>`;
-}
-function renderSimpleListBlock(){
-  if(collapsed['簡易リスト'])return `<div class="simple-list-block compact-material-bar"><div class="simple-list-box"><div class="simple-list-items"><span class="hint">登録済建材を閉じています</span></div></div></div>`;
-  return `<div class="simple-list-block compact-material-bar"><div class="simple-list-box"><div class="simple-list-items" id="simpleListItems">${renderSimpleItems()}</div>${renderMaterialDetailCompact()}</div></div>`;
-}
-function renderBodyRows(area,parts){
-  let html='';
-  for(const r of roomsForArea(area)){
-    for(let line=0;line<roomLineCount(r);line++){
-      html+=`<tr class="${line===0?'room-start':'room-sub'} area-${area==='外部'?'external':'internal'}">`;
-      if(line===0){
-        const span=roomLineCount(r);
-        html+=`<td class="floor" rowspan="${span}">${renderFloorCell(r,area)}</td><td class="room-no" rowspan="${span}">${renderRoomNoCell(r,area)}</td><td class="copy-col" rowspan="${span}">${renderCopyCell(r,area)}</td><td class="room-name" rowspan="${span}">${renderRoomNameCell(r)}</td>`;
-      }
-      for(const p of parts){html+=`<td>${renderIdInput(r.id,area,p,line)}</td><td>${renderNameInput(r.id,area,p,line)}</td>`}
-      for(const o of otherSlots){html+=`<td>${renderIdInput(r.id,area,o,line)}</td><td>${renderPartInput(r.id,area,o,line)}</td><td>${renderNameInput(r.id,area,o,line)}</td>`}
-      html+='</tr>';
-    }
-  }
-  return html;
-}
-
-function renderColGroup(parts){
-  let html='<colgroup>';
-  html+='<col class="col-floor" style="width:30px">';
-  html+='<col class="col-room-no" style="width:40px">';
-  html+='<col class="col-copy" style="width:35px">';
-  html+='<col class="col-room-name" style="width:70px">';
-  for(const p of parts){
-    html+='<col class="col-id" style="width:30px"><col class="col-name" style="width:110px">';
-  }
-  for(const o of otherSlots){
-    html+='<col class="col-id" style="width:30px"><col class="col-other-part" style="width:45px"><col class="col-name" style="width:110px">';
-  }
-  html+='</colgroup>';
-  return html;
-}
-
-function renderUnifiedTable(area,parts){
-  const tableClass=area==='外部'?'external-table':'internal-table';
-  return `<div class="finish-section unified-section ${area==='外部'?'finish-external':'finish-internal'}"><table class="finish-table unified-table ${tableClass}">${renderColGroup(parts)}<thead>${headerFor(area,parts)}</thead><tbody>${renderBodyRows(area,parts)}</tbody></table></div>`;
-}
-function renderFinish(){
-  renderSectionToggles();
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  const parts=activeFinishArea==='外部'?externalParts:internalParts;
-  let html=renderFinishAreaTabs()+renderSimpleListBlock()+renderUnifiedTable(activeFinishArea,parts);
-  container.innerHTML=html;
-  container.classList.add('v89-fixed4','v92-fixed','v93-fixed');
-  document.getElementById('matCount').textContent=state.materials.length;
-  {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
-  document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
-  container.classList.toggle('color-mode',colorMode);
-  setTimeout(updateStickyOffsets, 0);
-}
-
-
-
-/* v1.0.0 建材レコード方式 */
-function isActiveMaterial(m){return m && m.active!==false && !m.deleted && !m.mergedTo}
-function activeMaterials(){return state.materials.filter(isActiveMaterial)}
-function uniqueList(arr){return [...new Set(arr.filter(x=>String(x||'').trim()).map(x=>String(x).trim()))]}
-function todayISO(){const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function materialById(id){return state.materials.find(m=>m.id===id)}
-function escapeAttr(s){return esc(s).replace(/'/g,'&#39;')}
-function collectMaterialUsage(materialId){
-  const parts=[]; const places=[];
-  for(const r of allRooms()){
-    for(const area of ['外部','内部']){
-      const fixed=area==='外部'?externalParts:internalParts;
-      for(let line=0;line<roomLineCount(r);line++){
-        for(const p of fixed){
-          const c=getCell(r.id,area,p,'name',line);
-          if(c.materialId===materialId){parts.push(p); places.push(r.no||r.name||r.floor)}
-        }
-        for(const slot of otherSlots){
-          const c=getCell(r.id,area,slot,'name',line);
-          if(c.materialId===materialId){
-            const pc=getCell(r.id,area,slot,'part',line);
-            parts.push(pc.text||slot);
-            places.push(r.no||r.name||r.floor);
-          }
-        }
-      }
-    }
-  }
-  return {parts:uniqueList(parts), places:uniqueList(places)};
-}
-function ensureMaterialRecordDefaults(m,usage){
-  if(!m)return;
-  if(m.active===undefined)m.active=true;
-  if(m.level===undefined)m.level='-';
-  if(m.analysisNeed===undefined)m.analysisNeed='未調査';
-  if(m.sampleCount===undefined)m.sampleCount='0';
-  if(m.samplePlaces===undefined)m.samplePlaces=['','',''];
-  if(m.samplePart===undefined)m.samplePart='';
-  if(m.sampleChecked===undefined)m.sampleChecked=false;
-  if(m.sampleDate===undefined)m.sampleDate='';
-  if(m.sampleNo===undefined)m.sampleNo='';
-  if(m.analysisResult===undefined)m.analysisResult='';
-  if(m.analysisNote===undefined)m.analysisNote='';
-  if(usage){
-    if(usage.places.length===1){
-      const n=Math.max(1,Math.min(3,Number(m.sampleCount||0)));
-      for(let i=0;i<n;i++){ if(!m.samplePlaces[i])m.samplePlaces[i]=usage.places[0]; }
-    }
-    if(usage.parts.length===1 && !m.samplePart)m.samplePart=usage.parts[0];
-  }
-}
-function syncMaterialRecordsFromFinishSheet(){
-  for(const m of state.materials){
-    const usage=collectMaterialUsage(m.id);
-    m.usageParts=usage.parts;
-    m.usagePlaces=usage.places;
-    ensureMaterialRecordDefaults(m,usage);
-  }
-  return activeMaterials();
-}
-function joinRecord(arr){return uniqueList(arr).join('、') || '-'}
-function selectOptions(values,current,allowBlank=false){
-  const opts=[]; if(allowBlank)opts.push(`<option value=""></option>`);
-  uniqueList(values).forEach(v=>opts.push(`<option value="${escapeAttr(v)}" ${String(current||'')===String(v)?'selected':''}>${esc(v)}</option>`));
-  return opts.join('');
-}
-function levelSelect(m){return `<select onchange="updateMaterialRecord('${m.id}','level',this.value)">${['-','1','2','3'].map(v=>`<option ${m.level===v?'selected':''}>${v}</option>`).join('')}</select>`}
-function analysisNeedSelect(m){return `<select onchange="updateMaterialRecord('${m.id}','analysisNeed',this.value)">${['採取・分析','目視','みなし','対象外','未調査'].map(v=>`<option ${m.analysisNeed===v?'selected':''}>${v}</option>`).join('')}</select>`}
-function sampleCountSelect(m){return `<select onchange="updateMaterialRecord('${m.id}','sampleCount',this.value)">${['0','1','2','3'].map(v=>`<option ${String(m.sampleCount)===v?'selected':''}>${v}</option>`).join('')}</select>`}
-function samplePlaceSelect(m,index){const vals=(m.usagePlaces&&m.usagePlaces.length?m.usagePlaces:['-']); return `<select onchange="updateMaterialSamplePlace('${m.id}',${index},this.value)">${selectOptions(vals,m.samplePlaces[index],true)}</select>`}
-function samplePartSelect(m){const vals=(m.usageParts&&m.usageParts.length?m.usageParts:['-']); return `<select onchange="updateMaterialRecord('${m.id}','samplePart',this.value)">${selectOptions(vals,m.samplePart,true)}</select>`}
-function mergeTargetSelect(m,records){
-  const opts=records.filter(x=>x.id!==m.id).map(x=>`<option value="${x.id}">${esc(x.inputId+' '+x.name)}</option>`).join('');
-  return `<select class="merge-select" id="mergeTo_${m.id}"><option value="">統合先</option>${opts}</select>`;
-}
-function updateMaterialRecord(id,field,value){
-  const m=materialById(id); if(!m)return; remember();
-  m[field]=value;
-  if(field==='sampleCount')autoFillSamplePlaces(m);
-  addQueue('建材レコード変更',`${m.name} ${field}`);
-  renderAll();
-}
-function updateMaterialSamplePlace(id,index,value){
-  const m=materialById(id); if(!m)return; remember();
-  ensureMaterialRecordDefaults(m);
-  m.samplePlaces[index]=value;
-  addQueue('採取場所変更',m.name);
-  renderAll();
-}
-function autoFillSamplePlaces(m){
-  ensureMaterialRecordDefaults(m);
-  const n=Math.max(0,Math.min(3,Number(m.sampleCount||0)));
-  if((m.usagePlaces||[]).length===1){
-    for(let i=0;i<n;i++)m.samplePlaces[i]=m.usagePlaces[0];
-  }
-}
-function toggleSampleChecked(id,checked){
-  const m=materialById(id); if(!m)return; remember();
-  m.sampleChecked=checked;
-  if(checked)m.sampleDate=todayISO();
-  addQueue('採取チェック',m.name);
-  renderAll();
-}
-function mNote(id,value){const m=materialById(id); if(m){remember();m.note=normalizeInput(value); addQueue('調査備考',m.name); renderAll()}}
-
-function materialRecordStatus(m){
-  if(m.deleted)return {label:'削除済', cls:'deleted'};
-  if(m.mergedTo)return {label:'統合済', cls:'merged'};
-  if(isActiveMaterial(m))return {label:'有効', cls:'active'};
-  return {label:'無効', cls:'inactive'};
-}
-function materialNoMap(records){
-  const map={};
-  records.forEach((m,i)=>{map[m.id]=i+1});
-  return map;
-}
-function renderRecords(){
-  const active=syncMaterialRecordsFromFinishSheet();
-  const activeNo=materialNoMap(active);
-  const total=document.getElementById('recordTotalCount'); if(total)total.textContent=state.materials.length;
-  const activeCnt=document.getElementById('recordActiveCount'); if(activeCnt)activeCnt.textContent=active.length;
-  let rows='<tr><th class="rec-id">建材ID</th><th>状態</th><th>建材No.</th><th>入力ID</th><th>ベース名</th><th>末尾</th><th>建材名称</th><th>部位集計</th><th>使用箇所集計</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取日</th><th>統合先</th><th>削除日時</th><th>更新/作成</th></tr>';
-  state.materials.forEach(m=>{
-    const st=materialRecordStatus(m);
-    const mergedTo=m.mergedTo?(materialById(m.mergedTo)?.name||m.mergedTo):'';
-    const sp=m.samplePlaces||['','',''];
-    rows+=`<tr>
-      <td class="rec-id">${esc(m.id||'')}</td>
-      <td class="rec-status ${st.cls}">${st.label}</td>
-      <td class="rec-muted">${activeNo[m.id]||'-'}</td>
-      <td>${esc(m.inputId||'')}</td>
-      <td>${esc(m.base||splitMaterialName(m.name||'').base||'')}</td>
-      <td>${esc(m.suffix||'')}</td>
-      <td class="rec-name">${esc(m.name||'')}</td>
-      <td class="rec-wide">${esc(joinRecord(m.usageParts||[]))}</td>
-      <td class="rec-wide">${esc(joinRecord(m.usagePlaces||[]))}</td>
-      <td>${esc(m.level||'-')}</td>
-      <td>${esc(m.analysisNeed||'未調査')}</td>
-      <td class="rec-note">${esc(m.note||'')}</td>
-      <td>${esc(m.sampleCount||'0')}</td>
-      <td>${esc(sp[0]||'')}</td>
-      <td>${esc(sp[1]||'')}</td>
-      <td>${esc(sp[2]||'')}</td>
-      <td>${esc(m.samplePart||'')}</td>
-      <td>${esc(m.sampleDate||'')}</td>
-      <td class="rec-wide">${esc(mergedTo)}</td>
-      <td>${esc(m.deletedAt?String(m.deletedAt).slice(0,10):'')}</td>
-      <td>${esc((m.mergedAt||m.deletedAt||m.createdAt||'').slice(0,19))}</td>
-    </tr>`;
-  });
-  if(!state.materials.length)rows+='<tr><td colspan="21" class="rec-muted">建材レコードはまだありません</td></tr>';
-  const table=document.getElementById('recordsTable'); if(table)table.innerHTML=rows;
-}
-
 function renderMaterials(){
   const records=syncMaterialRecordsFromFinishSheet();
   const cnt=document.getElementById('activeMaterialCount'); if(cnt)cnt.textContent=records.length;
-  let rows='<tr><th class="mat-no">建材No.</th><th>入力ID</th><th>部位</th><th>建材名称</th><th>建材使用箇所</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>操作</th></tr>';
+  let rows='<tr><th class="mat-no">建材No.</th><th class="input-id">入力ID</th><th>部位</th><th>建材名称</th><th>建材使用箇所</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>操作</th></tr>';
   records.forEach((m,i)=>{
     ensureMaterialRecordDefaults(m,{parts:m.usageParts||[],places:m.usagePlaces||[]});
+    if(m.analysisNeed!=='採取・分析'){m.sampleCount='-';}
     rows+=`<tr>
       <td class="mat-no">${i+1}</td>
       <td class="input-id">${esc(m.inputId)}</td>
       <td class="mat-part">${esc(joinRecord(m.usageParts))}</td>
-      <td class="mat-name">${esc(m.name)}</td>
+      <td class="mat-name"><input value="${escapeAttr(m.name)}" onblur="updateMaterialName('${m.id}',this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"></td>
       <td class="mat-place">${esc(joinRecord(m.usagePlaces))}</td>
       <td>${levelSelect(m)}</td>
       <td>${analysisNeedSelect(m)}</td>
       <td class="mat-note"><input value="${escapeAttr(m.note||'')}" onblur="mNote('${m.id}',this.value)" placeholder="調査備考"></td>
       <td>${sampleCountSelect(m)}</td>
-      <td>${samplePlaceSelect(m,0)}</td>
-      <td>${samplePlaceSelect(m,1)}</td>
-      <td>${samplePlaceSelect(m,2)}</td>
-      <td>${samplePartSelect(m)}</td>
-      <td class="sample-check"><input type="checkbox" ${m.sampleChecked?'checked':''} onchange="toggleSampleChecked('${m.id}',this.checked)"></td>
-      <td class="sample-date"><input type="date" value="${esc(m.sampleDate||'')}" onchange="updateMaterialRecord('${m.id}','sampleDate',this.value)"></td>
+      <td class="${sampleEnabledByIndex(m,0)?'':'disabled-cell'}">${samplePlaceSelect(m,0)}</td>
+      <td class="${sampleEnabledByIndex(m,1)?'':'disabled-cell'}">${samplePlaceSelect(m,1)}</td>
+      <td class="${sampleEnabledByIndex(m,2)?'':'disabled-cell'}">${samplePlaceSelect(m,2)}</td>
+      <td class="${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}">${samplePartSelect(m)}</td>
+      <td class="sample-check ${isSamplingEnabled(m)&&Number(m.sampleCount||0)>0?'':'disabled-cell'}">${sampleCheckInput(m)}</td>
+      <td class="sample-date ${isSamplingEnabled(m)&&Number(m.sampleCount||0)>0?'':'disabled-cell'}">${sampleDateInput(m)}</td>
       <td class="ops">${mergeTargetSelect(m,records)}<button class="btn small" onclick="mergeMaterialRecord('${m.id}')">統合</button> <button class="btn small" onclick="deleteMaterialRecord('${m.id}')">削除</button></td>
     </tr>`;
   });
@@ -1541,7 +1226,9 @@ function compactMaterialSuffixes(){
     groups[base].sort((a,b)=>Number(a.inputId)-Number(b.inputId));
     groups[base].forEach((m,i)=>{
       const suffix=String.fromCharCode(65+i);
+      const oldName=m.name;
       m.base=base; m.suffix=suffix; m.name=base+suffix;
+      if(oldName!==m.name)addSystemMemo(m,`末尾英字再採番：${oldName} → ${m.name}`);
     });
   });
   for(const r of allRooms()){
@@ -1565,9 +1252,12 @@ function mergeMaterialRecord(fromId){
   if(!from||!to)return alert('統合先を選んでください');
   if(!confirm(`${from.name} を ${to.name} に統合します。仕上表上の該当セルも統合先に置換します。`))return;
   remember();
+  const fromName=from.name; const toNameBefore=to.name;
   forEachMaterialUse(from.id,(r,area,part,line)=>replaceCellMaterial(r.id,area,part,line,to));
   mergeNotes(to,from);
   from.active=false; from.mergedTo=to.id; from.mergedAt=new Date().toISOString();
+  addSystemMemo(from,`統合：${fromName} → ${toNameBefore}`);
+  addSystemMemo(to,`統合受入：${fromName} を統合`);
   selectedMaterialId=to.id;
   compactMaterialSuffixes();
   addQueue('建材統合',`${from.name} → ${to.name}`);
@@ -1579,6 +1269,7 @@ function deleteMaterialRecord(id){
   remember();
   clearMaterialFromFinishSheet(id);
   m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
+  addSystemMemo(m,`削除：${m.name} をリストから除外`);
   if(selectedMaterialId===id)selectedMaterialId=null;
   compactMaterialSuffixes();
   addQueue('建材削除',m.name);
