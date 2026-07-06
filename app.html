@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.10.6</title>
+<title>調査システムPWA プロトタイプ v0.10.7</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -873,13 +873,49 @@ input[list]::-webkit-calendar-picker-indicator{
 .record-table th.rec-id,.record-table th.rec-status,.record-table th.rec-name{z-index:45!important;background:var(--head)!important}
 .record-table .sys-memo{min-width:260px;max-width:360px;white-space:pre-wrap;font-size:11px;color:#475569}
 
+
+/* v0.10.7 display tuning */
+.drawer-backdrop{z-index:9000!important}
+.drawer{z-index:9010!important}
+.update-modal{z-index:9100!important}
+.finish-static-bars{position:sticky;top:0;z-index:120;background:var(--bg);border-bottom:1px solid var(--line)}
+.finish-static-bars .finish-area-tabs{position:relative!important;top:auto!important;left:0!important;z-index:122!important;background:var(--bg)}
+.finish-static-bars .simple-list-block{position:relative!important;top:auto!important;left:0!important;z-index:121!important;background:#fff9d7}
+.finish-static-bars .simple-list-box{overflow-x:auto!important;overflow-y:visible!important}
+.finish-section .finish-table th{top:0!important}
+.finish-section .finish-table th.floor,.finish-section .finish-table th.room-no,.finish-section .finish-table th.copy-col,.finish-section .finish-table th.room-name{z-index:92!important}
+.color-mode .mat-color-0,.simple-item.mat-color-0{background:#dbeafe!important;border-color:#93c5fd!important}
+.color-mode .mat-color-1,.simple-item.mat-color-1{background:#dcfce7!important;border-color:#86efac!important}
+.color-mode .mat-color-2,.simple-item.mat-color-2{background:#fef3c7!important;border-color:#fcd34d!important}
+.color-mode .mat-color-3,.simple-item.mat-color-3{background:#fae8ff!important;border-color:#e879f9!important}
+.color-mode .mat-color-4,.simple-item.mat-color-4{background:#ffe4e6!important;border-color:#fda4af!important}
+.color-mode .mat-color-5,.simple-item.mat-color-5{background:#ccfbf1!important;border-color:#5eead4!important}
+.color-mode .mat-color-6,.simple-item.mat-color-6{background:#ede9fe!important;border-color:#c4b5fd!important}
+.color-mode .mat-color-7,.simple-item.mat-color-7{background:#ffedd5!important;border-color:#fdba74!important}
+.color-mode .mat-color-8,.simple-item.mat-color-8{background:#ecfccb!important;border-color:#bef264!important}
+.color-mode .mat-color-9,.simple-item.mat-color-9{background:#fce7f3!important;border-color:#f9a8d4!important}
+.color-mode .mat-color-10,.simple-item.mat-color-10{background:#e0f2fe!important;border-color:#7dd3fc!important}
+.color-mode .mat-color-11,.simple-item.mat-color-11{background:#f1f5f9!important;border-color:#cbd5e1!important}
+.material-record-table .mat-color-0,.material-record-table.color-mode .mat-color-0 input{background:#dbeafe!important}
+.material-record-table .mat-color-1,.material-record-table.color-mode .mat-color-1 input{background:#dcfce7!important}
+.material-record-table .mat-color-2,.material-record-table.color-mode .mat-color-2 input{background:#fef3c7!important}
+.material-record-table .mat-color-3,.material-record-table.color-mode .mat-color-3 input{background:#fae8ff!important}
+.material-record-table .mat-color-4,.material-record-table.color-mode .mat-color-4 input{background:#ffe4e6!important}
+.material-record-table .mat-color-5,.material-record-table.color-mode .mat-color-5 input{background:#ccfbf1!important}
+.material-record-table .mat-color-6,.material-record-table.color-mode .mat-color-6 input{background:#ede9fe!important}
+.material-record-table .mat-color-7,.material-record-table.color-mode .mat-color-7 input{background:#ffedd5!important}
+.material-record-table .mat-color-8,.material-record-table.color-mode .mat-color-8 input{background:#ecfccb!important}
+.material-record-table .mat-color-9,.material-record-table.color-mode .mat-color-9 input{background:#fce7f3!important}
+.material-record-table .mat-color-10,.material-record-table.color-mode .mat-color-10 input{background:#e0f2fe!important}
+.material-record-table .mat-color-11,.material-record-table.color-mode .mat-color-11 input{background:#f1f5f9!important}
+
 </style>
 </head>
 <body>
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
-  <h1>26070101　○○マンション改修工事</h1>
-  <span class="pill">v0.10.6</span>
+  <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
+  <span class="pill">v0.10.7</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">同期待ち 0件</span>
   
@@ -887,9 +923,8 @@ input[list]::-webkit-calendar-picker-indicator{
 <div class="app">
   <aside class="side closed" id="side">
     <div class="side-body">
-      <button class="btn primary" onclick="alert('新規案件は未実装です')">＋ 新規案件</button>
-      <div class="project-card active"><strong>26070101 ○○マンション改修工事</strong><span>調査日：2026/07/01 / 写真 3枚</span></div>
-      <div class="project-card"><strong>26070102 △△ビル調査</strong><span>端末未保存 / サンプル表示</span></div>
+      <button class="btn primary" onclick="switchProject('blank')">＋ 新規案件</button>
+      <div id="projectList"></div>
     </div>
   </aside>
   <main class="main">
@@ -919,6 +954,7 @@ input[list]::-webkit-calendar-picker-indicator{
       </div>
       <div class="finish-workspace">
         <div class="panel finish-panel">
+          <div class="finish-static-bars" id="finishStaticBars"></div>
           <div class="table-wrap"><div class="finish-tables" id="finishTables"></div></div>
         </div>
       </div>
@@ -959,7 +995,7 @@ input[list]::-webkit-calendar-picker-indicator{
 <datalist id="materialSuggest"></datalist>
 <datalist id="partSuggest"></datalist>
 <script>
-const APP_VERSION='0.10.6';
+const APP_VERSION='0.10.7';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -988,6 +1024,7 @@ const state={
  },
  cells:{}, materials:[], materialCandidates:defaultMaterialCandidates.map(x=>({part:x[0],type:x[1],name:x[2]})), partCandidates:[...defaultPartCandidates], projectMaterialCandidates:[], projectPartCandidates:[], photos:[{roomId:'i1',type:'全景'},{roomId:'i1',type:'看板'},{roomId:'i2',type:'床'}], samples:[], queue:[]
 };
+let defaultRoomsByArea=null;
 function roomsForArea(area){return state.roomsByArea[area]||[]}
 function allRooms(){return [...roomsForArea('外部'),...roomsForArea('内部')]}
 function findRoom(id){return allRooms().find(r=>r.id===id)}
@@ -1031,7 +1068,7 @@ function updateHistoryButtons(){const u=document.getElementById('undoBtn'); cons
 function normalizeInput(v){return String(v||'').trim().replace(/[Ａ-Ｚａ-ｚ０-９]/g,s=>String.fromCharCode(s.charCodeAt(0)-0xFEE0)).replace(/[a-z]/g,s=>s.toUpperCase())}
 function splitMaterialName(v){const s=normalizeInput(v); if(/[9]$/.test(s))return {base:s.slice(0,-1),suffix:'9',legacy9:true}; if(/[A-Z]$/.test(s))return {base:s.slice(0,-1),suffix:s.slice(-1),legacy9:false}; return {base:s,suffix:'',legacy9:false}}
 function nextSuffix(base){const letters=state.materials.filter(m=>m.base===base).map(m=>m.suffix).sort(); if(!letters.length)return 'A'; const code=letters[letters.length-1].charCodeAt(0); return code>=90?'Z':String.fromCharCode(code+1)}
-function materialColorIndex(materialId){const i=state.materials.findIndex(m=>m.id===materialId); return i<0?0:i%8}
+function materialColorIndex(materialId){const i=state.materials.findIndex(m=>m.id===materialId); return i<0?0:i%12}
 function findMaterialByName(name){const n=normalizeInput(name); return state.materials.find(m=>normalizeInput(m.name)===n)}
 function createMaterial(base,suffix,method){const name=base+suffix; const existing=findMaterialByName(name); if(existing)return existing; const mat={id:'R'+String(materialSeq).padStart(3,'0'),inputId:inputSeq,base,suffix,name,method,note:''}; materialSeq++; inputSeq++; state.materials.push(mat); return mat}
 function registerName(roomId,area,part,line=0,shouldRender=true){if(shouldRender)remember();const c=getCell(roomId,area,part,'name',line); const v=normalizeInput(c.text); if(!v)return; const existing=findMaterialByName(v); if(existing){applyMaterialToCell(roomId,area,part,line,existing); addQueue('既存建材呼び出し',existing.name); if(shouldRender)renderAll(); return} const parsed=splitMaterialName(v); const base=parsed.base; const suffix=parsed.legacy9?nextSuffix(base):(parsed.suffix||nextSuffix(base)); const mat=createMaterial(base,suffix,parsed.legacy9?'旧9入力':'登録ボタン'); applyMaterialToCell(roomId,area,part,line,mat); selectedMaterialId=mat.id; addQueue('建材登録',mat.name); if(shouldRender)renderAll();}
@@ -1292,8 +1329,9 @@ function renderFinish(){
 function updateStickyOffsets(){
   const container=document.getElementById('finishTables')||document.getElementById('finishTable');
   if(!container)return;
-  const tabs=container.querySelector('.finish-area-tabs');
-  const bar=container.querySelector('.simple-list-block');
+  const bars=document.getElementById('finishStaticBars');
+  const tabs=(bars||container).querySelector('.finish-area-tabs');
+  const bar=(bars||container).querySelector('.simple-list-block');
   const tabH=tabs?Math.ceil(tabs.getBoundingClientRect().height):38;
   const barH=bar?Math.ceil(bar.getBoundingClientRect().height):30;
   container.style.setProperty('--area-tabs-height', tabH+'px');
@@ -1356,15 +1394,17 @@ function renderUnifiedTable(area,parts){
 }
 function renderFinish(){
   renderSectionToggles();
+  const bars=document.getElementById('finishStaticBars');
   const container=document.getElementById('finishTables')||document.getElementById('finishTable');
   const parts=activeFinishArea==='外部'?externalParts:internalParts;
-  let html=renderFinishAreaTabs()+renderSimpleListBlock()+renderUnifiedTable(activeFinishArea,parts);
-  container.innerHTML=html;
+  if(bars)bars.innerHTML=renderFinishAreaTabs()+renderSimpleListBlock();
+  container.innerHTML=renderUnifiedTable(activeFinishArea,parts);
   container.classList.add('v89-fixed4','v92-fixed','v93-fixed');
-  document.getElementById('matCount').textContent=state.materials.length;
+  document.getElementById('matCount').textContent=activeMaterials().length;
   {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
   document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
   container.classList.toggle('color-mode',colorMode);
+  if(bars)bars.classList.toggle('color-mode',colorMode);
   setTimeout(updateStickyOffsets, 0);
 }
 
@@ -1404,8 +1444,8 @@ function ensureMaterialRecordDefaults(m,usage){
   if(!m)return;
   if(m.active===undefined)m.active=true;
   if(m.level===undefined)m.level='-';
-  if(m.analysisNeed===undefined)m.analysisNeed='未調査';
-  if(m.sampleCount===undefined)m.sampleCount='0';
+  if(m.analysisNeed===undefined)m.analysisNeed='採取・分析';
+  if(m.sampleCount===undefined)m.sampleCount=isSamplingEnabled(m)?'1':'0';
   if(m.samplePlaces===undefined)m.samplePlaces=['','',''];
   if(m.samplePart===undefined)m.samplePart='';
   if(m.sampleChecked===undefined)m.sampleChecked=false;
@@ -1535,7 +1575,7 @@ function renderRecords(){
   const activeNo=materialNoMap(active);
   const total=document.getElementById('recordTotalCount'); if(total)total.textContent=state.materials.length;
   const activeCnt=document.getElementById('recordActiveCount'); if(activeCnt)activeCnt.textContent=active.length;
-  let rows='<tr><th class="rec-id">建材ID</th><th>状態</th><th>建材No.</th><th>入力ID</th><th>ベース名</th><th>末尾</th><th>建材名称</th><th>部位集計</th><th>使用箇所集計</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取日</th><th>統合先</th><th>削除日時</th><th>システムメモ</th><th>更新/作成</th></tr>';
+  let rows='<tr><th class="rec-id">建材ID</th><th class="rec-status">状態</th><th>建材No.</th><th>入力ID</th><th>ベース名</th><th>末尾</th><th class="rec-name">建材名称</th><th>部位集計</th><th>使用箇所集計</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取日</th><th>統合先</th><th>削除日時</th><th>システムメモ</th><th>更新/作成</th></tr>';
   state.materials.forEach(m=>{
     const st=materialRecordStatus(m);
     const mergedTo=m.mergedTo?(materialById(m.mergedTo)?.name||m.mergedTo):'';
@@ -1572,14 +1612,15 @@ function renderRecords(){
 function renderMaterials(){
   const records=syncMaterialRecordsFromFinishSheet();
   const cnt=document.getElementById('activeMaterialCount'); if(cnt)cnt.textContent=records.length;
-  let rows='<tr><th class="mat-no">建材No.</th><th>入力ID</th><th>部位</th><th>建材名称</th><th>建材使用箇所</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>操作</th></tr>';
+  let rows='<tr><th class="mat-no">建材No.</th><th class="input-id">入力ID</th><th>部位</th><th>建材名称</th><th>建材使用箇所</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>操作</th></tr>';
   records.forEach((m,i)=>{
     ensureMaterialRecordDefaults(m,{parts:m.usageParts||[],places:m.usagePlaces||[]});
+    const colorClass=colorMode?' mat-color-'+materialColorIndex(m.id):'';
     rows+=`<tr>
-      <td class="mat-no">${i+1}</td>
-      <td class="input-id">${esc(m.inputId)}</td>
+      <td class="mat-no${colorClass}">${i+1}</td>
+      <td class="input-id${colorClass}">${esc(m.inputId)}</td>
       <td class="mat-part">${esc(joinRecord(m.usageParts))}</td>
-      <td class="mat-name"><input value="${escapeAttr(m.name)}" onblur="updateMaterialName('${m.id}',this.value)"></td>
+      <td class="mat-name${colorClass}"><input value="${escapeAttr(m.name)}" onblur="updateMaterialName('${m.id}',this.value)"></td>
       <td class="mat-place">${esc(joinRecord(m.usagePlaces))}</td>
       <td>${levelSelect(m)}</td>
       <td>${analysisNeedSelect(m)}</td>
@@ -1595,7 +1636,7 @@ function renderMaterials(){
     </tr>`;
   });
   if(!records.length)rows+='<tr><td colspan="16" class="muted-cell">対象建材はまだありません</td></tr>';
-  const table=document.getElementById('materialsTable'); if(table)table.innerHTML=rows;
+  const table=document.getElementById('materialsTable'); if(table){table.innerHTML=rows; table.classList.toggle('color-mode',colorMode);}
 }
 function replaceCellMaterial(roomId,area,part,line,mat){
   setRaw(roomId,area,part,'id',{text:String(mat.inputId),status:'id',materialId:mat.id},line);
@@ -1688,20 +1729,84 @@ function renderMaterialDetailCompact(){const m=activeMaterials().find(x=>x.id===
 function usageOf(m){const u=collectMaterialUsage(m.id); return u.places.map(p=>p).join('、') || '-'}
 function renderFinish(){
   renderSectionToggles();
+  const bars=document.getElementById('finishStaticBars');
   const container=document.getElementById('finishTables')||document.getElementById('finishTable');
   const parts=activeFinishArea==='外部'?externalParts:internalParts;
-  let html=renderFinishAreaTabs()+renderSimpleListBlock()+renderUnifiedTable(activeFinishArea,parts);
-  container.innerHTML=html;
+  if(bars)bars.innerHTML=renderFinishAreaTabs()+renderSimpleListBlock();
+  container.innerHTML=renderUnifiedTable(activeFinishArea,parts);
   container.classList.add('v89-fixed4','v92-fixed','v93-fixed');
   document.getElementById('matCount').textContent=activeMaterials().length;
   {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
   document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
   container.classList.toggle('color-mode',colorMode);
+  if(bars)bars.classList.toggle('color-mode',colorMode);
   setTimeout(updateStickyOffsets, 0);
 }
 
+
+/* v0.10.7 simple project switch */
+const projectMeta={
+  odk:{no:'26070101',name:'ODKワールドアスベスト調査',sub:'調査日：2026/07/01 / サンプル入力済み'},
+  blank:{no:'26070102',name:'新規案件（空）',sub:'空の仕上表 / 入力用'}
+};
+let activeProjectId='odk';
+const projectStore={};
+function cloneData(obj){return JSON.parse(JSON.stringify(obj))}
+function resetStateForBlankProject(){
+  state.roomsByArea=cloneData(defaultRoomsByArea);
+  state.cells={};
+  state.materials=[];
+  state.materialCandidates=defaultMaterialCandidates.map(x=>({part:x[0],type:x[1],name:x[2]}));
+  state.partCandidates=[...defaultPartCandidates];
+  state.projectMaterialCandidates=[];
+  state.projectPartCandidates=[];
+  state.photos=[];
+  state.samples=[];
+  state.queue=[];
+  materialSeq=1;
+  inputSeq=1;
+  selectedMaterialId=null;
+  activePhotoRoom='i1';
+  roomCopy.source=null; roomCopy.warnings={}; roomCopy.done={}; roomCopy.working={}; roomCopy.backups={};
+}
+function saveActiveProject(){projectStore[activeProjectId]=snapshotState()}
+function loadProject(id){if(projectStore[id])restoreState(projectStore[id])}
+function renderProjectList(){
+  const header=document.getElementById('caseHeaderTitle');
+  const meta=projectMeta[activeProjectId];
+  if(header&&meta)header.textContent=`${meta.no}　${meta.name}`;
+  const list=document.getElementById('projectList');
+  if(!list)return;
+  list.innerHTML=Object.keys(projectMeta).map(id=>{
+    const m=projectMeta[id];
+    return `<div class="project-card ${id===activeProjectId?'active':''}" onclick="switchProject('${id}')"><strong>${esc(m.no+' '+m.name)}</strong><span>${esc(m.sub)}</span></div>`;
+  }).join('');
+}
+function switchProject(id){
+  if(!projectMeta[id]||id===activeProjectId){renderProjectList();return;}
+  remember();
+  saveActiveProject();
+  activeProjectId=id;
+  loadProject(id);
+  undoStack=[]; redoStack=[]; updateHistoryButtons();
+  selectedMaterialId=null;
+  renderProjectList();
+  renderAll();
+}
+function initProjects(){
+  const currentRooms=cloneData(state.roomsByArea);
+  defaultRoomsByArea=currentRooms;
+  seed();
+  projectStore.odk=snapshotState();
+  resetStateForBlankProject();
+  projectStore.blank=snapshotState();
+  activeProjectId='odk';
+  restoreState(projectStore.odk);
+  renderProjectList();
+}
+
 window.addEventListener('resize', updateStickyOffsets);
-seed(); renderAll();
+initProjects(); renderAll();
 </script>
 </body>
 </html>
