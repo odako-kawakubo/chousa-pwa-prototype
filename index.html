@@ -13,23 +13,28 @@
 <div class="card">
   <h1>調査システムPWA</h1>
   <div class="version" id="versionLabel">最新版確認中...</div>
-  <p class="hint">ホーム画面やブックマークはこの入口ページのままでOK。最新版の本体ファイルを開きます。</p>
+  <p class="hint">ホーム画面やブックマークはこの入口ページのままでOK。最新版の <b>app.html</b> を、バージョン付きURLで開きます。</p>
   <div class="actions">
-    <a class="btn primary" id="openLatest" href="app-v0.8.9.html">最新版を開く</a>
-    <button class="btn" onclick="checkVersion(true)">更新確認</button>
+    <a class="btn primary" id="openLatest" href="app.html">最新版を開く</a>
+    <button class="btn" onclick="hardRefreshLatest()">最新版に更新</button>
   </div>
   <div class="status" id="status">version.json を確認しています。</div>
-  <div class="small">iPadで古い画面が残る場合も、入口はそのままにして最新版ファイルへ移動する方式です。</div>
+  <div class="small">「最新版に更新」はアプリ本体キャッシュだけを削除して開き直します。案件データや未同期データは削除しません。</div>
 </div>
 <script>
-const fallback={latestVersion:'0.8.9',latestFile:'app-v0.8.9.html'};
+const fallback={version:'0.9.0',app:'app.html'};
+let latestInfo={...fallback};
+function appUrl(info, force){
+  const version=info.version||fallback.version;
+  const app=info.app||fallback.app;
+  const suffix=force ? version+'-'+Date.now() : version;
+  return app+'?v='+encodeURIComponent(suffix);
+}
 function setLatest(info){
-  const file=info.latestFile||fallback.latestFile;
-  const version=info.latestVersion||fallback.latestVersion;
-  const url=file+'?v='+encodeURIComponent(version);
-  document.getElementById('versionLabel').textContent='最新版 v'+version;
-  document.getElementById('openLatest').href=url;
-  document.getElementById('status').textContent='最新版ファイル: '+file;
+  latestInfo={...fallback,...info};
+  document.getElementById('versionLabel').textContent='最新版 v'+latestInfo.version;
+  document.getElementById('openLatest').href=appUrl(latestInfo,false);
+  document.getElementById('status').textContent='本体: '+latestInfo.app+' / version: '+latestInfo.version;
 }
 async function checkVersion(showAlert){
   try{
@@ -37,12 +42,30 @@ async function checkVersion(showAlert){
     if(!res.ok)throw new Error('version.json not found');
     const info=await res.json();
     setLatest(info);
-    if(showAlert)alert('最新版 v'+(info.latestVersion||fallback.latestVersion)+' を確認しました。');
+    if(showAlert)alert('最新版 v'+latestInfo.version+' を確認しました。');
   }catch(e){
     setLatest(fallback);
     document.getElementById('status').textContent='version.jsonを読めなかったため、固定の最新版を表示しています。';
     if(showAlert)alert('更新情報を読めませんでした。固定の最新版を開いてください。');
   }
+}
+async function clearAppCacheOnly(){
+  try{
+    if('serviceWorker' in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r=>r.unregister().catch(()=>{})));
+    }
+    if(window.caches){
+      const names=await caches.keys();
+      await Promise.all(names.map(n=>caches.delete(n).catch(()=>{})));
+    }
+  }catch(e){console.warn('cache clear skipped',e)}
+}
+async function hardRefreshLatest(){
+  if(!confirm('アプリ本体のキャッシュを削除して最新版を開きます。\n案件データや未同期データは削除しません。'))return;
+  await checkVersion(false);
+  await clearAppCacheOnly();
+  location.href=appUrl(latestInfo,true);
 }
 checkVersion(false);
 </script>

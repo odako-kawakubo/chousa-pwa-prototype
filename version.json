@@ -1,6 +1,6 @@
 {
-  "latestVersion": "0.8.9",
-  "latestFile": "app-v0.8.9.html",
+  "version": "0.9.0",
+  "app": "app.html",
   "updatedAt": "2026-07-06",
-  "note": "v8.9 fixed4: 外部/内部タブ、建材チップバー、固定表示調整"
+  "note": "入口固定、app.html方式、最新版更新ボタン、列幅固定、対象建材表示"
 }
