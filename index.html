@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.8.2</title>
+<title>調査システムPWA プロトタイプ v0.8.3</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -67,7 +67,7 @@
 .cell-id-hint{display:none}
 
 
-/* v0.8.2 tuning */
+/* v0.8.3 tuning */
 header{height:44px;padding:0 10px;gap:8px}
 header h1{font-size:14px;max-width:48vw;overflow:hidden;text-overflow:ellipsis}
 .app{min-height:calc(100vh - 44px)}
@@ -106,13 +106,26 @@ header h1{font-size:14px;max-width:48vw;overflow:hidden;text-overflow:ellipsis}
 .part-chip{border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:#f8fafc;font-size:12px}
 @media(max-width:850px){.settings-wrap{grid-template-columns:1fr}.simple-list-items{grid-template-columns:repeat(2,max-content)}header h1{max-width:42vw}.table-wrap{max-height:calc(100vh - 188px)}}
 
+
+
+/* v0.8.3 tuning */
+.case-title{display:none}
+.finish-fixed-status{top:84px;z-index:65;padding:4px 12px;margin:0 -12px 6px}
+.status-left,.status-right{gap:4px}
+.finish-action-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.simple-list-box{max-height:none;overflow:visible}
+.simple-list-head{position:static}
+.simple-list-row td{position:sticky;top:26px;z-index:27}
+.finish-table tr.external-head th{top:0}
+.finish-table tr.internal-head th{top:86px;z-index:28}
+@media(max-width:850px){.finish-fixed-status{top:84px}.finish-table tr.internal-head th{top:104px}}
 </style>
 </head>
 <body>
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1>26070101　○○マンション改修工事</h1>
-  <span class="pill">v0.8.2</span>
+  <span class="pill">v0.8.3</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">未同期 0件</span>
   
@@ -128,7 +141,7 @@ header h1{font-size:14px;max-width:48vw;overflow:hidden;text-overflow:ellipsis}
   <main class="main">
     <div class="toolbar">
       <div class="case-title compact-actions">
-        <div><button class="btn ghost" onclick="toggleOnline()">オンライン切替</button><button class="btn" onclick="openDrawer()">操作</button><button class="btn primary" onclick="syncNow()">同期</button></div>
+        <div></div>
       </div>
       <nav class="tabs">
         <button class="tab active" data-tab="finish" onclick="showTab('finish')">仕上表</button>
@@ -148,7 +161,7 @@ header h1{font-size:14px;max-width:48vw;overflow:hidden;text-overflow:ellipsis}
           <span class="pill">記録のみ <b id="recordCount">0</b>件</span>
           <span class="pill warn">未同期 <b id="miniUnsynced">0</b>件</span><button class="btn small" id="colorBtn" onclick="toggleColorMode()">カラー表示 OFF</button>
         </div>
-        <div class="status-right" id="sectionToggles"></div>
+        <div class="status-right"><div class="finish-action-row"><button class="btn ghost" onclick="toggleOnline()">オンライン切替</button><button class="btn" onclick="openDrawer()">操作</button><button class="btn primary" onclick="syncNow()">同期</button></div><div id="sectionToggles" class="finish-action-row"></div></div>
       </div>
       <div class="finish-workspace">
         <div class="panel finish-panel">
@@ -166,13 +179,13 @@ header h1{font-size:14px;max-width:48vw;overflow:hidden;text-overflow:ellipsis}
 </div>
 
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">更新確認</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.8.2<br>・建材名/部位候補の設定タブ追加<br>・部位別入力アシスト<br>・簡易リスト固定表示の調整<br>・ヘッダーを案件名表示に整理</div></div></div></aside>
+<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">更新確認</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.8.3<br>・建材名/部位候補の設定タブ追加<br>・部位別入力アシスト<br>・簡易リスト固定表示の調整<br>・ヘッダーを案件名表示に整理</div></div></div></aside>
 
 <div class="update-modal" id="updateModal"><div class="update-card"><h3>更新確認</h3><div class="hint" id="updateMessage">新しいバージョンがある場合は、確認後に更新します。<br>勝手に更新は実行しません。</div><div class="update-actions"><button class="btn" onclick="hideUpdatePrompt()">あとで</button><a class="btn primary" id="hardReloadLink" href="./?v=0.8.2-manual" onclick="confirmAppUpdate(event)">更新する</a></div></div></div>
 <datalist id="materialSuggest"></datalist>
 <datalist id="partSuggest"></datalist>
 <script>
-const APP_VERSION='0.8.2';
+const APP_VERSION='0.8.3';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='r1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 const externalParts=['床 犬走','外壁','屋根','軒裏'];
 const internalParts=['床','巾木','壁','天井'];
@@ -191,7 +204,7 @@ const defaultMaterialCandidates=[
 ];
 const defaultPartCandidates=['その他','床','巾木','壁','天井','外壁','屋根','軒裏','配管','梁','柱','床下','壁部','窓枠','貫通部'];
 
-const collapsed={'外部':false,'内部':false};
+const collapsed={'外部':false,'簡易リスト':false,'内部':false};
 const state={
  rooms:[{id:'r1',floor:'外部',no:'外部',name:'',lines:2},{id:'r2',floor:'1階',no:'1-1',name:'踏込',lines:2},{id:'r3',floor:'1階',no:'1-2',name:'廊下',lines:2},{id:'r4',floor:'1階',no:'1-3',name:'洋室',lines:2}],
  cells:{}, materials:[], materialCandidates:defaultMaterialCandidates.map(x=>({part:x[0],type:x[1],name:x[2]})), partCandidates:[...defaultPartCandidates], projectMaterialCandidates:[], projectPartCandidates:[], photos:[{roomId:'r2',type:'全景'},{roomId:'r2',type:'看板'},{roomId:'r3',type:'床'}], samples:[], queue:[]
@@ -222,19 +235,19 @@ function onPartBlur(roomId,area,slot,line,value){const v=normalizeInput(value); 
 function renderIdInput(roomId,area,part,line=0){const c=getCell(roomId,area,part,'id',line); return `<div class="cell"><input class="id-input" placeholder="ID" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing')" onblur="this.parentElement.classList.remove('editing');onIdBlur('${roomId}','${area}','${part}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"></div>`}
 function renderNameInput(roomId,area,part,line=0){const c=getCell(roomId,area,part,'name',line); const colorClass=c.materialId?`mat-color-${materialColorIndex(c.materialId)}`:''; const selected=c.materialId&&selectedMaterialId===c.materialId?'selected-match':''; const note=c.materialId&&(state.materials.find(m=>m.id===c.materialId)||{}).note?'has-note':''; const klass=[c.status==='registered'?'registered':(c.text?'record':''), colorMode&&c.materialId?colorClass:'', selected, note].join(' '); const btn=(c.text&&c.status==='record_only')?`<button class="btn small primary register-btn" onclick="registerName('${roomId}','${area}','${part}',${line},true)">登録</button>`:''; const cid=cellKey(roomId,area,part,line,'name'); const focus=c.materialId?`selectMaterial('${c.materialId}')`:''; return `<div class="cell ${klass}" data-cell-id="${esc(cid)}" onclick="${focus}"><input list="materialSuggest" placeholder="建材名称" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing');updateMaterialSuggest('${roomId}','${area}','${part}',${line});${focus}" oninput="updateMaterialSuggest('${roomId}','${area}','${part}',${line},this.value)" onblur="this.parentElement.classList.remove('editing');onNameBlur('${roomId}','${area}','${part}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}" oncontextmenu="openNoteForCell('${roomId}','${area}','${part}',${line});return false;">${btn}</div>`}
 function renderPartInput(roomId,area,slot,line=0){const c=getCell(roomId,area,slot,'part',line); return `<div class="cell"><input list="partSuggest" placeholder="部位" value="${esc(c.text)}" onfocus="this.parentElement.classList.add('editing');updatePartSuggest()" oninput="updatePartSuggest(this.value)" onblur="this.parentElement.classList.remove('editing');onPartBlur('${roomId}','${area}','${slot}',${line},this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"></div>`}
-function headerFor(area,parts){return `<tr><th class="floor">階</th><th class="room-no">部屋No.</th><th class="room-name">部屋名</th>${parts.map(p=>`<th class="id-col">建材ID</th><th class="name-col">${p}</th>`).join('')}${otherSlots.map(o=>`<th class="id-col">建材ID</th><th class="other-part">部位</th><th class="other-name">${o}</th>`).join('')}</tr>`}
+function headerFor(area,parts){const cls=area==='内部'?'internal-head':'external-head'; return `<tr class="${cls}"><th class="floor">階</th><th class="room-no">部屋No.</th><th class="room-name">部屋名</th>${parts.map(p=>`<th class="id-col">建材ID</th><th class="name-col">${p}</th>`).join('')}${otherSlots.map(o=>`<th class="id-col">建材ID</th><th class="other-part">部位</th><th class="other-name">${o}</th>`).join('')}</tr>`}
 function sectionRow(name,colspan){const cls=name==='外部'?' external':(name==='内部'?' internal':''); return `<tr class="section-row${cls}"><td colspan="${colspan}"><div class="section-title">${name}</div></td></tr>`}
 function roomLineCount(r){return r.lines||2}
 function isLastRoom(r){return state.rooms[state.rooms.length-1]&&state.rooms[state.rooms.length-1].id===r.id}
-function renderFloorCell(r){const add=isLastRoom(r)?`<button class="room-add-btn" title="次の階を追加" onclick="addNextFloor('${r.id}')">▼</button>`:''; return `<div class="room-control"><input value="${esc(r.floor)}" onblur="updateRoom('${r.id}','floor',this.value)">${add}</div>`}
-function renderRoomNoCell(r){const title=isLastRoom(r)?'次の部屋を追加':'この部屋の入力行を追加'; return `<div class="room-control"><input value="${esc(r.no)}" onblur="updateRoom('${r.id}','no',this.value)"><button class="room-add-btn" data-roomdown="${r.id}" title="${title}" onclick="roomNoDown('${r.id}')">▼</button></div>`}
+function renderFloorCell(r,area){const add=isLastRoom(r)?`<button class="room-add-btn" data-floordown="${r.id}" data-area="${area}" title="次の階を追加" onclick="addNextFloor('${r.id}','${area}')">▼</button>`:''; return `<div class="room-control"><input value="${esc(r.floor)}" onblur="updateRoom('${r.id}','floor',this.value)">${add}</div>`}
+function renderRoomNoCell(r,area){const title=isLastRoom(r)?'次の部屋を追加':'この部屋の入力行を追加'; return `<div class="room-control"><input value="${esc(r.no)}" onblur="updateRoom('${r.id}','no',this.value)"><button class="room-add-btn" data-roomdown="${r.id}" data-area="${area}" title="${title}" onclick="roomNoDown('${r.id}','${area}')">▼</button></div>`}
 function renderRoomNameCell(r){return `<div class="room-control"><input value="${esc(r.name)}" placeholder="部屋名" onblur="updateRoom('${r.id}','name',this.value)"></div>`}
-function renderSection(area,parts){const colspan=3+parts.length*2+otherSlots.length*3; let html=sectionRow(area,colspan); if(collapsed[area])return html; html+=headerFor(area,parts); for(const r of state.rooms){for(let line=0;line<roomLineCount(r);line++){html+=`<tr class="${line===0?'room-start':'room-sub'} area-${area==='外部'?'external':'internal'}">`; if(line===0){const span=roomLineCount(r); html+=`<td class="floor" rowspan="${span}">${renderFloorCell(r)}</td><td class="room-no" rowspan="${span}">${renderRoomNoCell(r)}</td><td class="room-name" rowspan="${span}">${renderRoomNameCell(r)}</td>`} for(const p of parts){html+=`<td>${renderIdInput(r.id,area,p,line)}</td><td>${renderNameInput(r.id,area,p,line)}</td>`} for(const o of otherSlots){html+=`<td>${renderIdInput(r.id,area,o,line)}</td><td>${renderPartInput(r.id,area,o,line)}</td><td>${renderNameInput(r.id,area,o,line)}</td>`} html+='</tr>'}} return html;}
-function renderSimpleListRow(){const colspan=3+internalParts.length*2+otherSlots.length*3; return `<tr class="simple-list-row"><td colspan="${colspan}"><div class="simple-list-box"><div class="simple-list-head"><b>簡易リスト</b><span class="tag">${state.materials.length}件</span></div><div class="simple-list-items" id="simpleListItems">${renderSimpleItems()}</div>${renderSelectedDetail()}</div></td></tr>`}
+function renderSection(area,parts){const colspan=3+parts.length*2+otherSlots.length*3; let html=sectionRow(area,colspan); if(collapsed[area])return html; html+=headerFor(area,parts); for(const r of state.rooms){for(let line=0;line<roomLineCount(r);line++){html+=`<tr class="${line===0?'room-start':'room-sub'} area-${area==='外部'?'external':'internal'}">`; if(line===0){const span=roomLineCount(r); html+=`<td class="floor" rowspan="${span}">${renderFloorCell(r,area)}</td><td class="room-no" rowspan="${span}">${renderRoomNoCell(r,area)}</td><td class="room-name" rowspan="${span}">${renderRoomNameCell(r)}</td>`} for(const p of parts){html+=`<td>${renderIdInput(r.id,area,p,line)}</td><td>${renderNameInput(r.id,area,p,line)}</td>`} for(const o of otherSlots){html+=`<td>${renderIdInput(r.id,area,o,line)}</td><td>${renderPartInput(r.id,area,o,line)}</td><td>${renderNameInput(r.id,area,o,line)}</td>`} html+='</tr>'}} return html;}
+function renderSimpleListRow(){const colspan=3+internalParts.length*2+otherSlots.length*3; if(collapsed['簡易リスト'])return `<tr class="simple-list-row"><td colspan="${colspan}"><div class="simple-list-box"><b>簡易リスト</b><span class="hint"> 閉じています</span></div></td></tr>`; return `<tr class="simple-list-row"><td colspan="${colspan}"><div class="simple-list-box"><div class="simple-list-head"><b>簡易リスト</b><span class="tag">${state.materials.length}件</span></div><div class="simple-list-items" id="simpleListItems">${renderSimpleItems()}</div>${renderSelectedDetail()}</div></td></tr>`}
 function renderSimpleItems(){return state.materials.length?state.materials.map(m=>`<button class="simple-item ${colorMode?'mat-color-'+materialColorIndex(m.id):''} ${selectedMaterialId===m.id?'selected':''}" onclick="selectMaterial('${m.id}')">【${m.inputId}】${esc(m.name)}</button>`).join(''):'<span class="hint">登録済建材はまだありません</span>'}
 function renderSelectedDetail(){const m=state.materials.find(x=>x.id===selectedMaterialId); if(!m)return '<div class="simple-detail"><span class="hint">建材を選択すると使用箇所と調査備考を表示します</span></div>'; return `<div class="simple-detail"><b>選択中：【${m.inputId}】${esc(m.name)}</b><span>使用箇所：${esc(usageOf(m))}</span><span>調査備考：${esc(m.note||'未入力')}</span><button class="btn small" onclick="editMaterialNote('${m.id}')">備考編集</button></div>`}
 function renderFinish(){renderSectionToggles(); let html=renderSection('外部',externalParts); html+=renderSimpleListRow(); html+=renderSection('内部',internalParts); document.getElementById('finishTable').innerHTML=html; document.getElementById('matCount').textContent=state.materials.length; document.getElementById('recordCount').textContent=countRecordOnly(); document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF'; document.getElementById('finishTable').classList.toggle('color-mode',colorMode);}
-function renderSectionToggles(){const el=document.getElementById('sectionToggles'); if(!el)return; el.innerHTML=['外部','内部'].map(n=>`<button class="section-toggle ${collapsed[n]?'closed':''}" onclick="toggleSection('${n}')">${collapsed[n]?'▶':'▼'} ${n}</button>`).join('')}
+function renderSectionToggles(){const el=document.getElementById('sectionToggles'); if(!el)return; el.innerHTML=['外部','簡易リスト','内部'].map(n=>`<button class="section-toggle ${collapsed[n]?'closed':''}" onclick="toggleSection('${n}')">${collapsed[n]?'▶':'▼'} ${n}</button>`).join('')}
 
 
 function partForSuggest(roomId,area,part,line){
@@ -259,16 +272,18 @@ function addPartCandidateValue(name){
 function candidateMatchesPart(c,part){
   const p=normalizeInput(part||'その他');
   const cp=normalizeInput(c.part||'その他');
-  return cp===p || cp==='その他' || p==='その他';
+  return cp===p;
 }
 function uniqueByName(list){
   const seen=new Set(); const out=[];
   for(const item of list){const key=normalizeInput(item.name||item); if(!key||seen.has(key))continue; seen.add(key); out.push(item)}
   return out;
 }
+function materialPartsFor(mat){const parts=new Set(); for(const r of state.rooms){for(const area of ['外部','内部']){for(let line=0;line<roomLineCount(r);line++){for(const p of [...externalParts,...internalParts]){const c=getCell(r.id,area,p,'name',line); if(c.materialId===mat.id)parts.add(normalizeInput(p))} for(const o of otherSlots){const c=getCell(r.id,area,o,'name',line); const part=getCell(r.id,area,o,'part',line); if(c.materialId===mat.id)parts.add(normalizeInput(part.text||'その他'))}}}} return parts;}
 function materialSuggestionsFor(part,filter=''){
   const f=normalizeInput(filter);
-  const registered=state.materials.map(m=>({part:'登録済',type:'登録済',name:m.name,label:`【${m.inputId}】${m.name}`}));
+  const p=normalizeInput(part||'その他');
+  const registered=state.materials.filter(m=>materialPartsFor(m).has(p)).map(m=>({part:p,type:'登録済',name:m.name,label:`【${m.inputId}】${m.name}`}));
   const project=state.projectMaterialCandidates.filter(c=>candidateMatchesPart(c,part));
   const master=state.materialCandidates.filter(c=>candidateMatchesPart(c,part));
   return uniqueByName([...registered,...project,...master]).filter(c=>!f || normalizeInput(c.name).includes(f) || normalizeInput(c.label||'').includes(f)).slice(0,40);
@@ -333,10 +348,10 @@ function toggleSection(name){collapsed[name]=!collapsed[name]; renderFinish()}
 function updateRoom(id,field,value){const r=state.rooms.find(x=>x.id===id); if(!r)return; r[field]=normalizeInput(value); addQueue('部屋情報変更',`${r.no} ${r.name}`); renderAll()}
 function nextRoomNo(floor){const nums=state.rooms.filter(r=>r.floor===floor).map(r=>String(r.no||'').match(/^(\d+)-(\d+)$/)).filter(Boolean).map(m=>Number(m[2])); const floorNum=(String(floor).match(/\d+/)||['1'])[0]; const next=(nums.length?Math.max(...nums)+1:1); return `${floorNum}-${next}`}
 function nextFloorName(floor){const n=Number((String(floor).match(/\d+/)||['1'])[0])+1; return `${n}階`}
-function addRoomAfter(refId,floor,no,name=''){const idx=state.rooms.findIndex(r=>r.id===refId); const room={id:'r'+Date.now()+Math.random().toString(16).slice(2),floor,no,name,lines:2}; state.rooms.splice(idx+1,0,room); pendingRoomFocus=room.id; addQueue('部屋追加',`${no} ${name}`); renderAll(); setTimeout(()=>{const b=document.querySelector(`[data-roomdown="${pendingRoomFocus}"]`); if(b){b.focus();b.classList.add('focused');setTimeout(()=>b.classList.remove('focused'),650)}},0)}
-function roomNoDown(id){const r=state.rooms.find(x=>x.id===id); if(!r)return; if(isLastRoom(r)){addRoomAfter(id,r.floor,nextRoomNo(r.floor),'')}else{r.lines=roomLineCount(r)+1; addQueue('部屋内行追加',`${r.no} ${r.name}`); renderAll()}}
-function addNextFloor(id){const r=state.rooms.find(x=>x.id===id); if(!r)return; const nf=nextFloorName(r.floor); const nno=nextRoomNo(nf); addRoomAfter(id,nf,nno,'')}
-function addRoom(){const r=state.rooms[state.rooms.length-1]; addRoomAfter(r.id,r.floor,nextRoomNo(r.floor),'')}
+function addRoomAfter(refId,floor,no,name='',area='内部'){const idx=state.rooms.findIndex(r=>r.id===refId); const room={id:'r'+Date.now()+Math.random().toString(16).slice(2),floor,no,name,lines:2}; state.rooms.splice(idx+1,0,room); pendingRoomFocus={id:room.id,area}; addQueue('部屋追加',`${no} ${name}`); renderAll(); setTimeout(()=>{const b=document.querySelector(`[data-roomdown="${pendingRoomFocus.id}"][data-area="${pendingRoomFocus.area}"]`)||document.querySelector(`[data-roomdown="${pendingRoomFocus.id}"]`); if(b){b.focus();b.classList.add('focused');setTimeout(()=>b.classList.remove('focused'),650)}},0)}
+function roomNoDown(id,area='内部'){const r=state.rooms.find(x=>x.id===id); if(!r)return; if(isLastRoom(r)){addRoomAfter(id,r.floor,nextRoomNo(r.floor),'',area)}else{r.lines=roomLineCount(r)+1; addQueue('部屋内行追加',`${r.no} ${r.name}`); renderAll()}}
+function addNextFloor(id,area='内部'){const r=state.rooms.find(x=>x.id===id); if(!r)return; const nf=nextFloorName(r.floor); const nno=nextRoomNo(nf); addRoomAfter(id,nf,nno,'',area)}
+function addRoom(){const r=state.rooms[state.rooms.length-1]; addRoomAfter(r.id,r.floor,nextRoomNo(r.floor),'','内部')}
 function copyFirstRoom(){const src=state.rooms[1]||state.rooms[0], id='r'+Date.now(); state.rooms.push({id,floor:src.floor,no:'コピー',name:'コピー部屋'}); for(const key in state.cells){if(key.startsWith(src.id+'|'))state.cells[key.replace(src.id,id)]={...state.cells[key]}} addQueue('部屋コピー',src.no); renderAll()}
 function addPhoto(board){state.photos.push({roomId:activePhotoRoom,type:board?'看板':'写真'}); addQueue('写真追加',board?'看板':'写真'); renderAll()}
 function createSample(materialId){const mId=materialId||(state.materials[0]&&state.materials[0].id); if(!mId)return alert('登録済建材がありません'); const id='26070101-'+String(state.samples.length+1).padStart(2,'0'); state.samples.push({id,materialId:mId,place:'101 玄関',part:'壁'}); addQueue('試料作成',id); renderAll(); showTab('samples')}
