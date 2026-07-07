@@ -964,13 +964,19 @@ input[list]::-webkit-calendar-picker-indicator{
 .finish-table .room-name input,.finish-table .name-col input,.finish-table .other-name input,.finish-table .other-part input{white-space:normal!important;line-height:1.2;}
 @media(max-width:850px){.material-list-panel .material-list-toolbar.material-action-bar{padding:5px 8px;gap:6px}.material-table-wrap{max-height:calc(100vh - 240px)!important}}
 
+/* v0.11.0 camera review */
+.photo-launch-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.camera-review-card{border:1px solid var(--line);border-radius:12px;background:#fbfcff;padding:10px;margin:10px 0;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.camera-review-card strong{font-size:13px}.camera-review-card .hint{max-width:680px}
+.photo-box.camera-linked{border-style:solid;background:#fff}
+
 </style>
 </head>
 <body>
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill">v0.10.8-0.10.8</span>
+  <span class="pill">v0.11.0-camera-review</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">同期待ち 0件</span>
   
@@ -1038,7 +1044,33 @@ input[list]::-webkit-calendar-picker-indicator{
         <div class="material-table-wrap"><table class="data-table material-record-table" id="materialsTable"></table></div>
       </div>
     </section>
-    <section class="content" id="photos" style="display:none"><div class="panel"><div class="panel-head"><h3>写真</h3><div><button class="btn small primary" onclick="addPhoto(false)">＋ 写真</button><button class="btn small" onclick="addPhoto(true)">＋ 看板写真</button></div></div><div class="photo-layout"><div class="room-list" id="photoRooms"></div><div class="photo-area"><h3 id="photoTitle">部屋</h3><div class="hint">写真担当は部屋を選んで写真を追加</div><div class="photo-grid" id="photoGrid"></div></div></div></div></section>
+    <section class="content" id="photos" style="display:none">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>写真</h3>
+          <div class="photo-launch-bar">
+            <button class="btn small primary" onclick="launchCamera('survey')">カメラ起動</button>
+            <button class="btn small" onclick="launchCamera('board')">看板カメラ</button>
+            <button class="btn small" onclick="launchCamera('sample')">採取カメラ</button>
+          </div>
+        </div>
+        <div class="camera-review-card">
+          <div>
+            <strong>調査カメラ仮組み込み</strong>
+            <div class="hint">選択中の案件・部屋No.を camera.html に渡して起動します。写真本体の一覧連携は次段階で調整。</div>
+          </div>
+          <button class="btn small" onclick="addPhoto(false)">仮写真追加</button>
+        </div>
+        <div class="photo-layout">
+          <div class="room-list" id="photoRooms"></div>
+          <div class="photo-area">
+            <h3 id="photoTitle">部屋</h3>
+            <div class="hint">部屋を選んでからカメラを起動。撮影画面には件名・住所・部屋No.が初期反映されます。</div>
+            <div class="photo-grid" id="photoGrid"></div>
+          </div>
+        </div>
+      </div>
+    </section>
     <section class="content" id="samples" style="display:none"><div class="panel"><div class="panel-head"><h3>試料</h3><button class="btn small primary" onclick="createSample()">＋ 試料作成</button></div><table class="data-table" id="samplesTable"></table></div></section>
     <section class="content" id="sync" style="display:none"><div class="panel"><div class="panel-head"><h3>同期状態</h3><button class="btn small primary" onclick="syncNow()">今すぐ同期</button></div><div class="sync-row"><span>仕上表変更</span><b id="syncFinish">0</b></div><div class="sync-row"><span>建材変更</span><b id="syncMaterials">0</b></div><div class="sync-row"><span>写真アップロード待ち</span><b id="syncPhotos">0</b></div><div id="syncList"></div></div></section>
     <section class="content" id="settings" style="display:none"><div class="panel"><div class="panel-head"><h3>設定</h3><span class="hint">旧システムの設定シート相当</span></div><div class="settings-wrap"><div class="settings-box"><h4>建材名候補</h4><div class="hint">部位 / 種別 / 建材名で管理。仕上表の建材名称入力時に候補表示します。</div><div class="settings-add"><input id="addMatPart" placeholder="部位"><input id="addMatType" placeholder="種別" value="追加"><input id="addMatName" placeholder="建材名"><button class="btn small primary" onclick="addMaterialCandidate()">追加</button></div><table class="data-table compact" id="materialCandidatesTable"></table></div><div class="settings-box"><h4>部位候補</h4><div class="hint">その他1/その他2の部位欄で候補表示します。入力した部位も案件内候補に追加されます。</div><div class="settings-add"><input id="addPartName" placeholder="部位"><button class="btn small primary" onclick="addPartCandidate()">追加</button></div><div class="part-candidate-list" id="partCandidatesList"></div></div></div></section>
@@ -1354,7 +1386,7 @@ function renderPhotos(){document.getElementById('photoRooms').innerHTML=allRooms
 function renderSamples(){let rows='<tr><th>試料ID</th><th>建材</th><th>採取場所</th><th>採取部位</th><th>結果</th></tr>'; for(const s of state.samples){const m=state.materials.find(x=>x.id===s.materialId); rows+=`<tr><td>${s.id}</td><td>${m?m.name:'-'}</td><td>${s.place}</td><td>${s.part}</td><td>未</td></tr>`} document.getElementById('samplesTable').innerHTML=rows}
 function renderSync(){const photoWait=state.photos.length; document.getElementById('unsyncedPill').textContent=`同期待ち ${state.queue.length+photoWait}件`; const mini=document.getElementById('miniUnsynced'); if(mini)mini.textContent=state.queue.length+photoWait; document.getElementById('syncFinish').textContent=state.queue.filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')).length; document.getElementById('syncMaterials').textContent=state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length; document.getElementById('syncPhotos').textContent=photoWait; document.getElementById('syncList').innerHTML=state.queue.length?state.queue.map(q=>`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`).join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>'}
 function renderAll(){renderFinish();renderMaterials();renderRecords();renderPhotos();renderSamples();renderSync();renderSettings();updateHistoryButtons()}
-function showTab(id){document.querySelectorAll('.content').forEach(x=>x.style.display='none'); document.getElementById(id).style.display='block'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));}
+function showTab(id){document.querySelectorAll('.content').forEach(x=>x.style.display='none'); const target=document.getElementById(id)||document.getElementById('finish'); target.style.display='block'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===target.id));}
 function toggleSection(name){collapsed[name]=!collapsed[name]; renderFinish()}
 function updateRoom(id,field,value){const r=findRoom(id); if(!r)return; remember(); r[field]=normalizeInput(value); addQueue('部屋情報変更',`${r.no} ${r.name}`); renderAll()}
 function nextRoomNo(floor,area='内部'){if(area==='外部')return ''; if(floor==='階段'){const nums=roomsForArea(area).filter(r=>r.floor==='階段').map(r=>String(r.no||'').match(/^S-(\d+)$/)).filter(Boolean).map(m=>Number(m[1])); return `S-${(nums.length?Math.max(...nums)+1:1)}`;} if(floor==='屋上'){const nums=roomsForArea(area).filter(r=>r.floor==='屋上').map(r=>String(r.no||'').match(/^R-(\d+)$/)).filter(Boolean).map(m=>Number(m[1])); return `R-${(nums.length?Math.max(...nums)+1:1)}`;} const nums=roomsForArea(area).filter(r=>r.floor===floor).map(r=>String(r.no||'').match(/^(\d+)-(\d+)$/)).filter(Boolean).map(m=>Number(m[2])); const floorNum=(String(floor).match(/\d+/)||['1'])[0]; const next=(nums.length?Math.max(...nums)+1:1); return `${floorNum}-${next}`}
@@ -1368,6 +1400,36 @@ function addStairRoom(id){const r=findRoom(id); if(!r)return; addRoomAfter(id,'�
 function addNextFloor(id,area='内部'){if(area!=='内部')return; remember(); const list=roomsForArea('内部'); const nf=nextFloorName(); const floorNum=(String(nf).match(/\d+/)||['1'])[0]; const insertIndex=list.findIndex(r=>r.id===id); const rooms=[]; for(let i=1;i<=10;i++)rooms.push({id:makeRoomId('内部'),floor:nf,no:`${floorNum}-${i}`,name:'',lines:2}); list.splice(insertIndex+1,0,...rooms); addQueue('階追加',`${nf} 10部屋`); renderAll(); focusRoomNo(rooms[0].id,'内部')}
 function addRoom(){const list=roomsForArea('内部'); const r=list[list.length-1]; addOneRoom(r.id,'内部')}
 function copyFirstRoom(){const list=roomsForArea('内部'); const src=list[0], id=makeRoomId('内部'); if(!src)return; remember(); list.push({id,floor:src.floor,no:'コピー',name:'コピー部屋',lines:src.lines||2}); for(const key in state.cells){if(key.startsWith(src.id+'|'))state.cells[key.replace(src.id,id)]={...state.cells[key]}} addQueue('部屋コピー',src.no); renderAll()}
+function getActiveProjectMeta(){return projectMeta[activeProjectId]||{no:'',name:'',sub:''}}
+function getCameraLaunchParams(mode){
+  const meta=getActiveProjectMeta();
+  const room=findRoom(activePhotoRoom)||allRooms()[0]||{};
+  const material=selectedMaterialId?state.materials.find(m=>m.materialId===selectedMaterialId):null;
+  const params=new URLSearchParams();
+  params.set('from','chousa');
+  params.set('projectId',activeProjectId||'');
+  params.set('projectNo',meta.no||'');
+  params.set('projectName',meta.name||'');
+  params.set('subject',meta.name||'');
+  params.set('address','神奈川県小田原市小八幡2-3-6');
+  params.set('roomId',room.id||'');
+  params.set('roomNo',room.no||'');
+  params.set('roomName',room.name||'');
+  params.set('mode',mode||'survey');
+  if(material){
+    params.set('materialId',material.materialId||'');
+    params.set('materialName',material.name||'');
+    params.set('materialNo',material.materialNo||'');
+    params.set('inputId',material.inputId||'');
+  }
+  params.set('returnUrl','app.html?tab=photos');
+  return params;
+}
+function launchCamera(mode){
+  const url='camera.html?'+getCameraLaunchParams(mode).toString();
+  window.location.href=url;
+}
+
 function addPhoto(board){remember();state.photos.push({roomId:activePhotoRoom,type:board?'看板':'写真'}); addQueue('写真追加',board?'看板':'写真'); renderAll()}
 function createSample(materialId){remember();const mId=materialId||(state.materials[0]&&state.materials[0].id); if(!mId)return alert('登録済建材がありません'); const id='26070101-'+String(state.samples.length+1).padStart(2,'0'); state.samples.push({id,materialId:mId,place:'101 玄関',part:'壁'}); addQueue('試料作成',id); renderAll(); showTab('samples')}
 function toggleOnline(){online=!online; const p=document.getElementById('onlinePill'); p.textContent=online?'オンライン':'オフライン'; p.className='pill '+(online?'ok':'warn')}
@@ -2755,6 +2817,11 @@ function deleteSelectedMaterialsFromDrawer(){
 }
 
 initProjects(); renderAll();
+
+window.addEventListener('load',()=>{
+  const tab=new URLSearchParams(location.search).get('tab');
+  if(tab) showTab(tab);
+});
 </script>
 </body>
 </html>

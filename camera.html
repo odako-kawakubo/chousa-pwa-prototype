@@ -1,0 +1,4008 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
+  />
+  <meta name="theme-color" content="#000000" />
+  <!-- camera review: manifest disabled to avoid service worker conflict -->
+  <title>電子看板カメラ</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    body {
+      touch-action: manipulation;
+    }
+
+    #cameraScreen {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      overflow: hidden;
+      background: #000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+    }
+
+    /*
+     * 撮影エリア。
+     * ここに見えている範囲だけを写真として保存する。
+     * 横向きでは中央4:3、右側の黒帯に操作ボタンを置く。
+     */
+
+
+    /* 左黒帯：撮影枚数などの情報表示 */
+    .left-panel {
+      position: relative;
+      z-index: 4;
+      width: 92px;
+      height: 100dvh;
+      flex: 0 0 92px;
+      background: #000;
+      color: #fff;
+      padding: calc(12px + env(safe-area-inset-top)) 8px calc(10px + env(safe-area-inset-bottom));
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .left-panel::-webkit-scrollbar {
+      display: none;
+    }
+
+    #captureFrame {
+      position: relative;
+      /* 横向きは4:3撮影エリアを画面内に収める。
+       * 左右の黒帯（左92px + 右92px）を差し引き、
+       * iPhone/PWAの下見切れ対策として安全側に少し小さくする。
+       */
+      --capture-safe-h: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 10px);
+      --capture-safe-w: calc(100vw - 184px);
+      width: min(var(--capture-safe-w), calc(var(--capture-safe-h) * 4 / 3));
+      height: min(var(--capture-safe-h), calc(var(--capture-safe-w) * 3 / 4));
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: #000;
+      flex: 0 0 auto;
+    }
+
+    #video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      z-index: 1;
+    }
+
+    #captureFreezeImage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      z-index: 4;
+      display: none;
+      pointer-events: none;
+    }
+
+    #captureFreezeImage.show {
+      display: block;
+    }
+
+    #cameraFlash {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      z-index: 5;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.16s ease;
+    }
+
+    #cameraFlash.flash {
+      opacity: 0.92;
+      transition: opacity 0.04s ease;
+    }
+
+    .control-button:disabled {
+      opacity: 0.45;
+      cursor: wait;
+    }
+
+    #toast.error {
+      background: rgba(235, 87, 87, 0.92);
+    }
+
+    #cameraGuide {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.65);
+      pointer-events: none;
+    }
+
+    .hidden,
+    .hidden-control {
+      display: none !important;
+    }
+
+    /* 撮影枚数表示 */
+    #photoCount {
+      position: relative;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      padding: 7px 6px;
+      border-radius: 9px;
+      font-size: 11px;
+      line-height: 1.25;
+      font-weight: 900;
+      text-align: center;
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      white-space: pre-line;
+      width: 68px;
+    }
+
+    #photoCount:active {
+      opacity: 0.72;
+    }
+
+    .board-control-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      padding-bottom: 4px;
+      flex: 0 0 auto;
+    }
+
+    .mode-toggle-button,
+    .panel-main-button,
+    .panel-mini-button,
+    .panel-center-button {
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+      color: #fff;
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    .mode-toggle-button:active,
+    .panel-main-button:active,
+    .panel-mini-button:active,
+    .panel-center-button:active {
+      opacity: 0.72;
+    }
+
+    .mode-toggle-button {
+      width: 72px;
+      min-height: 42px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.15;
+      background: linear-gradient(180deg, rgba(47,128,237,0.9), rgba(47,128,237,0.55));
+    }
+
+    body.sampling-mode .mode-toggle-button {
+      background: linear-gradient(180deg, rgba(39,174,96,0.9), rgba(39,174,96,0.55));
+    }
+
+    .panel-main-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .panel-main-button {
+      width: 72px;
+      min-height: 48px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.15;
+    }
+
+    .panel-main-button.active {
+      border-color: rgba(242, 201, 76, 0.95);
+      box-shadow: 0 0 0 2px rgba(242, 201, 76, 0.25) inset, 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    .panel-expanded {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .panel-expanded.show {
+      display: flex;
+    }
+
+    .panel-pair {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .panel-vertical {
+      display: grid;
+      grid-template-rows: 30px 32px 30px;
+      width: 34px;
+      gap: 3px;
+      justify-items: center;
+      align-items: center;
+    }
+
+    .panel-mini-button {
+      width: 34px;
+      height: 30px;
+      border-radius: 9px;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .panel-center-button {
+      width: 34px;
+      height: 32px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1;
+      padding: 0;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .panel-single {
+      width: 44px;
+      display: grid;
+      grid-template-rows: 32px 38px 32px;
+      gap: 5px;
+      justify-items: center;
+      align-items: center;
+    }
+
+    .panel-single .panel-mini-button {
+      width: 44px;
+      height: 32px;
+      font-size: 17px;
+    }
+
+    .panel-single .panel-center-button {
+      width: 44px;
+      height: 38px;
+      font-size: 20px;
+    }
+
+    .panel-close-button {
+      width: 58px;
+      min-height: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255,255,255,0.92);
+      font-size: 11px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    body.sampling-mode .survey-only {
+      display: none !important;
+    }
+
+    body:not(.sampling-mode) .sampling-only {
+      display: none !important;
+    }
+
+    body.sampling-mode #roomLabelCell {
+      display: none;
+    }
+
+    body.sampling-mode #roomValueCell {
+      padding-left: 12px;
+    }
+
+    /* 看板レイヤー */
+    .board-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    #boardWrap {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 390px;
+      transform-origin: top left;
+      pointer-events: auto;
+      touch-action: none;
+      user-select: none;
+      cursor: default;
+      will-change: transform;
+    }
+
+
+    /* 電子看板：横長長方形 */
+    #photoBoard {
+      position: relative;
+      width: 100%;
+      height: 242px;
+      padding: 4px;
+      background: #fff;
+      color: #000;
+      border: 2px solid #000;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+    }
+
+    /*
+     * 細線の二重枠。
+     * 外側は #photoBoard の border、内側は表全体の枠で作る。
+     */
+    #photoBoard::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      z-index: 5;
+      border: 1.5px solid #000;
+      pointer-events: none;
+    }
+
+    .board-table,
+    .inner-table {
+      width: 100%;
+      height: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #fff;
+    }
+
+    .board-table {
+      border: none;
+    }
+
+    .board-table td,
+    .inner-table td {
+      border: 1.5px solid #000;
+      vertical-align: middle;
+      padding: 0;
+    }
+
+
+    /* v45: 入れ子表の外周罫線を消して、内容欄だけ太線に見えるのを防ぐ */
+    .inner-table tr:first-child td { border-top: none; }
+    .inner-table tr:last-child td { border-bottom: none; }
+    .inner-table td:first-child { border-left: none; }
+    .inner-table td:last-child { border-right: none; }
+
+    .row-subject {
+      height: 52px;
+    }
+
+    .row-place {
+      height: 40px;
+    }
+
+    .row-content {
+      height: 96px;
+    }
+
+    .row-date {
+      height: 42px;
+    }
+
+    .label-cell {
+      width: 78px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .content-label-cell {
+      width: 78px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .value-cell {
+      padding: 4px 5px;
+    }
+
+    .board-value-cell {
+      padding: 0 6px;
+    }
+
+    .textarea-center-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .subject-text {
+      font-size: 23px;
+      font-weight: 900;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .address-text {
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1.2;
+      word-break: break-all;
+    }
+
+    .board-editable {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      overflow: hidden;
+      background: transparent;
+      color: #000;
+      font-family: inherit;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-break: strict;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    textarea.board-editable {
+      display: block;
+      text-align-last: center;
+      scrollbar-width: none;
+      box-sizing: border-box;
+    }
+
+    textarea.board-editable::-webkit-scrollbar {
+      display: none;
+    }
+
+
+    .textarea-center-wrap textarea.board-editable {
+      height: 100%;
+      line-height: 1.25;
+      padding-left: 0;
+      padding-right: 0;
+      overflow: hidden;
+    }
+
+    /* v45: 件名・採取場所のtextareaを同じ仕組みで上下中央に見せる */
+    .subject-textarea,
+    .address-textarea {
+      display: block;
+      text-align: center;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .subject-textarea {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .address-textarea {
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    #boardWrap.text-small .subject-textarea {
+      font-size: 16px;
+    }
+
+    #boardWrap.text-small .address-textarea {
+      font-size: 15px;
+    }
+
+    #boardWrap.text-small #roomNoInput {
+      font-size: 21px;
+    }
+
+    #boardWrap.text-large .subject-textarea {
+      font-size: 20px;
+    }
+
+    #boardWrap.text-large .address-textarea {
+      font-size: 19px;
+    }
+
+    #boardWrap.text-large #roomNoInput {
+      font-size: 27px;
+    }
+
+    .inner-label {
+      /* 確定設定：No.セル「少し広」 */
+      width: 120px;
+      padding: 4px 5px 4px 12px;
+      font-size: 17px;
+      font-weight: 900;
+      white-space: nowrap;
+      text-align: left;
+      border-right: none !important;
+    }
+
+    .inner-value {
+      border-left: none !important;
+      /* 確定設定：値位置「右」 */
+      padding: 0 6px 0 48px;
+    }
+
+    .board-input {
+      width: 100%;
+      height: 28px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #000;
+      font-size: 24px;
+      font-weight: 900;
+      font-family: inherit;
+      text-align: left;
+      padding: 0;
+    }
+
+    .status-cell {
+      padding: 3px 4px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2px;
+      width: 100%;
+      height: 34px;
+      flex-wrap: nowrap;
+    }
+
+    .status-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      color: #000;
+      font-size: 15px;
+      font-weight: 900;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .status-box {
+      display: inline-block;
+      min-width: 1em;
+      text-align: center;
+      font-size: 1.05em;
+      line-height: 1;
+    }
+
+    .date-cell {
+      text-align: center;
+      padding: 0 6px;
+    }
+
+    .date-text {
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.06em;
+    }
+
+    /* 操作パネル：横向きでは右黒帯に縦並び */
+    .controls {
+      position: relative !important;
+      z-index: 9999 !important;
+      width: 92px !important;
+      height: 100dvh !important;
+      flex: 0 0 92px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 12px !important;
+      padding: calc(10px + env(safe-area-inset-top)) 8px calc(10px + env(safe-area-inset-bottom)) !important;
+      margin: 0 !important;
+      pointer-events: auto !important;
+      background: #000;
+    }
+
+    .control-button {
+      border: none;
+      border-radius: 999px;
+      width: 64px;
+      min-height: 82px;
+      padding: 12px 8px;
+      font-size: 18px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      touch-action: manipulation;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+    }
+
+    .btn-start {
+      background: #2f80ed;
+      color: #fff;
+    }
+
+    .btn-view {
+      background: #f2c94c;
+      color: #000;
+      min-width: 80px;
+    }
+
+    .btn-shoot {
+      background: #fff;
+      color: #000;
+      min-width: 92px;
+    }
+
+    .btn-section {
+      background: #eb5757;
+      color: #fff;
+      min-width: 80px;
+    }
+
+    .btn-section.active {
+      background: #fff;
+      color: #eb5757;
+      box-shadow: 0 0 0 3px #eb5757 inset, 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .btn-mode {
+      background: #27ae60;
+      color: #fff;
+      min-width: 80px;
+      font-size: 17px;
+    }
+
+    body:not(.sampling-mode) .btn-mode {
+      background: #2f80ed;
+    }
+
+
+    .controls .control-button {
+      min-width: 64px;
+    }
+
+    #sectionModeBadge {
+      position: absolute;
+      left: 50%;
+      bottom: calc(74px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: none;
+      background: rgba(235, 87, 87, 0.92);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    #sectionModeBadge.show {
+      display: block;
+    }
+
+    body.section-mode #boardWrap {
+      display: none;
+    }
+
+    /* プレビュー画面 */
+    #previewOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20000;
+      background: #000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: calc(14px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom));
+      touch-action: pan-y;
+    }
+
+    #previewOverlay.show {
+      display: flex;
+    }
+
+    #previewCounter {
+      color: #fff;
+      font-size: 17px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      min-height: 24px;
+    }
+
+    #previewImageWrap {
+      position: relative;
+      width: 100%;
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #previewImage {
+      max-width: 100%;
+      max-height: calc(100dvh - 205px);
+      object-fit: contain;
+      background: #111;
+      border: 1px solid #333;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: pan-y;
+    }
+
+    #previewMeta {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      margin-top: 8px;
+      min-height: 18px;
+      text-align: center;
+      word-break: break-all;
+    }
+
+    #previewThumbnails {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 4px 2px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #previewOverlay.list-mode #previewImageWrap,
+    #previewOverlay.list-mode #previewMeta,
+    #previewOverlay.list-mode #previewThumbnails {
+      display: none;
+    }
+
+    #previewOverlay.list-mode {
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+
+    #previewOverlay.list-mode #previewCounter {
+      flex: 0 0 auto;
+      margin-bottom: 8px;
+    }
+
+    #previewOverlay.list-mode .preview-controls {
+      flex: 0 0 auto;
+    }
+
+    #previewOverlay.list-mode #previewList {
+      display: grid;
+    }
+
+    #previewList {
+      width: 100%;
+      max-width: 980px;
+      height: calc(100dvh - 118px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      flex: 0 0 auto;
+      display: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: calc(100dvh - 176px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      align-content: start;
+      gap: 12px;
+      overflow-y: auto;
+      padding: 6px 4px 18px;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    .photo-list-item {
+      position: relative;
+      border: 2px solid #333;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #111;
+      color: #fff;
+      cursor: pointer;
+      text-align: left;
+      padding: 0;
+      font-family: inherit;
+    }
+
+    .photo-list-item.current {
+      border-color: #f2c94c;
+    }
+
+    .photo-list-item.selected {
+      border-color: #27ae60;
+    }
+
+    .photo-list-item {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .photo-list-item img {
+      width: 100%;
+      height: auto;
+      flex: 1 1 auto;
+      min-height: 0;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .photo-list-info {
+      flex: 0 0 auto;
+      padding: 5px 7px 7px;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1.2;
+      word-break: break-all;
+      max-height: 42px;
+      overflow: hidden;
+    }
+
+    .photo-list-status {
+      color: #f2c94c;
+      margin-bottom: 2px;
+    }
+
+    .thumb-item {
+      position: relative;
+      flex: 0 0 auto;
+      width: 74px;
+      height: 56px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #111;
+      cursor: pointer;
+    }
+
+    .thumb-item.current {
+      border-color: #f2c94c;
+    }
+
+    .thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb-check,
+    .list-check {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 2px solid #fff;
+      background: rgba(0, 0, 0, 0.58);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 20px;
+      text-align: center;
+      z-index: 4;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .thumb-item.selected .thumb-check,
+    .photo-list-item.selected .list-check {
+      background: #27ae60;
+    }
+
+    .preview-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: #000;
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 44px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .preview-arrow.left {
+      left: 6px;
+    }
+
+    .preview-arrow.right {
+      right: 6px;
+    }
+
+
+    .preview-casebar {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    .case-select-button {
+      max-width: min(92vw, 620px);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      font-family: inherit;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    #casePickerOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 26000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.68);
+      padding: 18px;
+    }
+
+    #casePickerOverlay.show {
+      display: flex;
+    }
+
+    .case-picker-panel {
+      width: min(92vw, 520px);
+      max-height: min(80dvh, 560px);
+      overflow-y: auto;
+      border-radius: 18px;
+      background: #fff;
+      color: #000;
+      padding: 14px;
+      font-family: inherit;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+    }
+
+    .case-picker-title {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .case-item {
+      width: 100%;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      color: #000;
+      padding: 10px 12px;
+      margin: 8px 0;
+      text-align: left;
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .case-item.active {
+      border-color: #27ae60;
+      box-shadow: 0 0 0 2px rgba(39,174,96,0.16) inset;
+    }
+
+    .case-name {
+      font-size: 14px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .case-count {
+      margin-top: 4px;
+      color: #555;
+      font-size: 12px;
+    }
+
+    .preview-controls {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .preview-button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background: #27ae60;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background: #eb5757;
+      color: #fff;
+    }
+
+    .btn-list-toggle {
+      background: #f2c94c;
+      color: #000;
+    }
+
+    .btn-close {
+      background: #444;
+      color: #fff;
+    }
+
+    .preview-topbar {
+      position: absolute;
+      top: calc(12px + env(safe-area-inset-top));
+      right: 12px;
+      z-index: 20005;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .settings-button {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #000;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 42px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    #settingsOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 30000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 16px;
+    }
+
+    #settingsOverlay.show {
+      display: flex;
+    }
+
+    .settings-panel {
+      width: min(100%, 520px);
+      max-height: calc(100dvh - 40px);
+      overflow-y: auto;
+      background: #fff;
+      color: #000;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+      font-weight: 900;
+      font-family: inherit;
+    }
+
+    .settings-title {
+      text-align: center;
+      font-size: 20px;
+      margin: 0 0 16px;
+    }
+
+    .settings-section-title {
+      font-size: 16px;
+      margin: 14px 0 8px;
+    }
+
+    .quality-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      color: #000;
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 16px;
+      font-weight: 900;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .quality-option.active {
+      border-color: #27ae60;
+      box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.18) inset;
+    }
+
+    .quality-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 2px solid #222;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .quality-option.active .quality-dot::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #27ae60;
+    }
+
+    .settings-note {
+      margin: 14px 0;
+      padding-top: 12px;
+      border-top: 1px solid #ddd;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .settings-close {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 18px;
+      margin-top: 8px;
+      background: #444;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+
+
+    /* 看板編集モード */
+    #boardEditOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 35000;
+      display: none;
+      grid-template-columns: 92px minmax(0, 1fr) 92px;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: calc(12px + env(safe-area-inset-top)) 10px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(0, 0, 0, 0.78);
+    }
+
+    #boardEditOverlay.show {
+      display: grid;
+    }
+
+    .board-edit-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-width: 0;
+      justify-self: center;
+    }
+
+    .board-edit-title {
+      color: #fff;
+      font-size: 17px;
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.35;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    .text-size-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .text-size-button {
+      width: 58px;
+      min-height: 34px;
+      border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .text-size-button.active {
+      background: #f2c94c;
+      color: #000;
+      border-color: #f2c94c;
+    }
+
+    #boardEditHost {
+      width: 100%;
+      height: 100%;
+      max-height: calc(100dvh - 32px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    #boardEditHost #boardWrap {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      width: min(88%, 780px) !important;
+      transform: none !important;
+      transform-origin: center center !important;
+      pointer-events: auto;
+    }
+
+    #boardEditHost #photoBoard {
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+    }
+
+    .board-edit-done {
+      border: none;
+      border-radius: 18px;
+      width: 68px;
+      min-height: 140px;
+      padding: 14px 10px;
+      background: #27ae60;
+      color: #fff;
+      font-size: 19px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      justify-self: center;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+    }
+
+    .board-edit-hint {
+      display: none;
+    }
+
+    #boardWrap.board-readonly .board-input,
+    #boardWrap.board-readonly .board-editable,
+    #boardWrap.board-readonly .date-text {
+      caret-color: transparent;
+    }
+
+    /* トースト */
+    #toast {
+      position: absolute;
+      left: 50%;
+      top: calc(14px + env(safe-area-inset-top));
+      transform: translateX(-50%);
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.72);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 900;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      opacity: 1;
+    }
+
+
+
+
+    /* v44: 通常時は看板内を直接編集させない。編集は看板編集モードのみ */
+    body:not(.board-editing) #photoBoard textarea,
+    body:not(.board-editing) #photoBoard input,
+    body:not(.board-editing) #photoBoard .date-text,
+    body:not(.board-editing) #photoBoard .status-btn {
+      pointer-events: none;
+    }
+
+    .edit-mode-toggle {
+      width: 72px;
+      min-height: 58px;
+      border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(47,128,237,0.95), rgba(47,128,237,0.55));
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      font-family: inherit;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    body.sampling-mode .edit-mode-toggle {
+      background: linear-gradient(180deg, rgba(39,174,96,0.95), rgba(39,174,96,0.55));
+    }
+
+    #boardEditHost {
+      position: relative;
+    }
+
+    .font-control-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .font-control-row {
+      position: absolute;
+      left: 10%;
+      right: 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .font-control-row button {
+      pointer-events: auto;
+      width: 38px;
+      height: 32px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.55);
+      background: rgba(0,0,0,0.68);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      font-family: inherit;
+      line-height: 1;
+    }
+
+    .font-subject { top: 9%; }
+    .font-address { top: 26%; }
+    .font-room { top: 49%; }
+
+    @media (orientation: portrait) {
+      #cameraScreen {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        display: none;
+      }
+
+      #captureFrame {
+        width: 100vw;
+        height: min(calc(100vw * 3 / 4), calc(100dvh - 92px));
+      }
+
+      .controls {
+        width: 100vw !important;
+        height: 92px !important;
+        flex: 0 0 92px !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        padding: 8px calc(10px + env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left)) !important;
+      }
+
+      .control-button {
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        width: auto;
+        min-width: 76px;
+        min-height: auto;
+        padding: 13px 16px;
+      }
+
+      #boardEditOverlay {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+      }
+
+      .board-edit-title {
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+      }
+
+      .board-edit-done {
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        width: auto;
+        min-height: auto;
+        padding: 13px 34px;
+      }
+
+      #boardEditHost #boardWrap {
+        width: min(92vw, 620px) !important;
+      }
+    }
+
+  
+    .chousa-return-button{position:fixed;top:10px;left:10px;z-index:9999;border:1px solid rgba(255,255,255,.45);background:rgba(15,23,42,.72);color:#fff;border-radius:999px;padding:8px 12px;font-size:13px;text-decoration:none;backdrop-filter:blur(4px)}
+    .chousa-return-button:active{transform:scale(.98)}
+  </style>
+</head>
+
+<body>
+  <a id="chousaReturnButton" class="chousa-return-button" href="app.html?tab=photos">← 調査システム</a>
+  <div id="cameraScreen">
+    <div class="left-panel">
+      <div id="photoCount">撮影済み
+0枚</div>
+
+      <div class="board-control-panel" aria-label="撮影補助操作">
+        <div id="panelMainList" class="panel-main-list">
+          <button id="panelRoomButton" class="panel-main-button" type="button" onclick="openSidePanel('room')">部屋</button>
+          <button id="panelSampleButton" class="panel-main-button" type="button" onclick="openSidePanel('sample')">検体</button>
+          <button id="panelBoardButton" class="panel-main-button" type="button" onclick="openSidePanel('board')">看板</button>
+        </div>
+
+        <div id="roomPanel" class="panel-expanded">
+          <div class="panel-pair survey-only">
+            <div class="panel-vertical" aria-label="階操作">
+              <button class="panel-mini-button" type="button" onclick="changeRoomNumber('floor', 1)">▲</button>
+              <button class="panel-center-button" type="button" onclick="promptRoomNo()">階</button>
+              <button class="panel-mini-button" type="button" onclick="changeRoomNumber('floor', -1)">▼</button>
+            </div>
+            <div class="panel-vertical" aria-label="部屋操作">
+              <button class="panel-mini-button" type="button" onclick="changeRoomNumber('room', 1)">▲</button>
+              <button class="panel-center-button" type="button" onclick="promptRoomNo()">部屋</button>
+              <button class="panel-mini-button" type="button" onclick="changeRoomNumber('room', -1)">▼</button>
+            </div>
+          </div>
+
+          <div class="panel-single sampling-only" aria-label="採取箇所入力">
+            <button class="panel-mini-button" type="button" onclick="promptRoomNo()">▲</button>
+            <button class="panel-center-button" type="button" onclick="promptRoomNo()">📍</button>
+            <button class="panel-mini-button" type="button" onclick="promptRoomNo()">▼</button>
+          </div>
+
+          <button class="panel-close-button" type="button" onclick="closeSidePanel()">閉じる</button>
+        </div>
+
+        <div id="samplePanel" class="panel-expanded">
+          <div class="panel-pair">
+            <div class="panel-vertical" aria-label="検体操作">
+              <button class="panel-mini-button" type="button" onclick="changeSampleNo(1)">▲</button>
+              <button class="panel-center-button" type="button" onclick="promptSampleNo()">検体</button>
+              <button class="panel-mini-button" type="button" onclick="changeSampleNo(-1)">▼</button>
+            </div>
+            <div class="panel-vertical" aria-label="箇所操作">
+              <button class="panel-mini-button" type="button" onclick="changePointNo(1)">▲</button>
+              <button class="panel-center-button" type="button" onclick="promptSampleNo()">箇所</button>
+              <button class="panel-mini-button" type="button" onclick="changePointNo(-1)">▼</button>
+            </div>
+          </div>
+          <button class="panel-close-button" type="button" onclick="closeSidePanel()">閉じる</button>
+        </div>
+
+        <div id="boardPanel" class="panel-expanded">
+          <div class="panel-single" aria-label="看板操作">
+            <button class="panel-mini-button" type="button" onclick="increaseBoardSize()">▲</button>
+            <button class="panel-center-button" type="button" onclick="cycleBoardPosition()">🪧</button>
+            <button class="panel-mini-button" type="button" onclick="decreaseBoardSize()">▼</button>
+          </div>
+          <button class="panel-close-button" type="button" onclick="closeSidePanel()">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="captureFrame">
+      <video id="video" playsinline muted autoplay></video>
+      <img id="captureFreezeImage" alt="撮影画像" />
+      <div id="cameraFlash"></div>
+
+      <div id="cameraGuide">右側の「カメラ起動」を押してください</div>
+
+      <div id="sectionModeBadge">断面モード：看板なし</div>
+
+      <div class="board-layer">
+      <div id="boardWrap">
+        <div id="photoBoard">
+          <table class="board-table">
+            <tr class="row-subject">
+              <td class="label-cell">件名</td>
+              <td class="value-cell board-value-cell">
+                <div class="textarea-center-wrap">
+                  <textarea id="subjectText" class="board-editable subject-textarea" inputmode="text" rows="2"></textarea>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="row-place">
+              <td class="label-cell">採取場所</td>
+              <td class="value-cell board-value-cell">
+                <div class="textarea-center-wrap">
+                  <textarea id="addressText" class="board-editable address-textarea" inputmode="text" rows="2"></textarea>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="row-content">
+              <td class="content-label-cell">内容</td>
+              <td>
+                <table class="inner-table">
+                  <tr>
+                    <td id="roomLabelCell" class="inner-label">　部屋No.</td>
+                    <td id="roomValueCell" class="inner-value">
+                      <input id="roomNoInput" class="board-input" type="text" inputmode="text" />
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="inner-label">　試料No.</td>
+                    <td class="inner-value">
+                      <input id="sampleNoInput" class="board-input" type="text" inputmode="text" />
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td colspan="2" class="status-cell">
+                      <div class="status-row">
+                        <button id="visualStatusButton" class="status-btn" type="button" data-value="visual">
+                          <span class="status-box">■</span><span>目視</span>
+                        </button>
+
+                        <button class="status-btn" type="button" data-value="before">
+                          <span class="status-box">□</span><span>施工前</span>
+                        </button>
+
+                        <button class="status-btn" type="button" data-value="during">
+                          <span class="status-box">□</span><span>施工中</span>
+                        </button>
+
+                        <button class="status-btn" type="button" data-value="after">
+                          <span class="status-box">□</span><span>施工後</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr class="row-date">
+              <td class="label-cell">日付</td>
+              <td class="date-cell">
+                <div id="dateText" class="date-text"></div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button
+        id="startButton"
+        class="control-button btn-start"
+        type="button"
+        onclick="startCamera()"
+      >
+        カメラ起動
+      </button>
+
+      <button
+        id="viewButton"
+        class="control-button btn-view hidden-control"
+        type="button"
+        onclick="openPreview()"
+      >
+        表示
+      </button>
+
+      <button
+        id="shootButton"
+        class="control-button btn-shoot hidden-control"
+        type="button"
+        onclick="takePhoto()"
+      >
+        撮影
+      </button>
+
+      <button
+        id="sectionButton"
+        class="control-button btn-section hidden-control"
+        type="button"
+        onclick="toggleSectionMode()"
+      >
+        断面
+      </button>
+
+      <button
+        id="categoryToggleButton"
+        class="control-button btn-mode hidden-control"
+        type="button"
+        onclick="cyclePhotoStatus()"
+      >
+        目視
+      </button>
+    </div>
+
+    <div id="toast"></div>
+  </div>
+
+  <div id="previewOverlay">
+    <div class="preview-topbar">
+      <button class="settings-button" type="button" onclick="openSettings()" aria-label="設定">⚙</button>
+    </div>
+
+    <div class="preview-casebar">
+      <button id="caseSelectButton" class="case-select-button" type="button" onclick="openCasePicker()">案件選択</button>
+    </div>
+
+    <div id="previewCounter">0 / 0</div>
+
+    <div id="previewImageWrap">
+      <button class="preview-arrow left" type="button" onclick="showPrevPhoto()">‹</button>
+      <img id="previewImage" alt="撮影写真" />
+      <button class="preview-arrow right" type="button" onclick="showNextPhoto()">›</button>
+    </div>
+
+    <div id="previewMeta"></div>
+    <div id="previewThumbnails"></div>
+    <div id="previewList"></div>
+
+    <div class="preview-controls">
+      <button class="preview-button btn-list-toggle" type="button" onclick="checkMissingPhotos()">チェック</button>
+      <button id="previewSortButton" class="preview-button btn-list-toggle" type="button" onclick="togglePreviewSortMode()">撮影順</button>
+      <button id="selectAllButton" class="preview-button btn-list-toggle" type="button" onclick="toggleSelectAllPhotos()">全選択</button>
+      <button class="preview-button btn-save" type="button" onclick="saveCurrentPreviewPhoto()">保存</button>
+      <button class="preview-button btn-delete" type="button" onclick="deleteSelectedPreviewPhotos()">削除</button>
+      <button class="preview-button btn-close" type="button" onclick="closePreview()">戻る</button>
+    </div>
+  </div>
+
+  <div id="casePickerOverlay">
+    <div class="case-picker-panel">
+      <h2 class="case-picker-title">案件を選択</h2>
+      <div id="casePickerList"></div>
+      <button class="settings-close" type="button" onclick="closeCasePicker()">閉じる</button>
+    </div>
+  </div>
+
+
+  <div id="settingsOverlay">
+    <div class="settings-panel">
+      <h2 class="settings-title">設定</h2>
+
+      <div class="settings-section-title">📷 写真画質</div>
+
+      <button id="qualityStandardButton" class="quality-option" type="button" onclick="setPhotoQuality('standard')">
+        <span class="quality-dot"></span>
+        <span>標準（3024×2268）</span>
+      </button>
+
+      <button id="qualityHighButton" class="quality-option" type="button" onclick="setPhotoQuality('high')">
+        <span class="quality-dot"></span>
+        <span>高画質（3264×2448）</span>
+      </button>
+
+      <div class="settings-note">
+        今後追加予定：ライト、ズーム、位置情報、グリッド表示、シャッター音など。
+      </div>
+
+      <button class="settings-close" type="button" onclick="closeSettings()">閉じる</button>
+    </div>
+  </div>
+
+  <div id="boardEditOverlay">
+    <div class="board-edit-left">
+      <div class="board-edit-title">看板編集モード</div>
+      <button id="editBoardModeButton" class="edit-mode-toggle" type="button" onclick="toggleBoardMode()">調査</button>
+    </div>
+    <div id="boardEditHost">
+      <div id="fontControlOverlay" class="font-control-overlay">
+        <div class="font-control-row font-subject"><button type="button" onclick="adjustBoardFieldTextSize('subject', -1)">－</button><button type="button" onclick="adjustBoardFieldTextSize('subject', 1)">＋</button></div>
+        <div class="font-control-row font-address"><button type="button" onclick="adjustBoardFieldTextSize('address', -1)">－</button><button type="button" onclick="adjustBoardFieldTextSize('address', 1)">＋</button></div>
+        <div class="font-control-row font-room"><button type="button" onclick="adjustBoardFieldTextSize('room', -1)">－</button><button type="button" onclick="adjustBoardFieldTextSize('room', 1)">＋</button></div>
+      </div>
+    </div>
+    <button class="board-edit-done" type="button" onclick="closeBoardEditMode()">完了</button>
+    <div class="board-edit-hint">件名・採取場所・部屋No.・試料No.・日付を編集できます。<br>写真区分もこの画面で切り替えできます。</div>
+  </div>
+
+  <script>
+    const APP_VERSION = "v47";
+
+    const APP_DATA = {
+      subject: "テストビル解体に伴うアスベスト調査",
+      address: "神奈川県小田原市小八幡2-3-6"
+    };
+
+    const CHOUSA_CAMERA_CONTEXT = (() => {
+      const p = new URLSearchParams(window.location.search);
+      const ctx = {
+        from: p.get("from") || "standalone",
+        projectId: p.get("projectId") || "",
+        projectNo: p.get("projectNo") || "",
+        projectName: p.get("projectName") || "",
+        roomId: p.get("roomId") || "",
+        roomNo: p.get("roomNo") || "",
+        roomName: p.get("roomName") || "",
+        materialId: p.get("materialId") || "",
+        materialName: p.get("materialName") || "",
+        materialNo: p.get("materialNo") || "",
+        inputId: p.get("inputId") || "",
+        mode: p.get("mode") || "survey",
+        returnUrl: p.get("returnUrl") || "app.html?tab=photos"
+      };
+      const subject = p.get("subject") || ctx.projectName;
+      const address = p.get("address");
+      if (subject) APP_DATA.subject = subject;
+      if (address) APP_DATA.address = address;
+      return ctx;
+    })();
+
+    const STATUS_LIST = [
+      { value: "visual", label: "目視", code: "5" },
+      { value: "before", label: "施工前", code: "1" },
+      { value: "during", label: "施工中", code: "2" },
+      { value: "after", label: "施工後", code: "3" }
+    ];
+
+    const SECTION_PHOTO_TYPE = { value: "section", label: "断面", code: "4" };
+    const DB_NAME = "electronic-board-camera-prototype";
+    const DB_VERSION = 1;
+    const DB_STORE_NAME = "photos";
+    const DEFAULT_POINT_NO = "1";
+    const POINT_DISPLAY_DEFAULT = "1-①";
+    const PHOTO_QUALITY_STORAGE_KEY = "electronic-board-camera-photo-quality";
+    const BOARD_TEXT_SIZE_STORAGE_KEY = "electronic-board-camera-board-text-size";
+    const BOARD_TEXT_SIZE_MULTIPLIERS = {
+      small: 0.88,
+      normal: 1,
+      large: 1.12
+    };
+    const PHOTO_QUALITY_SETTINGS = {
+      standard: { label: "標準", width: 3024, height: 2268 },
+      high: { label: "高画質", width: 3264, height: 2448 }
+    };
+
+    const cameraScreen = document.getElementById("cameraScreen");
+    const captureFrame = document.getElementById("captureFrame");
+    const video = document.getElementById("video");
+    const captureFreezeImage = document.getElementById("captureFreezeImage");
+    const cameraFlash = document.getElementById("cameraFlash");
+    const cameraGuide = document.getElementById("cameraGuide");
+
+    const boardLayer = document.querySelector(".board-layer");
+    const boardWrap = document.getElementById("boardWrap");
+    const photoBoard = document.getElementById("photoBoard");
+    const boardEditOverlay = document.getElementById("boardEditOverlay");
+    const boardEditHost = document.getElementById("boardEditHost");
+
+    const subjectText = document.getElementById("subjectText");
+    const addressText = document.getElementById("addressText");
+    const roomNoInput = document.getElementById("roomNoInput");
+    const sampleNoInput = document.getElementById("sampleNoInput");
+    const dateText = document.getElementById("dateText");
+
+    const startButton = document.getElementById("startButton");
+    const viewButton = document.getElementById("viewButton");
+    const sectionButton = document.getElementById("sectionButton");
+    const shootButton = document.getElementById("shootButton");
+    const statusButtons = Array.from(document.querySelectorAll(".status-btn"));
+
+    const photoCount = document.getElementById("photoCount");
+    const sectionModeBadge = document.getElementById("sectionModeBadge");
+    const previewOverlay = document.getElementById("previewOverlay");
+    const previewImage = document.getElementById("previewImage");
+    const previewCounter = document.getElementById("previewCounter");
+    const caseSelectButton = document.getElementById("caseSelectButton");
+    const casePickerOverlay = document.getElementById("casePickerOverlay");
+    const casePickerList = document.getElementById("casePickerList");
+    const previewMeta = document.getElementById("previewMeta");
+    const previewThumbnails = document.getElementById("previewThumbnails");
+    const previewList = document.getElementById("previewList");
+    const previewModeToggleButton = document.getElementById("previewModeToggleButton");
+    const previewSortButton = document.getElementById("previewSortButton");
+    const selectAllButton = document.getElementById("selectAllButton");
+    const settingsOverlay = document.getElementById("settingsOverlay");
+    const qualityStandardButton = document.getElementById("qualityStandardButton");
+    const qualityHighButton = document.getElementById("qualityHighButton");
+    const categoryToggleButton = document.getElementById("categoryToggleButton");
+    const editBoardModeButton = document.getElementById("editBoardModeButton");
+    const samplingLocationInput = null;
+    const textSizeSmallButton = document.getElementById("textSizeSmallButton");
+    const textSizeNormalButton = document.getElementById("textSizeNormalButton");
+    const textSizeLargeButton = document.getElementById("textSizeLargeButton");
+    const panelMainButtons = Array.from(document.querySelectorAll(".panel-main-button"));
+    const sidePanels = {
+      room: document.getElementById("roomPanel"),
+      sample: document.getElementById("samplePanel"),
+      board: document.getElementById("boardPanel")
+    };
+    const roomLabelCell = document.getElementById("roomLabelCell");
+    const roomValueCell = document.getElementById("roomValueCell");
+    const visualStatusButton = document.getElementById("visualStatusButton");
+    const toast = document.getElementById("toast");
+
+    let currentStream = null;
+    let isTakingPhoto = false;
+    let selectedStatus = "visual";
+    let isSectionMode = false;
+    let hasInitializedBoard = false;
+    let toastTimer = null;
+    let dbInstance = null;
+
+    const capturedPhotos = [];
+    let previewIndex = 0;
+    let isPreviewListMode = false;
+    let previewSortMode = "shooting";
+    let selectedCaseSubject = "";
+    let photoQuality = loadPhotoQuality();
+    let boardTextSize = loadBoardTextSize();
+    const boardFieldTextSize = { subject: 18, address: 17, room: 24 };
+    let boardMode = "survey";
+    let activeSidePanel = null;
+    let isDateManuallyEdited = false;
+
+    const BOARD_POSITIONS = ["bottom-left", "bottom-right", "top-right", "top-left"];
+    const BOARD_POSITION_LABELS = {
+      "bottom-left": "左下",
+      "bottom-right": "右下",
+      "top-right": "右上",
+      "top-left": "左上"
+    };
+
+    const boardState = {
+      x: 12,
+      y: 12,
+      scale: 1,
+      minScale: 0.35,
+      maxScale: 1.8,
+      sizeRatio: 0.45,
+      minSizeRatio: 0.35,
+      maxSizeRatio: 0.55,
+      position: "bottom-left"
+    };
+
+    let previewTouchStartX = 0;
+    let previewTouchStartY = 0;
+    let lastBoardTapAt = 0;
+    let isBoardEditMode = false;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      checkAppUpdate();
+      initializeBoard();
+      setupStatusButtons();
+      setupBoardMode();
+      setupDateEditTracking();
+      setupBoardEditGesture();
+      setBoardEditable(false);
+      setupPreviewSwipe();
+      setupPreviewImageTap();
+      setupPhotoCountHiddenShoot();
+      setupBoardTextareaAutoCenter();
+      renderPhotoQualitySettings();
+      renderBoardTextSize();
+      applyBoardFieldTextSizes();
+
+      await loadPhotosFromIndexedDB();
+
+      requestAnimationFrame(() => {
+        setInitialBoardLayout();
+      });
+    });
+
+    window.addEventListener("resize", () => {
+      handleWindowResize();
+    });
+
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => {
+        handleWindowResize();
+      }, 200);
+    });
+
+    /*
+     * iPhone / iPad のホーム画面PWA対策
+     * 画面復帰時にカメラが止まることがあるため復帰を試す
+     */
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && currentStream && !previewOverlay.classList.contains("show")) {
+        resumeCameraAfterPreview();
+      }
+    });
+
+    window.addEventListener("pageshow", () => {
+      if (currentStream && !previewOverlay.classList.contains("show")) {
+        resumeCameraAfterPreview();
+      }
+    });
+
+    function initializeBoard() {
+      subjectText.value = APP_DATA.subject;
+      addressText.value = APP_DATA.address;
+      syncBoardTextAreaVerticalCenter();
+      roomNoInput.value = CHOUSA_CAMERA_CONTEXT.roomNo || roomNoInput.value || "1-1";
+      sampleNoInput.value = sampleNoInput.value || POINT_DISPLAY_DEFAULT;
+      const returnButton = document.getElementById("chousaReturnButton");
+      if (returnButton) returnButton.href = CHOUSA_CAMERA_CONTEXT.returnUrl || "app.html?tab=photos";
+      updateCurrentDate();
+      syncBoardTextareas();
+      if (CHOUSA_CAMERA_CONTEXT.mode === "sample") {
+        boardMode = "sampling";
+      } else {
+        setStatus("visual");
+      }
+      applyBoardMode();
+      setSectionMode(false);
+      updatePhotoCount();
+    }
+
+    function updateCurrentDate() {
+      dateText.textContent = formatJapaneseDate(new Date());
+    }
+
+    function formatJapaneseDate(date) {
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+      return `${y}年${m}月${d}日`;
+    }
+
+    function formatFileDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const h = String(date.getHours()).padStart(2, "0");
+      const min = String(date.getMinutes()).padStart(2, "0");
+      const s = String(date.getSeconds()).padStart(2, "0");
+      return `${y}${m}${d}_${h}${min}${s}`;
+    }
+
+    function setupBoardMode() {
+      applyBoardMode();
+    }
+
+    function toggleBoardMode() {
+      boardMode = boardMode === "survey" ? "sampling" : "survey";
+      applyBoardMode();
+      showToast(boardMode === "sampling" ? "サンプリング看板" : "調査看板");
+    }
+
+    function applyBoardMode() {
+      const isSampling = boardMode === "sampling";
+      document.body.classList.toggle("sampling-mode", isSampling);
+
+      if (editBoardModeButton) {
+        editBoardModeButton.textContent = isSampling ? "サンプリング" : "調査";
+      }
+      updateCategoryToggleButton();
+
+      if (roomLabelCell) {
+        roomLabelCell.textContent = isSampling ? "" : "　部屋No.";
+      }
+
+      if (roomValueCell) {
+        roomValueCell.colSpan = isSampling ? 2 : 1;
+      }
+
+      if (roomNoInput) {
+        roomNoInput.placeholder = isSampling ? "例：階段 1-2階 / 駐車場" : "";
+      }
+
+      if (visualStatusButton) {
+        visualStatusButton.style.display = isSampling ? "none" : "inline-flex";
+      }
+
+      if (isSampling && selectedStatus === "visual") {
+        setStatus("before");
+      }
+    }
+
+    function openSidePanel(name) {
+      activeSidePanel = activeSidePanel === name ? null : name;
+
+      Object.entries(sidePanels).forEach(([key, panel]) => {
+        if (panel) panel.classList.toggle("show", key === activeSidePanel);
+      });
+
+      panelMainButtons.forEach((button) => {
+        const isActive =
+          (activeSidePanel === "room" && button.id === "panelRoomButton") ||
+          (activeSidePanel === "sample" && button.id === "panelSampleButton") ||
+          (activeSidePanel === "board" && button.id === "panelBoardButton");
+        button.classList.toggle("active", isActive);
+      });
+    }
+
+    function closeSidePanel() {
+      activeSidePanel = null;
+      Object.values(sidePanels).forEach((panel) => {
+        if (panel) panel.classList.remove("show");
+      });
+      panelMainButtons.forEach((button) => button.classList.remove("active"));
+    }
+
+    function promptRoomNo() {
+      const label = boardMode === "sampling" ? "採取箇所" : "部屋No.";
+      const next = window.prompt(`${label}を入力してください`, roomNoInput.value || "");
+      if (next === null) return;
+      roomNoInput.value = next.trim();
+      showToast(`${label}を変更しました`);
+    }
+
+    function promptSampleNo() {
+      const next = window.prompt("試料No.を入力してください", sampleNoInput.value || POINT_DISPLAY_DEFAULT);
+      if (next === null) return;
+      sampleNoInput.value = next.trim() || POINT_DISPLAY_DEFAULT;
+      showToast("試料No.を変更しました");
+    }
+
+    function changeRoomNumber(part, delta) {
+      if (boardMode === "sampling") {
+        promptRoomNo();
+        return;
+      }
+
+      roomNoInput.value = incrementNumberInText(roomNoInput.value, part === "floor" ? "first" : "last", delta);
+      showToast(part === "floor" ? "階を変更しました" : "部屋を変更しました");
+    }
+
+    function incrementNumberInText(value, target, delta) {
+      const text = String(value || "1");
+      const matches = Array.from(text.matchAll(/\d+/g));
+
+      if (!matches.length) {
+        return String(Math.max(1, 1 + delta));
+      }
+
+      const match = target === "first" ? matches[0] : matches[matches.length - 1];
+      const current = Number(match[0]);
+      const next = Math.max(1, current + delta);
+
+      return text.slice(0, match.index) + String(next) + text.slice(match.index + match[0].length);
+    }
+
+    function changeSampleNo(delta) {
+      const parts = parseSampleDisplayValue(sampleNoInput.value);
+      parts.sampleNo = Math.max(1, parts.sampleNo + delta);
+      sampleNoInput.value = formatSampleDisplayValue(parts.sampleNo, parts.pointNo);
+      showToast("検体No.を変更しました");
+    }
+
+    function changePointNo(delta) {
+      const parts = parseSampleDisplayValue(sampleNoInput.value);
+      parts.pointNo = Math.max(1, parts.pointNo + delta);
+      sampleNoInput.value = formatSampleDisplayValue(parts.sampleNo, parts.pointNo);
+      showToast("箇所No.を変更しました");
+    }
+
+    function parseSampleDisplayValue(value) {
+      const parsed = parseSampleAndPoint(value || POINT_DISPLAY_DEFAULT);
+      return {
+        sampleNo: Number(parsed.sampleNo) || 1,
+        pointNo: Number(parsed.pointNo) || 1
+      };
+    }
+
+    function formatSampleDisplayValue(sampleNo, pointNo) {
+      return `${sampleNo}-${toCircledNumber(pointNo)}`;
+    }
+
+    function toCircledNumber(value) {
+      const circles = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬", "⑭", "⑮", "⑯", "⑰", "⑱", "⑲", "⑳"];
+      return circles[value] || String(value);
+    }
+
+    function setupDateEditTracking() {
+      if (!dateText) return;
+      dateText.addEventListener("input", () => {
+        isDateManuallyEdited = true;
+      });
+    }
+
+    function getActiveStatusList() {
+      return boardMode === "sampling"
+        ? STATUS_LIST.filter((item) => item.value !== "visual")
+        : STATUS_LIST;
+    }
+
+    function setupStatusButtons() {
+      statusButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setStatus(button.dataset.value);
+        });
+      });
+    }
+
+    function setStatus(value) {
+      selectedStatus = value;
+      setSectionMode(false);
+
+      statusButtons.forEach((button) => {
+        const checked = button.dataset.value === value;
+        const box = button.querySelector(".status-box");
+
+        button.setAttribute("aria-pressed", checked ? "true" : "false");
+
+        if (box) {
+          box.textContent = checked ? "■" : "□";
+        }
+      });
+
+      updateCategoryToggleButton();
+    }
+
+    function cyclePhotoStatus() {
+      const list = getActiveStatusList();
+      const currentIndex = Math.max(0, list.findIndex((item) => item.value === selectedStatus));
+      const next = list[(currentIndex + 1) % list.length];
+      setStatus(next.value);
+      showToast(`区分：${next.label}`);
+    }
+
+    function updateCategoryToggleButton() {
+      if (!categoryToggleButton) return;
+      const current = getActiveStatusList().find((item) => item.value === selectedStatus) || getActiveStatusList()[0];
+      categoryToggleButton.textContent = current.label;
+    }
+
+    function setInitialBoardLayout() {
+      placeBoardByFixedPosition();
+      hasInitializedBoard = true;
+    }
+
+    function handleWindowResize() {
+      placeBoardByFixedPosition();
+      hasInitializedBoard = true;
+    }
+
+    function getScreenSize() {
+      return {
+        width: captureFrame.clientWidth || window.innerWidth,
+        height: captureFrame.clientHeight || window.innerHeight
+      };
+    }
+
+    function getBoardBaseSize() {
+      return {
+        width: photoBoard.offsetWidth,
+        height: photoBoard.offsetHeight
+      };
+    }
+
+    function applyBoardTransform() {
+      boardWrap.style.transform =
+        `translate(${boardState.x}px, ${boardState.y}px) scale(${boardState.scale})`;
+    }
+
+    function placeBoardByFixedPosition() {
+      const screen = getScreenSize();
+      const base = getBoardBaseSize();
+      const margin = 4;
+
+      boardState.sizeRatio = clamp(boardState.sizeRatio, boardState.minSizeRatio, boardState.maxSizeRatio);
+      const targetWidth = screen.width * boardState.sizeRatio;
+      boardState.scale = clamp(targetWidth / base.width, boardState.minScale, boardState.maxScale);
+
+      const boardWidth = base.width * boardState.scale;
+      const boardHeight = base.height * boardState.scale;
+      const maxX = Math.max(margin, screen.width - boardWidth - margin);
+      const maxY = Math.max(margin, screen.height - boardHeight - margin);
+
+      switch (boardState.position) {
+        case "top-left":
+          boardState.x = margin;
+          boardState.y = margin;
+          break;
+        case "top-right":
+          boardState.x = maxX;
+          boardState.y = margin;
+          break;
+        case "bottom-right":
+          boardState.x = maxX;
+          boardState.y = maxY;
+          break;
+        case "bottom-left":
+        default:
+          boardState.x = margin;
+          boardState.y = maxY;
+          break;
+      }
+
+      applyBoardTransform();
+      syncBoardTextareas();
+    }
+
+    function cycleBoardPosition() {
+      const currentIndex = BOARD_POSITIONS.indexOf(boardState.position);
+      const nextIndex = (currentIndex + 1) % BOARD_POSITIONS.length;
+      boardState.position = BOARD_POSITIONS[nextIndex];
+      placeBoardByFixedPosition();
+      showToast(`看板位置：${BOARD_POSITION_LABELS[boardState.position]}`);
+    }
+
+    function increaseBoardSize() {
+      boardState.sizeRatio = Math.min(boardState.maxSizeRatio, boardState.sizeRatio + 0.05);
+      placeBoardByFixedPosition();
+      showToast("看板を拡大しました");
+    }
+
+    function decreaseBoardSize() {
+      boardState.sizeRatio = Math.max(boardState.minSizeRatio, boardState.sizeRatio - 0.05);
+      placeBoardByFixedPosition();
+      showToast("看板を縮小しました");
+    }
+
+
+
+    function setupBoardEditGesture() {
+      let lastTapAt = 0;
+      photoBoard.addEventListener("pointerup", (event) => {
+        if (isBoardEditMode) return;
+        if (isSectionMode) return;
+
+        const now = Date.now();
+        if (now - lastTapAt < 380) {
+          event.preventDefault();
+          event.stopPropagation();
+          openBoardEditMode();
+        }
+        lastTapAt = now;
+      }, true);
+    }
+
+    function setBoardEditable(enabled) {
+      subjectText.readOnly = !enabled;
+      addressText.readOnly = !enabled;
+      roomNoInput.readOnly = !enabled;
+      sampleNoInput.readOnly = !enabled;
+      dateText.contentEditable = enabled ? "true" : "false";
+      boardWrap.classList.toggle("board-readonly", !enabled);
+    }
+
+    function openBoardEditMode() {
+      if (isBoardEditMode) return;
+      if (isSectionMode) {
+        showToast("断面モード中は看板を編集できません");
+        return;
+      }
+
+      isBoardEditMode = true;
+      document.body.classList.add("board-editing");
+      boardEditHost.appendChild(boardWrap);
+      boardEditOverlay.classList.add("show");
+      setBoardEditable(true);
+
+      setTimeout(() => {
+        syncBoardTextareas();
+        if (subjectText && subjectText.focus) subjectText.focus();
+      }, 120);
+    }
+
+    function closeBoardEditMode() {
+      if (!isBoardEditMode) return;
+
+      boardLayer.appendChild(boardWrap);
+      boardEditOverlay.classList.remove("show");
+      document.body.classList.remove("board-editing");
+      setBoardEditable(false);
+      isBoardEditMode = false;
+      placeBoardByFixedPosition();
+      showToast("看板編集を完了しました");
+    }
+
+
+
+    function syncBoardTextareas() {
+      const targets = [subjectText, addressText, samplingLocationInput].filter(Boolean);
+
+      targets.forEach((textarea) => {
+        if (!textarea || textarea.tagName !== "TEXTAREA") return;
+
+        textarea.style.paddingTop = "0px";
+        textarea.style.paddingBottom = "0px";
+
+        const parent = textarea.parentElement;
+        const boxHeight = parent ? parent.clientHeight : textarea.clientHeight;
+        const scrollHeight = textarea.scrollHeight;
+        const top = Math.max(0, (boxHeight - scrollHeight) / 2);
+
+        textarea.style.paddingTop = `${top}px`;
+      });
+    }
+
+    function setupBoardTextareaAutoCenter() {
+      [subjectText, addressText, samplingLocationInput].filter(Boolean).forEach((textarea) => {
+        if (!textarea || textarea.tagName !== "TEXTAREA") return;
+        textarea.addEventListener("input", syncBoardTextareas);
+      });
+
+      requestAnimationFrame(syncBoardTextareas);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function setupBoardGesture() {
+      boardWrap.addEventListener("pointerdown", onBoardPointerDown);
+      boardWrap.addEventListener("pointermove", onBoardPointerMove);
+      boardWrap.addEventListener("pointerup", onBoardPointerEnd);
+      boardWrap.addEventListener("pointercancel", onBoardPointerEnd);
+      boardWrap.addEventListener("pointerleave", onBoardPointerEnd);
+    }
+
+    function onBoardPointerDown(event) {
+      if (isInteractiveBoardTarget(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+      boardWrap.classList.add("dragging");
+
+      try {
+        boardWrap.setPointerCapture(event.pointerId);
+      } catch (error) {}
+
+      activePointers.set(event.pointerId, {
+        x: event.clientX,
+        y: event.clientY
+      });
+
+      if (activePointers.size === 1) {
+        gestureState.mode = "drag";
+        gestureState.dragStartX = event.clientX;
+        gestureState.dragStartY = event.clientY;
+        gestureState.originX = boardState.x;
+        gestureState.originY = boardState.y;
+      } else if (activePointers.size === 2) {
+        preparePinchGesture();
+      }
+    }
+
+    function onBoardPointerMove(event) {
+      if (!activePointers.has(event.pointerId)) return;
+
+      activePointers.set(event.pointerId, {
+        x: event.clientX,
+        y: event.clientY
+      });
+
+      if (activePointers.size >= 2) {
+        handlePinchMove();
+        return;
+      }
+
+      if (activePointers.size === 1 && gestureState.mode === "drag") {
+        event.preventDefault();
+
+        const dx = event.clientX - gestureState.dragStartX;
+        const dy = event.clientY - gestureState.dragStartY;
+
+        boardState.x = gestureState.originX + dx;
+        boardState.y = gestureState.originY + dy;
+
+        clampBoardWithinScreen();
+        applyBoardTransform();
+      }
+    }
+
+    function onBoardPointerEnd(event) {
+      if (activePointers.has(event.pointerId)) {
+        activePointers.delete(event.pointerId);
+      }
+
+      try {
+        boardWrap.releasePointerCapture(event.pointerId);
+      } catch (error) {}
+
+      if (activePointers.size === 1) {
+        const remaining = Array.from(activePointers.values())[0];
+
+        gestureState.mode = "drag";
+        gestureState.dragStartX = remaining.x;
+        gestureState.dragStartY = remaining.y;
+        gestureState.originX = boardState.x;
+        gestureState.originY = boardState.y;
+      } else {
+        gestureState.mode = null;
+        boardWrap.classList.remove("dragging");
+      }
+    }
+
+    function preparePinchGesture() {
+      const points = Array.from(activePointers.values());
+      if (points.length < 2) return;
+
+      const p1 = points[0];
+      const p2 = points[1];
+      const mid = getMidpoint(p1, p2);
+
+      gestureState.mode = "pinch";
+      gestureState.startDistance = getDistance(p1, p2);
+      gestureState.startScale = boardState.scale;
+
+      gestureState.localMidX = (mid.x - boardState.x) / boardState.scale;
+      gestureState.localMidY = (mid.y - boardState.y) / boardState.scale;
+    }
+
+    function handlePinchMove() {
+      const points = Array.from(activePointers.values());
+      if (points.length < 2) return;
+
+      const p1 = points[0];
+      const p2 = points[1];
+
+      const newDistance = getDistance(p1, p2);
+      const mid = getMidpoint(p1, p2);
+
+      if (!gestureState.startDistance) return;
+
+      let nextScale =
+        gestureState.startScale * (newDistance / gestureState.startDistance);
+
+      nextScale = clamp(nextScale, boardState.minScale, boardState.maxScale);
+
+      boardState.scale = nextScale;
+      boardState.x = mid.x - gestureState.localMidX * boardState.scale;
+      boardState.y = mid.y - gestureState.localMidY * boardState.scale;
+
+      clampBoardWithinScreen();
+      applyBoardTransform();
+    }
+
+    function getDistance(p1, p2) {
+      const dx = p2.x - p1.x;
+      const dy = p2.y - p1.y;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function getMidpoint(p1, p2) {
+      return {
+        x: (p1.x + p2.x) / 2,
+        y: (p1.y + p2.y) / 2
+      };
+    }
+
+    function isInteractiveBoardTarget(target) {
+      return Boolean(
+        target.closest(".board-input") || target.closest(".board-editable") || target.closest(".status-btn")
+      );
+    }
+
+    async function startCamera() {
+      try {
+        await requestFullscreenSafe();
+        stopCurrentStream();
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          },
+          audio: false
+        });
+
+        currentStream = stream;
+        video.srcObject = stream;
+
+        await video.play();
+
+        showCameraButtons();
+        showToast("カメラを起動しました");
+      } catch (error) {
+        console.error(error);
+        showToast("カメラを起動できませんでした");
+      }
+    }
+
+    function stopCurrentStream() {
+      if (!currentStream) return;
+
+      currentStream.getTracks().forEach((track) => track.stop());
+      currentStream = null;
+      video.srcObject = null;
+    }
+
+    async function requestFullscreenSafe() {
+      const target = document.documentElement;
+
+      if (!document.fullscreenElement && target.requestFullscreen) {
+        try {
+          await target.requestFullscreen();
+        } catch (error) {}
+      }
+    }
+
+    function showCameraButtons() {
+      cameraGuide.classList.add("hidden");
+      startButton.classList.add("hidden-control");
+      viewButton.classList.remove("hidden-control");
+      sectionButton.classList.remove("hidden-control");
+      shootButton.classList.remove("hidden-control");
+      if (categoryToggleButton) categoryToggleButton.classList.remove("hidden-control");
+    }
+
+    function showStartButton() {
+      cameraGuide.classList.remove("hidden");
+      startButton.classList.remove("hidden-control");
+      viewButton.classList.add("hidden-control");
+      sectionButton.classList.add("hidden-control");
+      shootButton.classList.add("hidden-control");
+      if (categoryToggleButton) categoryToggleButton.classList.add("hidden-control");
+    }
+
+    function toggleSectionMode() {
+      setSectionMode(!isSectionMode);
+    }
+
+    function setSectionMode(enabled) {
+      isSectionMode = Boolean(enabled);
+      document.body.classList.toggle("section-mode", isSectionMode);
+      sectionButton.classList.toggle("active", isSectionMode);
+
+      // 断面モードの表示バッジは出さない。
+      // ボタン色と看板の表示/非表示だけで状態を判断する。
+      sectionModeBadge.classList.remove("show");
+    }
+
+    /*
+     * プレビューから戻った後のカメラ復帰
+     * iPhone / iPad のホーム画面PWAで重要
+     */
+    async function resumeCameraAfterPreview() {
+      try {
+        const hasLiveTrack =
+          currentStream &&
+          currentStream.getVideoTracks &&
+          currentStream.getVideoTracks().some((track) => track.readyState === "live");
+
+        if (hasLiveTrack) {
+          video.srcObject = currentStream;
+          await video.play();
+          showCameraButtons();
+          return;
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          },
+          audio: false
+        });
+
+        currentStream = stream;
+        video.srcObject = stream;
+        await video.play();
+
+        showCameraButtons();
+      } catch (error) {
+        console.error(error);
+        showStartButton();
+        showToast("カメラを再起動してください");
+      }
+    }
+
+    async function takePhoto() {
+      if (isTakingPhoto) return;
+
+      if (!currentStream || !video.srcObject || video.readyState < 2) {
+        showToast("先にカメラを起動してください");
+        return;
+      }
+
+      isTakingPhoto = true;
+      shootButton.disabled = true;
+
+      try {
+        if (!isDateManuallyEdited) {
+          updateCurrentDate();
+        }
+
+        // Canvasに文字を焼き込む前に、フォント読み込み完了を待つ
+        // iPhone/iPadで日本語フォントの描画が不安定になるのを軽減する
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const canvas = captureCompositedImage();
+
+        // 白フラッシュで撮影感を出す
+        runCameraFlash();
+
+        /*
+         * iPhone/iPad向けに少し軽量化
+         * 0.95だと重くなりやすいので 0.82
+         */
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+
+        // 実際に保存する合成後画像を一時表示する
+        showCapturedStill(dataUrl);
+
+        const createdAt = new Date();
+        const photoType = getCurrentPhotoType();
+        const sampleParts = parseSampleAndPoint(sampleNoInput.value);
+        const sampleNo = sampleParts.sampleNo;
+        const pointNo = sampleParts.pointNo;
+        const fileName = generatePhotoFileName(sampleNo, pointNo, photoType.code);
+        const photo = {
+          id: `photo_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+          dataUrl,
+          fileName,
+          status: photoType.value,
+          statusLabel: photoType.label,
+          statusCode: photoType.code,
+          sampleNo,
+          pointNo,
+          roomNo: roomNoInput.value.trim(),
+          subjectName: getCurrentSubjectName(),
+          chousaContext: { ...CHOUSA_CAMERA_CONTEXT },
+          projectId: CHOUSA_CAMERA_CONTEXT.projectId,
+          projectNo: CHOUSA_CAMERA_CONTEXT.projectNo,
+          projectName: CHOUSA_CAMERA_CONTEXT.projectName,
+          roomId: CHOUSA_CAMERA_CONTEXT.roomId,
+          materialId: CHOUSA_CAMERA_CONTEXT.materialId,
+          materialName: CHOUSA_CAMERA_CONTEXT.materialName,
+          photoKind: CHOUSA_CAMERA_CONTEXT.mode,
+          isSection: photoType.value === SECTION_PHOTO_TYPE.value,
+          selected: false,
+          createdAt: createdAt.toISOString()
+        };
+
+        // 保存成功を確認してから、撮影済み配列と表示枚数へ反映する
+        await savePhotoToIndexedDB(photo);
+
+        capturedPhotos.push(photo);
+        previewIndex = capturedPhotos.length - 1;
+        updatePhotoCount();
+
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+
+        await delay(520);
+        showToast("撮影しました");
+        hideCapturedStill();
+      } catch (error) {
+        console.error(error);
+        showErrorToast("撮影データの保存に失敗しました");
+        hideCapturedStill();
+      } finally {
+        isTakingPhoto = false;
+        shootButton.disabled = false;
+      }
+    }
+
+    function runCameraFlash() {
+      if (!cameraFlash) return;
+
+      cameraFlash.classList.add("flash");
+      setTimeout(() => {
+        cameraFlash.classList.remove("flash");
+      }, 90);
+    }
+
+    function showCapturedStill(dataUrl) {
+      if (!captureFreezeImage) return;
+
+      captureFreezeImage.src = dataUrl;
+      captureFreezeImage.classList.add("show");
+    }
+
+    function hideCapturedStill() {
+      if (!captureFreezeImage) return;
+
+      captureFreezeImage.classList.remove("show");
+      setTimeout(() => {
+        if (!captureFreezeImage.classList.contains("show")) {
+          captureFreezeImage.removeAttribute("src");
+        }
+      }, 120);
+    }
+
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function captureCompositedImage() {
+      const quality = PHOTO_QUALITY_SETTINGS[photoQuality] || PHOTO_QUALITY_SETTINGS.standard;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = quality.width;
+      canvas.height = quality.height;
+
+      const ctx = canvas.getContext("2d");
+
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      /*
+       * 保存画像は撮影エリアだけにする。
+       * 黒帯はUI用なので保存しない。
+       * previewの object-fit: cover と同じ考えで、Canvasも4:3いっぱいに描画する。
+       */
+      const videoScale = Math.max(
+        canvas.width / videoWidth,
+        canvas.height / videoHeight
+      );
+
+      const drawVideoW = videoWidth * videoScale;
+      const drawVideoH = videoHeight * videoScale;
+      const drawVideoX = (canvas.width - drawVideoW) / 2;
+      const drawVideoY = (canvas.height - drawVideoH) / 2;
+
+      ctx.drawImage(
+        video,
+        0,
+        0,
+        videoWidth,
+        videoHeight,
+        drawVideoX,
+        drawVideoY,
+        drawVideoW,
+        drawVideoH
+      );
+
+      if (!isSectionMode) {
+        const frameRect = captureFrame.getBoundingClientRect();
+        const boardRect = photoBoard.getBoundingClientRect();
+
+        // 撮影エリアの中の看板だけを、4:3保存画像へ同じ比率で変換する。
+        const scaleX = canvas.width / frameRect.width;
+        const scaleY = canvas.height / frameRect.height;
+
+        const boardX = (boardRect.left - frameRect.left) * scaleX;
+        const boardY = (boardRect.top - frameRect.top) * scaleY;
+        const boardW = boardRect.width * scaleX;
+        const boardH = boardRect.height * scaleY;
+
+        drawBoardOnCanvas(ctx, boardX, boardY, boardW, boardH);
+      }
+
+      return canvas;
+    }
+
+
+    function getCurrentSubjectName() {
+      const value = subjectText && ("value" in subjectText ? subjectText.value : subjectText.textContent);
+      return String(value || "").trim() || "無題案件";
+    }
+
+    function getPhotoSubject(photo) {
+      return String(photo.subjectName || photo.subject || APP_DATA.subject || "無題案件").trim() || "無題案件";
+    }
+
+    function getCaseSummaries() {
+      const map = new Map();
+
+      capturedPhotos.forEach((photo) => {
+        const subject = getPhotoSubject(photo);
+        const current = map.get(subject) || { subject, count: 0, latest: 0 };
+        current.count += 1;
+        current.latest = Math.max(current.latest, new Date(photo.createdAt || 0).getTime());
+        map.set(subject, current);
+      });
+
+      return Array.from(map.values()).sort((a, b) => b.latest - a.latest);
+    }
+
+    function getLatestCaseSubject() {
+      const cases = getCaseSummaries();
+      return cases.length ? cases[0].subject : "";
+    }
+
+    function getPreviewPhotos() {
+      let photos = capturedPhotos.slice();
+
+      if (selectedCaseSubject) {
+        photos = photos.filter((photo) => getPhotoSubject(photo) === selectedCaseSubject);
+      }
+
+      if (previewSortMode === "sample") {
+        photos.sort(comparePhotosBySample);
+      } else {
+        photos.sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime());
+      }
+
+      return photos;
+    }
+
+    function comparePhotosBySample(a, b) {
+      const sampleA = Number(a.sampleNo || 0);
+      const sampleB = Number(b.sampleNo || 0);
+      if (sampleA !== sampleB) return sampleA - sampleB;
+
+      const pointA = Number(a.pointNo || 0);
+      const pointB = Number(b.pointNo || 0);
+      if (pointA !== pointB) return pointA - pointB;
+
+      const codeA = Number(a.statusCode || getStatusCode(a.status));
+      const codeB = Number(b.statusCode || getStatusCode(b.status));
+      if (codeA !== codeB) return codeA - codeB;
+
+      return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+    }
+
+    function updatePreviewHeader() {
+      if (caseSelectButton) {
+        const title = selectedCaseSubject || getLatestCaseSubject() || "案件なし";
+        const count = getPreviewPhotos().length;
+        caseSelectButton.textContent = `${title}　${count}枚 ▼`;
+      }
+
+      if (previewSortButton) {
+        previewSortButton.textContent = previewSortMode === "sample" ? "検体順" : "撮影順";
+      }
+    }
+
+    function openCasePicker() {
+      renderCasePicker();
+      casePickerOverlay.classList.add("show");
+    }
+
+    function closeCasePicker() {
+      casePickerOverlay.classList.remove("show");
+    }
+
+    function renderCasePicker() {
+      casePickerList.innerHTML = "";
+
+      getCaseSummaries().forEach((item) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "case-item";
+        button.classList.toggle("active", item.subject === selectedCaseSubject);
+        button.onclick = () => {
+          selectedCaseSubject = item.subject;
+          previewIndex = 0;
+          closeCasePicker();
+          renderPreview();
+        };
+
+        const name = document.createElement("div");
+        name.className = "case-name";
+        name.textContent = item.subject;
+
+        const count = document.createElement("div");
+        count.className = "case-count";
+        count.textContent = `${item.count}枚`;
+
+        button.appendChild(name);
+        button.appendChild(count);
+        casePickerList.appendChild(button);
+      });
+    }
+
+    function togglePreviewSortMode() {
+      previewSortMode = previewSortMode === "shooting" ? "sample" : "shooting";
+      previewIndex = 0;
+      renderPreview();
+      showToast(previewSortMode === "sample" ? "検体順にしました" : "撮影順にしました");
+    }
+
+    function checkMissingPhotos() {
+      const photos = getPreviewPhotos();
+      if (!photos.length) {
+        showToast("写真がありません");
+        return;
+      }
+
+      const required = ["1", "2", "3"];
+      const labels = { "1": "施工前", "2": "施工中", "3": "施工後" };
+      const groups = new Map();
+
+      photos.forEach((photo) => {
+        const key = `${photo.sampleNo || "1"}-${photo.pointNo || "1"}`;
+        if (!groups.has(key)) groups.set(key, new Set());
+        groups.get(key).add(String(photo.statusCode || getStatusCode(photo.status)));
+      });
+
+      const missingLines = [];
+      groups.forEach((codes, key) => {
+        const hasSampling = required.some((code) => codes.has(code));
+        if (!hasSampling) return;
+
+        const missing = required.filter((code) => !codes.has(code));
+        if (missing.length) {
+          missingLines.push(`${formatSamplePointLabel(key)}：${missing.map((code) => labels[code]).join("・")}`);
+        }
+      });
+
+      if (!missingLines.length) {
+        window.alert("撮影不足はありません。");
+        return;
+      }
+
+      window.alert(`撮影不足\n\n${missingLines.join("\n")}`);
+    }
+
+    function formatSamplePointLabel(key) {
+      const [sample, point] = String(key).split("-");
+      return `${sample || "1"}-${numberToCircle(Number(point || 1))}`;
+    }
+
+    function numberToCircle(num) {
+      const circles = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬", "⑭", "⑮", "⑯", "⑰", "⑱", "⑲", "⑳"];
+      return circles[num] || String(num);
+    }
+
+    /* 写真ビューア */
+    async function openPreview() {
+      await loadPhotosFromIndexedDB();
+
+      if (!capturedPhotos.length) {
+        showToast("撮影した写真がありません");
+        return;
+      }
+
+      selectedCaseSubject = getLatestCaseSubject();
+      const photos = getPreviewPhotos();
+      previewIndex = Math.max(0, photos.length - 1);
+      setPreviewListMode(false);
+      renderPreview();
+      previewOverlay.classList.add("show");
+    }
+
+    async function closePreview() {
+      previewOverlay.classList.remove("show");
+      setPreviewListMode(false);
+
+      /*
+       * 戻るを押したらカメラ画面へ復帰
+       * PWAでカメラが止まっていたら再取得を試す
+       */
+      await resumeCameraAfterPreview();
+    }
+
+    function showPrevPhoto() {
+      const photos = getPreviewPhotos();
+      if (!photos.length) return;
+
+      previewIndex -= 1;
+
+      if (previewIndex < 0) {
+        previewIndex = photos.length - 1;
+      }
+
+      renderPreview();
+    }
+
+    function showNextPhoto() {
+      const photos = getPreviewPhotos();
+      if (!photos.length) return;
+
+      previewIndex += 1;
+
+      if (previewIndex >= photos.length) {
+        previewIndex = 0;
+      }
+
+      renderPreview();
+    }
+
+    function renderPreview() {
+      const photos = getPreviewPhotos();
+
+      if (!photos.length) {
+        previewImage.removeAttribute("src");
+        previewCounter.textContent = "0 / 0";
+        previewMeta.textContent = "この案件の写真がありません";
+        previewThumbnails.innerHTML = "";
+        previewList.innerHTML = "";
+        updatePreviewHeader();
+        updateSelectAllButton();
+        return;
+      }
+
+      previewIndex = clamp(previewIndex, 0, photos.length - 1);
+      const photo = photos[previewIndex];
+      previewImage.src = photo.dataUrl;
+      previewCounter.textContent = `${previewIndex + 1} / ${photos.length}`;
+      previewMeta.textContent = `${photo.fileName}　${photo.statusLabel || getStatusLabel(photo.status)}${photo.selected ? "　✓選択中" : ""}`;
+      updatePreviewHeader();
+      renderThumbnails();
+      renderPhotoList();
+      updateSelectAllButton();
+    }
+
+    function renderThumbnails() {
+      previewThumbnails.innerHTML = "";
+
+      getPreviewPhotos().forEach((photo, index) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "thumb-item";
+        item.classList.toggle("current", index === previewIndex);
+        item.classList.toggle("selected", Boolean(photo.selected));
+        item.onclick = () => {
+          previewIndex = index;
+          renderPreview();
+        };
+
+        const img = document.createElement("img");
+        img.src = photo.dataUrl;
+        img.alt = photo.fileName;
+
+        const check = document.createElement("span");
+        check.className = "thumb-check";
+        check.textContent = photo.selected ? "✓" : "";
+        check.onclick = async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          await togglePhotoSelected(index);
+        };
+
+        item.appendChild(img);
+        item.appendChild(check);
+        previewThumbnails.appendChild(item);
+      });
+
+      const currentThumb = previewThumbnails.querySelector(".thumb-item.current");
+      if (currentThumb) {
+        currentThumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    }
+
+    function renderPhotoList() {
+      previewList.innerHTML = "";
+
+      getPreviewPhotos().forEach((photo, index) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "photo-list-item";
+        item.classList.toggle("current", index === previewIndex);
+        item.classList.toggle("selected", Boolean(photo.selected));
+        item.onclick = () => {
+          previewIndex = index;
+          setPreviewListMode(false);
+          renderPreview();
+        };
+
+        const img = document.createElement("img");
+        img.src = photo.dataUrl;
+        img.alt = photo.fileName;
+
+        const check = document.createElement("span");
+        check.className = "list-check";
+        check.textContent = photo.selected ? "✓" : "";
+        check.onclick = async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          await togglePhotoSelected(index, { keepListMode: true });
+        };
+
+        const info = document.createElement("div");
+        info.className = "photo-list-info";
+
+        const status = document.createElement("div");
+        status.className = "photo-list-status";
+        status.textContent = photo.statusLabel || getStatusLabel(photo.status);
+
+        const file = document.createElement("div");
+        file.textContent = photo.fileName;
+
+        info.appendChild(status);
+        info.appendChild(file);
+        item.appendChild(img);
+        item.appendChild(check);
+        item.appendChild(info);
+        previewList.appendChild(item);
+      });
+    }
+
+    function togglePreviewListMode() {
+      setPreviewListMode(!isPreviewListMode);
+      renderPreview();
+    }
+
+    function setPreviewListMode(value) {
+      isPreviewListMode = Boolean(value);
+      previewOverlay.classList.toggle("list-mode", isPreviewListMode);
+      if (previewModeToggleButton) {
+        previewModeToggleButton.textContent = isPreviewListMode ? "拡大表示" : "2列一覧";
+      }
+      updateSelectAllButton();
+    }
+
+    async function toggleCurrentPhotoSelected() {
+      const photos = getPreviewPhotos();
+      if (!photos.length) return;
+      await togglePhotoSelected(previewIndex);
+    }
+
+    async function togglePhotoSelected(index, options = {}) {
+      const photos = getPreviewPhotos();
+      const photo = photos[index];
+      if (!photo) return;
+      photo.selected = !photo.selected;
+      await savePhotoToIndexedDB(photo);
+      updatePhotoCount();
+      renderPreview();
+
+      if (options.keepListMode) {
+        setPreviewListMode(true);
+      }
+    }
+
+    async function toggleSelectAllPhotos() {
+      const photos = getPreviewPhotos();
+      if (!photos.length) {
+        showToast("撮影した写真がありません");
+        return;
+      }
+
+      const allSelected = photos.every((photo) => photo.selected);
+      const nextSelected = !allSelected;
+
+      for (const photo of photos) {
+        photo.selected = nextSelected;
+        await savePhotoToIndexedDB(photo);
+      }
+
+      updatePhotoCount();
+      renderPreview();
+      showToast(nextSelected ? "表示中の写真を全選択しました" : "表示中の写真を全解除しました");
+    }
+
+    function updateSelectAllButton() {
+      if (!selectAllButton) return;
+      const photos = getPreviewPhotos();
+      if (!photos.length) {
+        selectAllButton.textContent = "全選択";
+        return;
+      }
+      const allSelected = photos.every((photo) => photo.selected);
+      selectAllButton.textContent = allSelected ? "全解除" : "全選択";
+    }
+
+    async function saveCurrentPreviewPhoto() {
+      if (!capturedPhotos.length) {
+        showToast("撮影した写真がありません");
+        return;
+      }
+
+      const selectedPhotos = getPreviewPhotos().filter((photo) => photo.selected);
+
+      if (!selectedPhotos.length) {
+        showToast("共有する写真をチェックしてください");
+        return;
+      }
+
+      await shareOrDownloadPhotos(selectedPhotos);
+    }
+
+    async function deleteSelectedPreviewPhotos() {
+      if (!capturedPhotos.length) {
+        showToast("撮影した写真がありません");
+        return;
+      }
+
+      const selectedPhotos = getPreviewPhotos().filter((photo) => photo.selected);
+
+      if (!selectedPhotos.length) {
+        showToast("削除する写真をチェックしてください");
+        return;
+      }
+
+      const ok = window.confirm(`選択した画像 ${selectedPhotos.length}枚を削除しますか？`);
+      if (!ok) return;
+
+      const selectedIds = new Set(selectedPhotos.map((photo) => photo.id));
+
+      for (const photo of selectedPhotos) {
+        await deletePhotoFromIndexedDB(photo.id);
+      }
+
+      for (let i = capturedPhotos.length - 1; i >= 0; i--) {
+        if (selectedIds.has(capturedPhotos[i].id)) {
+          capturedPhotos.splice(i, 1);
+        }
+      }
+
+      const remainingPhotos = getPreviewPhotos();
+
+      if (!remainingPhotos.length) {
+        previewIndex = 0;
+        renderPreview();
+      } else {
+        previewIndex = Math.min(previewIndex, remainingPhotos.length - 1);
+        renderPreview();
+      }
+
+      updatePhotoCount();
+      showToast("削除しました");
+    }
+
+    async function shareOrDownloadPhotos(photos) {
+      if (!photos.length) return;
+
+      if (navigator.share && navigator.canShare) {
+        try {
+          const files = photos.map((photo) => {
+            const blob = dataUrlToBlob(photo.dataUrl);
+            return new File([blob], photo.fileName, { type: "image/jpeg" });
+          });
+
+          if (navigator.canShare({ files })) {
+            await navigator.share({
+              files,
+              title: photos.length === 1 ? photos[0].fileName : `電子看板写真 ${photos.length}枚`
+            });
+            return;
+          }
+        } catch (error) {
+          if (error && error.name === "AbortError") return;
+          console.error(error);
+          showToast("共有できませんでした");
+        }
+      }
+
+      photos.forEach((photo, index) => {
+        setTimeout(() => {
+          const link = document.createElement("a");
+          link.href = photo.dataUrl;
+          link.download = photo.fileName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        }, index * 250);
+      });
+    }
+
+    function dataUrlToBlob(dataUrl) {
+      const parts = dataUrl.split(",");
+      const header = parts[0];
+      const base64 = parts[1];
+      const mimeMatch = header.match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
+      const binary = atob(base64);
+      const array = new Uint8Array(binary.length);
+
+      for (let i = 0; i < binary.length; i++) {
+        array[i] = binary.charCodeAt(i);
+      }
+
+      return new Blob([array], { type: mime });
+    }
+
+    function setupPreviewSwipe() {
+      previewOverlay.addEventListener("touchstart", (event) => {
+        if (!event.touches || event.touches.length !== 1) return;
+
+        previewTouchStartX = event.touches[0].clientX;
+        previewTouchStartY = event.touches[0].clientY;
+      }, { passive: true });
+
+      previewOverlay.addEventListener("touchend", (event) => {
+        if (!event.changedTouches || event.changedTouches.length !== 1) return;
+        if (isPreviewListMode) return;
+
+        const endX = event.changedTouches[0].clientX;
+        const endY = event.changedTouches[0].clientY;
+
+        const dx = endX - previewTouchStartX;
+        const dy = endY - previewTouchStartY;
+
+        if (Math.abs(dx) < 45) return;
+        if (Math.abs(dx) < Math.abs(dy)) return;
+
+        if (dx < 0) {
+          showNextPhoto();
+        } else {
+          showPrevPhoto();
+        }
+      }, { passive: true });
+    }
+
+    /*
+     * 写真プレビューの大きい画像をタップしたら、現在の写真を選択/解除する。
+     * サムネイルの小さいチェックだけだと現場で押しにくいため、画像全体をチェック操作にする。
+     */
+    function setupPhotoCountHiddenShoot() {
+      // 隠し機能：左上の「撮影済み ○枚 / 選択 ○枚」を押しても撮影する。
+      // 音量ボタン撮影の代わりに、片手で押しやすいサブシャッターとして使う。
+      photoCount.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // プレビュー表示中は誤作動させない。
+        if (previewOverlay.classList.contains("show")) return;
+
+        await takePhoto();
+      });
+    }
+
+    function setupPreviewImageTap() {
+      previewImage.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        await toggleCurrentPhotoSelected();
+      });
+    }
+
+    function updatePhotoCount() {
+      photoCount.textContent = `撮影済み\n${capturedPhotos.length}枚`;
+      updateSelectAllButton();
+    }
+
+    function getStatusLabel(value) {
+      if (value === SECTION_PHOTO_TYPE.value) return SECTION_PHOTO_TYPE.label;
+      const found = STATUS_LIST.find(item => item.value === value);
+      return found ? found.label : value;
+    }
+
+    function getCurrentPhotoType() {
+      if (isSectionMode) return SECTION_PHOTO_TYPE;
+      return STATUS_LIST.find((item) => item.value === selectedStatus) || STATUS_LIST[0];
+    }
+
+    function getStatusCode(value) {
+      if (value === SECTION_PHOTO_TYPE.value) return SECTION_PHOTO_TYPE.code;
+      const found = STATUS_LIST.find((item) => item.value === value);
+      return found ? found.code : "0";
+    }
+
+    function normalizeFilePart(value) {
+      const text = normalizeFullWidthText(String(value || "").trim());
+      return text ? text.replace(/[^0-9A-Za-z_-]/g, "") : "1";
+    }
+
+    /*
+     * 看板表示用の「試料No.」には、現場運用上「1-①」のような表記が入る想定。
+     * ファイル名では丸数字を半角数字に直し、「1-①」も「1-1」も同じ 1-1 として扱う。
+     */
+    function parseSampleAndPoint(value) {
+      const rawText = String(value || "").trim() || POINT_DISPLAY_DEFAULT;
+      const normalized = normalizeFullWidthText(rawText)
+        .replace(/[−ー―‐]/g, "-")
+        .replace(/[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳]/g, (char) => String("①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳".indexOf(char) + 1));
+
+      const parts = normalized.split("-").filter(Boolean);
+
+      return {
+        sampleNo: normalizeFilePart(parts[0] || normalized || "1"),
+        pointNo: normalizeFilePart(parts[1] || DEFAULT_POINT_NO)
+      };
+    }
+
+    function normalizeFullWidthText(value) {
+      return String(value || "").replace(/[！-～]/g, (char) => {
+        return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+      }).replace(/　/g, " ");
+    }
+
+    function generatePhotoFileName(sampleNo, pointNo, statusCode) {
+      const baseName = `${sampleNo}-${pointNo}-${statusCode}`;
+      const sameCount = capturedPhotos.filter((photo) => {
+        return photo.sampleNo === sampleNo &&
+          photo.pointNo === pointNo &&
+          photo.statusCode === statusCode;
+      }).length;
+
+      if (sameCount === 0) {
+        return `${baseName}.jpg`;
+      }
+
+      return `${baseName}_${String(sameCount + 1).padStart(2, "0")}.jpg`;
+    }
+
+    function openPhotoDB() {
+      return new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+          resolve(null);
+          return;
+        }
+
+        if (dbInstance) {
+          resolve(dbInstance);
+          return;
+        }
+
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains(DB_STORE_NAME)) {
+            db.createObjectStore(DB_STORE_NAME, { keyPath: "id" });
+          }
+        };
+
+        request.onsuccess = () => {
+          dbInstance = request.result;
+          resolve(dbInstance);
+        };
+
+        request.onerror = () => {
+          console.error(request.error);
+          reject(request.error);
+        };
+      });
+    }
+
+    async function loadPhotosFromIndexedDB() {
+      try {
+        const db = await openPhotoDB();
+        if (!db) return;
+
+        const photos = await new Promise((resolve, reject) => {
+          const transaction = db.transaction(DB_STORE_NAME, "readonly");
+          const store = transaction.objectStore(DB_STORE_NAME);
+          const request = store.getAll();
+
+          request.onsuccess = () => resolve(request.result || []);
+          request.onerror = () => reject(request.error);
+        });
+
+        capturedPhotos.splice(0, capturedPhotos.length, ...photos.sort((a, b) => {
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }));
+
+        capturedPhotos.forEach((photo) => {
+          if (!photo.subjectName) photo.subjectName = getPhotoSubject(photo);
+        });
+
+        if (capturedPhotos.length) {
+          previewIndex = capturedPhotos.length - 1;
+        }
+
+        updatePhotoCount();
+      } catch (error) {
+        console.error(error);
+        showToast("端末内保存の読込に失敗しました");
+      }
+    }
+
+    async function savePhotoToIndexedDB(photo) {
+      try {
+        const db = await openPhotoDB();
+        if (!db) return;
+
+        await new Promise((resolve, reject) => {
+          const transaction = db.transaction(DB_STORE_NAME, "readwrite");
+          const store = transaction.objectStore(DB_STORE_NAME);
+          const request = store.put(photo);
+
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+      } catch (error) {
+        console.error(error);
+        showToast("端末内保存に失敗しました");
+      }
+    }
+
+    async function deletePhotoFromIndexedDB(photoId) {
+      try {
+        const db = await openPhotoDB();
+        if (!db) return;
+
+        await new Promise((resolve, reject) => {
+          const transaction = db.transaction(DB_STORE_NAME, "readwrite");
+          const store = transaction.objectStore(DB_STORE_NAME);
+          const request = store.delete(photoId);
+
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+      } catch (error) {
+        console.error(error);
+        showToast("端末内写真の削除に失敗しました");
+      }
+    }
+
+    /* キャンバス上に看板を描画 */
+    function drawBoardOnCanvas(ctx, x, y, w, h) {
+      const data = {
+        subject: subjectText.value || "",
+        address: addressText.value || "",
+        roomNo: roomNoInput.value.trim(),
+        sampleNo: sampleNoInput.value.trim(),
+        date: dateText.textContent || "",
+        status: selectedStatus,
+        roomLabel: boardMode === "sampling" ? "" : "　部屋No."
+      };
+
+      const outerLine = Math.max(1.2, h * 0.0085);
+      const innerLine = Math.max(0.9, h * 0.0065);
+      const frameGap = Math.max(2.2, h * 0.017);
+      const frameInset = outerLine + frameGap;
+
+      const outerX = x;
+      const outerY = y;
+      const outerW = w;
+      const outerH = h;
+
+      // 細線二重枠の内側に、表本体を描く。
+      x = outerX + frameInset;
+      y = outerY + frameInset;
+      w = Math.max(1, outerW - frameInset * 2);
+      h = Math.max(1, outerH - frameInset * 2);
+
+      const leftColW = w * 0.20;
+      const rightW = w - leftColW;
+
+      const row1H = h * (52 / 230);
+      const row2H = h * (40 / 230);
+      const row3H = h * (96 / 230);
+      const row4H = h - row1H - row2H - row3H;
+
+      const contentY = y + row1H + row2H;
+      const contentH = row3H;
+
+      // 確定設定：No.セル「少し広」+ 値位置「右」。
+      // テストHTMLの 120px + 48px を、右側幅416px基準の比率でCanvasへ反映する。
+      const innerLabelW = rightW * 0.404;
+      const roomRowH = contentH * 0.31;
+      const sampleRowH = contentH * 0.31;
+      const statusRowH = contentH - roomRowH - sampleRowH;
+
+      ctx.save();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(outerX, outerY, outerW, outerH);
+
+      ctx.strokeStyle = "#000000";
+      ctx.lineJoin = "miter";
+      ctx.lineCap = "butt";
+      drawOuterBorder(ctx, outerX, outerY, outerW, outerH, outerLine);
+      drawOuterBorder(ctx, x, y, w, h, innerLine);
+
+      ctx.lineWidth = innerLine;
+
+      // v45: 罫線は二重枠の内側だけに描く。内容欄の太線・下側の飛び出しを防ぐ。
+      const gridTop = y + innerLine;
+      const gridBottom = y + h - innerLine;
+      const gridLeft = x + innerLine;
+      const gridRight = x + w - innerLine;
+      drawLine(ctx, x + leftColW, gridTop, x + leftColW, gridBottom);
+      drawLine(ctx, gridLeft, y + row1H, gridRight, y + row1H);
+      drawLine(ctx, gridLeft, y + row1H + row2H, gridRight, y + row1H + row2H);
+      drawLine(ctx, gridLeft, y + row1H + row2H + row3H, gridRight, y + row1H + row2H + row3H);
+
+      drawLine(ctx, x + leftColW, contentY + roomRowH, gridRight, contentY + roomRowH);
+      drawLine(ctx, x + leftColW, contentY + roomRowH + sampleRowH, gridRight, contentY + roomRowH + sampleRowH);
+      // 部屋No. / 試料No. はラベルと値の間の縦線を描かない。
+
+      const textMultiplier = BOARD_TEXT_SIZE_MULTIPLIERS[boardTextSize] || 1;
+      const labelFont = Math.max(10, w * 0.046);
+      const titleFont = Math.max(10, w * 0.047 * textMultiplier);
+      const addressFont = Math.max(10, w * 0.044 * textMultiplier);
+      const innerLabelFont = Math.max(9, w * 0.043);
+      const innerValueFont = Math.max(11, w * 0.055 * textMultiplier);
+      const statusFont = Math.max(9, w * 0.038);
+      const dateFont = Math.max(12, w * 0.055);
+
+      drawCenteredText(ctx, "件名", x, y, leftColW, row1H, labelFont);
+      drawCenteredText(ctx, "採取場所", x, y + row1H, leftColW, row2H, labelFont);
+      drawCenteredText(ctx, "内容", x, contentY, leftColW, contentH, labelFont);
+      drawCenteredText(ctx, "日付", x, y + row1H + row2H + row3H, leftColW, row4H, labelFont);
+
+      drawWrappedCenterText(ctx, data.subject, x + leftColW + 6, y, rightW - 12, row1H, titleFont, 1.25, 2);
+      drawWrappedCenterText(ctx, data.address, x + leftColW + 6, y + row1H, rightW - 12, row2H, addressFont, 1.2, 2);
+
+      if (boardMode === "sampling") {
+        drawLeftMiddleText(ctx, data.roomNo, x + leftColW + 10, contentY, rightW - 20, roomRowH, innerValueFont);
+      } else {
+        drawLeftMiddleText(ctx, data.roomLabel, x + leftColW + 8, contentY, innerLabelW - 8, roomRowH, innerLabelFont);
+        drawLeftMiddleText(ctx, data.roomNo, x + leftColW + innerLabelW, contentY, rightW - innerLabelW, roomRowH, innerValueFont);
+      }
+
+      drawLeftMiddleText(ctx, "　試料No.", x + leftColW + 8, contentY + roomRowH, innerLabelW - 8, sampleRowH, innerLabelFont);
+      drawLeftMiddleText(ctx, data.sampleNo, x + leftColW + innerLabelW, contentY + roomRowH, rightW - innerLabelW, sampleRowH, innerValueFont);
+
+      const statusStartX = x + leftColW + 3;
+      const statusWidth = rightW - 6;
+      const activeStatusList = getActiveStatusList();
+      const segmentW = statusWidth / activeStatusList.length;
+      const statusCenterY = contentY + roomRowH + sampleRowH + statusRowH / 2;
+
+      ctx.fillStyle = "#000";
+      ctx.font = `900 ${statusFont}px "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      activeStatusList.forEach((item, index) => {
+        const symbol = item.value === data.status ? "■" : "□";
+        const text = `${symbol}${item.label}`;
+        const centerX = statusStartX + segmentW * index + segmentW / 2;
+        ctx.fillText(text, centerX, statusCenterY);
+      });
+
+      drawCenteredText(ctx, data.date, x + leftColW, y + row1H + row2H + row3H, rightW, row4H, dateFont);
+
+      // 最後に二重枠をもう一度描いて、焼き込み時の外周を安定させる。
+      drawOuterBorder(ctx, outerX, outerY, outerW, outerH, outerLine);
+      drawOuterBorder(ctx, x, y, w, h, innerLine);
+
+      ctx.restore();
+    }
+
+    function drawOuterBorder(ctx, x, y, w, h, lineWidth) {
+      ctx.save();
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(x, y, w, lineWidth);
+      ctx.fillRect(x, y + h - lineWidth, w, lineWidth);
+      ctx.fillRect(x, y, lineWidth, h);
+      ctx.fillRect(x + w - lineWidth, y, lineWidth, h);
+      ctx.restore();
+    }
+
+    function drawLine(ctx, x1, y1, x2, y2) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function drawCenteredText(ctx, text, x, y, w, h, fontSize) {
+      ctx.save();
+      ctx.fillStyle = "#000";
+      ctx.font = `900 ${fontSize}px "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text || "", x + w / 2, y + h / 2);
+      ctx.restore();
+    }
+
+    function drawLeftMiddleText(ctx, text, x, y, w, h, fontSize) {
+      ctx.save();
+      ctx.fillStyle = "#000";
+      ctx.font = `900 ${fontSize}px "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text || "", x, y + h / 2);
+      ctx.restore();
+    }
+
+    function drawWrappedLeftText(ctx, text, x, y, w, h, fontSize, lineRate, maxLines) {
+      ctx.save();
+      ctx.fillStyle = "#000";
+      ctx.font = `900 ${fontSize}px "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+
+      const lines = getWrappedLines(ctx, text || "", w).slice(0, maxLines);
+      const lineHeight = fontSize * lineRate;
+      const totalHeight = lines.length * lineHeight;
+      let currentY = y + h / 2 - totalHeight / 2 + lineHeight / 2;
+
+      lines.forEach((line) => {
+        ctx.fillText(line, x, currentY);
+        currentY += lineHeight;
+      });
+
+      ctx.restore();
+    }
+
+    function drawWrappedCenterText(ctx, text, x, y, w, h, fontSize, lineRate, maxLines) {
+      ctx.save();
+      ctx.fillStyle = "#000";
+      ctx.font = `900 ${fontSize}px "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      const lines = getWrappedLines(ctx, text || "", w).slice(0, maxLines);
+      const lineHeight = fontSize * lineRate;
+      const totalHeight = lines.length * lineHeight;
+      let currentY = y + h / 2 - totalHeight / 2 + lineHeight / 2;
+
+      lines.forEach((line) => {
+        ctx.fillText(line, x + w / 2, currentY);
+        currentY += lineHeight;
+      });
+
+      ctx.restore();
+    }
+
+    function getWrappedLines(ctx, text, maxWidth) {
+      const result = [];
+      const source = String(text || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+      const manualLines = source.split("\n");
+
+      manualLines.forEach((manualLine) => {
+        const segment = manualLine || "";
+        let current = "";
+
+        for (const char of segment) {
+          const test = current + char;
+          const testWidth = ctx.measureText(test).width;
+
+          if (testWidth > maxWidth && current !== "") {
+            result.push(current);
+            current = char;
+          } else {
+            current = test;
+          }
+        }
+
+        // 手動改行だけの空行も保持する
+        result.push(current);
+      });
+
+      return result.length ? result : [""];
+    }
+
+
+    function setupBoardTextAreaCentering() {
+      [subjectText, addressText].forEach((element) => {
+        if (!element) return;
+        element.addEventListener("input", syncBoardTextAreaVerticalCenter);
+        element.addEventListener("change", syncBoardTextAreaVerticalCenter);
+      });
+      syncBoardTextAreaVerticalCenter();
+    }
+
+    function syncBoardTextAreaVerticalCenter() {
+      [subjectText, addressText].forEach((element) => {
+        if (!element) return;
+        element.style.paddingTop = "0px";
+        element.style.paddingBottom = "0px";
+
+        const visibleHeight = element.clientHeight;
+        const contentHeight = element.scrollHeight;
+        const padding = Math.max(0, Math.floor((visibleHeight - contentHeight) / 2));
+
+        element.style.paddingTop = `${padding}px`;
+        element.style.paddingBottom = "0px";
+      });
+    }
+
+    function loadPhotoQuality() {
+      try {
+        const saved = localStorage.getItem(PHOTO_QUALITY_STORAGE_KEY);
+        if (saved && PHOTO_QUALITY_SETTINGS[saved]) return saved;
+      } catch (error) {}
+
+      return "standard";
+    }
+
+    function setPhotoQuality(value) {
+      if (!PHOTO_QUALITY_SETTINGS[value]) return;
+
+      photoQuality = value;
+
+      try {
+        localStorage.setItem(PHOTO_QUALITY_STORAGE_KEY, value);
+      } catch (error) {}
+
+      renderPhotoQualitySettings();
+      const setting = PHOTO_QUALITY_SETTINGS[photoQuality];
+      showToast(`${setting.label}（${setting.width}×${setting.height}）にしました`);
+    }
+
+    function renderPhotoQualitySettings() {
+      if (!qualityStandardButton || !qualityHighButton) return;
+
+      qualityStandardButton.classList.toggle("active", photoQuality === "standard");
+      qualityHighButton.classList.toggle("active", photoQuality === "high");
+    }
+
+    function adjustBoardFieldTextSize(field, delta) {
+      if (!boardFieldTextSize[field]) return;
+      boardFieldTextSize[field] = clamp(boardFieldTextSize[field] + delta, 12, 32);
+      applyBoardFieldTextSizes();
+      syncBoardTextAreaVerticalCenter();
+      showToast("文字サイズを変更しました");
+    }
+
+    function applyBoardFieldTextSizes() {
+      if (subjectText) subjectText.style.fontSize = `${boardFieldTextSize.subject}px`;
+      if (addressText) addressText.style.fontSize = `${boardFieldTextSize.address}px`;
+      if (roomNoInput) roomNoInput.style.fontSize = `${boardFieldTextSize.room}px`;
+      syncBoardTextAreaVerticalCenter();
+    }
+
+    function loadBoardTextSize() {
+      try {
+        const saved = localStorage.getItem(BOARD_TEXT_SIZE_STORAGE_KEY);
+        if (saved && BOARD_TEXT_SIZE_MULTIPLIERS[saved]) return saved;
+      } catch (error) {}
+
+      return "normal";
+    }
+
+    function setBoardTextSize(value) {
+      if (!BOARD_TEXT_SIZE_MULTIPLIERS[value]) return;
+
+      boardTextSize = value;
+
+      try {
+        localStorage.setItem(BOARD_TEXT_SIZE_STORAGE_KEY, value);
+      } catch (error) {}
+
+      renderBoardTextSize();
+      showToast(value === "small" ? "文字サイズ：小" : value === "large" ? "文字サイズ：大" : "文字サイズ：標準");
+    }
+
+    function renderBoardTextSize() {
+      if (!boardWrap) return;
+
+      boardWrap.classList.toggle("text-small", boardTextSize === "small");
+      boardWrap.classList.toggle("text-large", boardTextSize === "large");
+
+      if (textSizeSmallButton) textSizeSmallButton.classList.toggle("active", boardTextSize === "small");
+      if (textSizeNormalButton) textSizeNormalButton.classList.toggle("active", boardTextSize === "normal");
+      if (textSizeLargeButton) textSizeLargeButton.classList.toggle("active", boardTextSize === "large");
+    }
+
+    function openSettings() {
+      renderPhotoQualitySettings();
+      settingsOverlay.classList.add("show");
+    }
+
+    function closeSettings() {
+      settingsOverlay.classList.remove("show");
+    }
+
+    async function checkAppUpdate() {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("_update_check", Date.now());
+
+        const response = await fetch(url.toString(), {
+          cache: "no-store"
+        });
+
+        const html = await response.text();
+        const match = html.match(/const APP_VERSION = "([^"]+)"/);
+
+        if (!match) return;
+
+        const latestVersion = match[1];
+
+        if (latestVersion !== APP_VERSION) {
+          const ok = window.confirm(
+            `新しいバージョンがあります。\n\n現在：${APP_VERSION}\n最新：${latestVersion}\n\n更新しますか？`
+          );
+
+          if (ok) {
+            const reloadUrl = new URL(window.location.href);
+            reloadUrl.searchParams.set("v", latestVersion);
+            window.location.href = reloadUrl.toString();
+          }
+        }
+      } catch (error) {
+        console.log("更新確認に失敗しました", error);
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.remove("error");
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1400);
+    }
+
+    function showErrorToast(message) {
+      toast.textContent = message;
+      toast.classList.add("error");
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.remove("error");
+      }, 2400);
+    }
+  </script>
+  <!-- camera review: service worker disabled in embedded package -->
+</body>
+</html>
