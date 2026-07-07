@@ -939,6 +939,31 @@ input[list]::-webkit-calendar-picker-indicator{
   z-index:260!important;
 }
 
+
+/* v0.10.9 review: material list UI bar / wrapping / right marker */
+.material-list-panel{overflow:hidden!important;}
+.material-list-panel .material-list-toolbar.material-action-bar{
+  position:relative!important;top:auto!important;z-index:3!important;background:#fff;border-bottom:1px solid var(--line);
+  padding:7px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap;margin:0;
+}
+.material-list-toolbar .status-left{display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-width:0;flex:1;}
+.material-list-toolbar .status-right{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex:0 0 auto;}
+.material-list-toolbar .bar-divider{color:#cbd5e1;margin:0 4px;}
+.material-list-summary{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;}
+.material-list-summary .pill b{font-size:12px;}
+.material-table-wrap{max-height:calc(100vh - 225px)!important;border-top:0!important;}
+.material-record-table .mat-name input,.material-record-table .mat-note input{min-width:0!important;width:100%!important;}
+.material-record-table .mat-name,.material-record-table .mat-place,.material-record-table .mat-note{white-space:normal!important;line-height:1.25;}
+.material-record-table .mat-place,.material-record-table .mat-part{max-width:230px;white-space:normal!important;line-height:1.25;}
+.material-record-table .mat-note input{height:auto!important;min-height:28px;}
+.material-record-table .wrap2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;line-height:1.25;}
+.material-record-table tr.selected-material-row td{box-shadow:inset 0 0 0 9999px rgba(37,99,235,.06);}
+.material-record-table .row-marker{min-width:210px;max-width:260px;white-space:normal!important;background:#f8fafc!important;font-weight:600;color:#334155;}
+.material-record-table .row-marker .marker-main{font-size:12px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.material-record-table .row-marker .marker-sub{font-size:10.5px;color:#64748b;margin-top:2px;}
+.finish-table .room-name input,.finish-table .name-col input,.finish-table .other-name input,.finish-table .other-part input{white-space:normal!important;line-height:1.2;}
+@media(max-width:850px){.material-list-panel .material-list-toolbar.material-action-bar{padding:5px 8px;gap:6px}.material-table-wrap{max-height:calc(100vh - 240px)!important}}
+
 </style>
 </head>
 <body>
@@ -992,11 +1017,24 @@ input[list]::-webkit-calendar-picker-indicator{
 
     <section class="content" id="materials" style="display:none">
       <div class="panel material-list-panel">
-        <div class="material-list-toolbar">
-          <span class="pill">有効建材 <b id="activeMaterialCount">0</b>件</span>
-          <span class="hint">建材IDは内部保持。試料No.〜分析備考は隠し扱い。</span>
-          <button class="btn small" onclick="renderMaterials()">レコード再集計</button>
+        <div class="material-list-toolbar material-action-bar">
+          <div class="status-left">
+            <button class="btn small" onclick="renderMaterials()">レコード再集計</button>
+            <button class="btn small" id="listColorBtn" onclick="toggleColorMode()">カラー表示 OFF</button>
+            <span class="pill">有効建材 <b id="activeMaterialCount">0</b>件</span>
+            <div class="material-list-summary">
+              <span class="pill">採取 <b id="sampleNeedCount">0</b></span>
+              <span class="pill">みなし <b id="assumeCount">0</b></span>
+              <span class="pill">目視等 <b id="visualCount">0</b></span>
+              <span class="pill warn">未設定 <b id="unsetNeedCount">0</b></span>
+            </div>
+          </div>
+          <div class="status-right">
+            <span class="bar-divider">｜</span>
+            <button class="btn" onclick="openMaterialOps()">操作</button>
+          </div>
         </div>
+        <span id="selectedMaterialLabel" style="display:none">なし</span>
         <div class="material-table-wrap"><table class="data-table material-record-table" id="materialsTable"></table></div>
       </div>
     </section>
@@ -1918,6 +1956,804 @@ function updateStickyOffsets(){
 }
 
 window.addEventListener('resize', updateStickyOffsets);
+
+
+/* v0.10.9 review override: material list UI */
+function materialNeedStats(records){
+  const stats={sample:0,assume:0,visual:0,unset:0};
+  (records||[]).forEach(m=>{
+    const v=String(m.analysisNeed||'').trim();
+    if(v==='採取・分析')stats.sample++;
+    else if(v==='みなし')stats.assume++;
+    else if(v==='目視'||v==='未調査'||v==='対象外')stats.visual++;
+    else stats.unset++;
+  });
+  return stats;
+}
+function updateMaterialListHeader(records){
+  const cnt=document.getElementById('activeMaterialCount'); if(cnt)cnt.textContent=(records||[]).length;
+  const st=materialNeedStats(records||[]);
+  const set=(id,v)=>{const el=document.getElementById(id); if(el)el.textContent=v;};
+  set('sampleNeedCount',st.sample); set('assumeCount',st.assume); set('visualCount',st.visual); set('unsetNeedCount',st.unset);
+  const label=document.getElementById('selectedMaterialLabel');
+  const m=activeMaterials().find(x=>x.id===selectedMaterialId);
+  if(label)label.textContent=m?`【${m.inputId}】${m.name}`:'なし';
+  const listColor=document.getElementById('listColorBtn'); if(listColor)listColor.textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
+}
+function materialRowMarker(m,no){
+  const part=joinRecord(m.usageParts||[]);
+  return `<div class="marker-main">${no}　${esc(part||'-')}　${esc(m.name||'')}</div><div class="marker-sub">${esc(m.id||'')}</div>`;
+}
+function selectMaterialFromList(id){selectedMaterialId=id; renderAll();}
+function openMaterialOps(){
+  if(!selectedMaterialId){alert('先に建材リストの行を選択してください'); return;}
+  openDrawer();
+}
+function updateDrawerMaterialOps(){
+  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
+  let box=document.getElementById('drawerMaterialOps');
+  if(!box){
+    box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box';
+    body.insertBefore(box, body.firstChild);
+  }
+  const records=activeMaterials();
+  const m=records.find(x=>x.id===selectedMaterialId);
+  if(!m){box.innerHTML='<h4>選択建材</h4><div class="hint">建材リストで行を選択すると、ここで統合・削除できます。</div>';return;}
+  const noMap=materialNoMap(records);
+  const targets=records.filter(x=>x.id!==m.id).map(x=>`<option value="${esc(x.id)}">${noMap[x.id]||'-'}　${esc(x.name)}</option>`).join('');
+  box.innerHTML=`<h4>選択建材の操作</h4>
+    <div class="hint"><b>${noMap[m.id]||'-'}　${esc(joinRecord(m.usageParts||[]))}　${esc(m.name)}</b><br>建材ID：${esc(m.id)}</div>
+    <button class="btn" onclick="editMaterialNote('${m.id}')">調査備考を編集</button>
+    <div style="margin-top:8px"><select id="mergeTo_${m.id}" style="width:100%;height:32px;border:1px solid var(--line);border-radius:8px;padding:4px 6px"><option value="">統合先を選択</option>${targets}</select></div>
+    <button class="btn" onclick="mergeMaterialRecord('${m.id}')">選択建材を統合</button>
+    <button class="btn" onclick="deleteMaterialRecord('${m.id}')">選択建材を削除</button>`;
+}
+function openDrawer(){updateDrawerMaterialOps();document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('open')}
+function renderMaterials(){
+  const records=syncMaterialRecordsFromFinishSheet();
+  updateMaterialListHeader(records);
+  let rows='<tr><th class="mat-no">建材No.</th><th class="input-id">入力ID</th><th>部位</th><th class="mat-name">建材名称</th><th class="mat-place">建材使用箇所</th><th>レベル</th><th>分析の要否</th><th class="mat-note">調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>確認</th></tr>';
+  records.forEach((m,i)=>{
+    ensureMaterialRecordDefaults(m,{parts:m.usageParts||[],places:m.usagePlaces||[]});
+    const colorClass=colorMode?' mat-color-'+materialColorIndex(m.id):'';
+    const selected=selectedMaterialId===m.id?' selected-material-row':'';
+    rows+=`<tr class="${selected}" onclick="selectMaterialFromList('${m.id}')">
+      <td class="mat-no${colorClass}">${i+1}</td>
+      <td class="input-id${colorClass}">${esc(m.inputId)}</td>
+      <td class="mat-part"><div class="wrap2">${esc(joinRecord(m.usageParts))}</div></td>
+      <td class="mat-name${colorClass}" onclick="event.stopPropagation()"><input value="${escapeAttr(m.name)}" onfocus="selectMaterialFromList('${m.id}')" onblur="updateMaterialName('${m.id}',this.value)"></td>
+      <td class="mat-place"><div class="wrap2">${esc(joinRecord(m.usagePlaces))}</div></td>
+      <td onclick="event.stopPropagation()">${levelSelect(m)}</td>
+      <td onclick="event.stopPropagation()">${analysisNeedSelect(m)}</td>
+      <td class="mat-note" onclick="event.stopPropagation()"><input value="${escapeAttr(m.note||'')}" onfocus="selectMaterialFromList('${m.id}')" onblur="mNote('${m.id}',this.value)" placeholder="調査備考"></td>
+      <td onclick="event.stopPropagation()">${sampleCountSelect(m)}</td>
+      <td class="${sampleEnabledByIndex(m,0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,0)}</td>
+      <td class="${sampleEnabledByIndex(m,1)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,1)}</td>
+      <td class="${sampleEnabledByIndex(m,2)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,2)}</td>
+      <td class="${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePartSelect(m)}</td>
+      <td class="sample-check ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${sampleCheckInput(m)}</td>
+      <td class="sample-date ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${sampleDateInput(m)}</td>
+      <td class="row-marker" title="${escapeAttr((i+1)+' '+joinRecord(m.usageParts||[])+' '+(m.name||''))}">${materialRowMarker(m,i+1)}</td>
+    </tr>`;
+  });
+  if(!records.length)rows+='<tr><td colspan="16" class="muted-cell">対象建材はまだありません</td></tr>';
+  const table=document.getElementById('materialsTable'); if(table){table.innerHTML=rows; table.classList.toggle('color-mode',colorMode);}
+}
+
+
+
+/* v0.10.9 review: list column compact + merge/delete picker UI + ABCDE sample */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+    .material-record-table th.mat-no,.material-record-table td.mat-no{width:35px!important;min-width:35px!important;max-width:35px!important;left:0!important;padding-left:2px!important;padding-right:2px!important;}
+    .material-record-table th.input-id,.material-record-table td.input-id{width:35px!important;min-width:35px!important;max-width:35px!important;left:35px!important;padding-left:2px!important;padding-right:2px!important;}
+    .material-record-table .mat-part{min-width:62px!important;max-width:82px!important;width:72px!important;white-space:normal!important;line-height:1.2!important;}
+    .material-record-table .mat-name{min-width:150px!important;max-width:190px!important;}
+    .material-record-table .row-marker{min-width:220px!important;max-width:280px!important;}
+    .material-record-table th.mat-no,.material-record-table th.input-id{z-index:55!important;}
+    .material-record-table td.mat-no,.material-record-table td.input-id{z-index:40!important;}
+    .drawer-material-target{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px;margin-top:8px;}
+    .drawer-material-target h5{margin:0 0 6px;font-size:12.5px;}
+    .material-picker-list{display:flex;flex-direction:column;gap:6px;}
+    .material-picker-list select{width:100%;height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:4px 7px;font-size:12px;}
+    .drawer-material-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+    .drawer-material-actions .btn{width:auto!important;text-align:center!important;margin-top:0!important;}
+    .drawer-box .danger{border-color:#fecaca!important;color:#b91c1c!important;background:#fff7f7!important;}
+    .picker-note{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:5px;}
+  `;
+  document.head.appendChild(style);
+})();
+
+function reviewBaseSort(a,b){
+  const ab=String(a.base||splitMaterialName(a.name||'').base||a.name||'');
+  const bb=String(b.base||splitMaterialName(b.name||'').base||b.name||'');
+  const c=ab.localeCompare(bb,'ja');
+  if(c!==0)return c;
+  const as=String(a.suffix||'');
+  const bs=String(b.suffix||'');
+  const sc=as.localeCompare(bs,'ja');
+  if(sc!==0)return sc;
+  return Number(a.inputId||0)-Number(b.inputId||0);
+}
+function reviewMaterialLabel(m,noMap){
+  const no=noMap&&noMap[m.id]?noMap[m.id]:'-';
+  const base=String(m.base||splitMaterialName(m.name||'').base||m.name||'');
+  const part=joinRecord((m.usageParts||[]));
+  const place=joinRecord((m.usagePlaces||[]));
+  return `${base}｜${m.name}｜No.${no}｜${part||'-'}｜${place||'-'}`;
+}
+function reviewMaterialOptions(selectedId='',excludeIds=[]){
+  const exclude=new Set((excludeIds||[]).filter(Boolean));
+  const records=activeMaterials().slice().sort(reviewBaseSort);
+  const noMap=materialNoMap(activeMaterials());
+  return '<option value="">選択してください</option>'+records.filter(m=>!exclude.has(m.id)).map(m=>`<option value="${esc(m.id)}" ${m.id===selectedId?'selected':''}>${esc(reviewMaterialLabel(m,noMap))}</option>`).join('');
+}
+function addMergeSourceSelect(selectedId=''){
+  const box=document.getElementById('mergeSourceList'); if(!box)return;
+  const div=document.createElement('div');
+  div.innerHTML=`<select class="merge-source-select">${reviewMaterialOptions(selectedId,[document.getElementById('mergeTargetSelect')?.value||''])}</select>`;
+  box.appendChild(div.firstChild);
+}
+function addDeleteTargetSelect(selectedId=''){
+  const box=document.getElementById('deleteTargetList'); if(!box)return;
+  const div=document.createElement('div');
+  div.innerHTML=`<select class="delete-target-select">${reviewMaterialOptions(selectedId,[])}</select>`;
+  box.appendChild(div.firstChild);
+}
+function selectedValuesByClass(cls){
+  return Array.from(document.querySelectorAll('.'+cls)).map(x=>x.value).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);
+}
+function materialPlacesForWarning(id){
+  const m=materialById(id);
+  const places=m&&m.usagePlaces&&m.usagePlaces.length?m.usagePlaces.slice():[];
+  if(places.length)return uniqueList(places).join('、');
+  const found=[];
+  forEachMaterialUse(id,(r)=>{if(r&&r.no)found.push(r.no)});
+  return uniqueList(found).join('、');
+}
+function mergeSelectedMaterialsFromDrawer(){
+  const toId=document.getElementById('mergeTargetSelect')?.value||'';
+  const to=materialById(toId);
+  const fromIds=selectedValuesByClass('merge-source-select').filter(id=>id!==toId);
+  if(!to)return alert('統合先の建材を選んでください');
+  if(!fromIds.length)return alert('統合する建材を選んでください');
+  const names=fromIds.map(id=>materialById(id)?.name).filter(Boolean).join('、');
+  if(!confirm(`${names} を ${to.name} に統合します。仕上表上の該当セルも統合先に置換します。`))return;
+  remember();
+  for(const fromId of fromIds){
+    const from=materialById(fromId); if(!from||from.id===to.id)continue;
+    forEachMaterialUse(from.id,(r,area,part,line)=>replaceCellMaterial(r.id,area,part,line,to));
+    mergeNotes(to,from);
+    from.active=false; from.mergedTo=to.id; from.mergedAt=new Date().toISOString();
+    addSystemMemo(from,`統合：${from.name} → ${to.name}`);
+    addSystemMemo(to,`統合受入：${from.name} を統合`);
+    addQueue('建材統合',`${from.name} → ${to.name}`);
+  }
+  selectedMaterialId=to.id;
+  compactMaterialSuffixes();
+  closeDrawer();
+  renderAll();
+}
+function deleteSelectedMaterialsFromDrawer(){
+  const ids=selectedValuesByClass('delete-target-select');
+  if(!ids.length)return alert('削除する建材を選んでください');
+  const lines=[];
+  for(const id of ids){
+    const m=materialById(id); if(!m)continue;
+    const places=materialPlacesForWarning(id);
+    lines.push(places?`${m.name}：${places} にあります`:`${m.name}：仕上表上の使用なし`);
+  }
+  if(!confirm(`${lines.join('\n')}\n\n仕上表から消しますか？`))return;
+  remember();
+  for(const id of ids){
+    const m=materialById(id); if(!m)continue;
+    clearMaterialFromFinishSheet(id);
+    m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
+    addSystemMemo(m,`削除：${m.name} をリストから除外`);
+    addQueue('建材削除',m.name);
+    if(selectedMaterialId===id)selectedMaterialId=null;
+  }
+  compactMaterialSuffixes();
+  closeDrawer();
+  renderAll();
+}
+function deleteMaterialRecord(id){
+  const m=materialById(id); if(!m)return;
+  const places=materialPlacesForWarning(id);
+  const msg=places?`${places} にありますが消しますか？`:`${m.name} を建材リストから外しますか？`;
+  if(!confirm(msg))return;
+  remember();
+  clearMaterialFromFinishSheet(id);
+  m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
+  addSystemMemo(m,`削除：${m.name} をリストから除外`);
+  if(selectedMaterialId===id)selectedMaterialId=null;
+  compactMaterialSuffixes();
+  addQueue('建材削除',m.name);
+  renderAll();
+}
+function updateDrawerMaterialOps(){
+  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
+  let box=document.getElementById('drawerMaterialOps');
+  if(!box){box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box'; body.insertBefore(box, body.firstChild);}
+  const records=activeMaterials().slice().sort(reviewBaseSort);
+  const m=records.find(x=>x.id===selectedMaterialId)||records[0];
+  const defaultTarget=m?m.id:'';
+  const defaultSource=records.find(x=>x.id!==defaultTarget)?.id||'';
+  box.innerHTML=`<h4>建材リスト操作</h4>
+    <div class="hint">建材はベース名順で表示。統合先と統合する建材を選んで操作します。</div>
+    <div class="drawer-material-target">
+      <h5>統合</h5>
+      <div class="hint">統合先の建材</div>
+      <div class="material-picker-list"><select id="mergeTargetSelect" onchange="document.querySelectorAll('.merge-source-select').forEach(s=>{const v=s.value;s.innerHTML=reviewMaterialOptions(v,[this.value]);s.value=v;})">${reviewMaterialOptions(defaultTarget,[])}</select></div>
+      <div class="hint" style="margin-top:8px">統合する建材</div>
+      <div class="material-picker-list" id="mergeSourceList"></div>
+      <div class="drawer-material-actions"><button class="btn small" onclick="addMergeSourceSelect()">さらに選択…</button><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
+      <div class="picker-note">例：仕上塗材Aへ、仕上塗材B/Cを統合。</div>
+    </div>
+    <div class="drawer-material-target">
+      <h5>削除</h5>
+      <div class="hint">削除する建材</div>
+      <div class="material-picker-list" id="deleteTargetList"></div>
+      <div class="drawer-material-actions"><button class="btn small" onclick="addDeleteTargetSelect()">さらに選択…</button><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
+      <div class="picker-note">削除時は、仕上表に残っている使用箇所を確認してから消します。</div>
+    </div>`;
+  addMergeSourceSelect(defaultSource);
+  addDeleteTargetSelect(defaultTarget);
+}
+function renderMaterials(){
+  const records=syncMaterialRecordsFromFinishSheet();
+  updateMaterialListHeader(records);
+  let rows='<tr><th class="mat-no">No.</th><th class="input-id">ID</th><th>部位</th><th class="mat-name">建材名称</th><th class="mat-place">建材使用箇所</th><th>レベル</th><th>分析の要否</th><th class="mat-note">調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>確認</th></tr>';
+  records.forEach((m,i)=>{
+    ensureMaterialRecordDefaults(m,{parts:m.usageParts||[],places:m.usagePlaces||[]});
+    const colorClass=colorMode?' mat-color-'+materialColorIndex(m.id):'';
+    const selected=selectedMaterialId===m.id?' selected-material-row':'';
+    rows+=`<tr class="${selected}" onclick="selectMaterialFromList('${m.id}')">
+      <td class="mat-no${colorClass}">${i+1}</td>
+      <td class="input-id${colorClass}">${esc(m.inputId)}</td>
+      <td class="mat-part"><div class="wrap2">${esc(joinRecord(m.usageParts))}</div></td>
+      <td class="mat-name${colorClass}" onclick="event.stopPropagation()"><input value="${escapeAttr(m.name)}" onfocus="selectMaterialFromList('${m.id}')" onblur="updateMaterialName('${m.id}',this.value)"></td>
+      <td class="mat-place"><div class="wrap2">${esc(joinRecord(m.usagePlaces))}</div></td>
+      <td onclick="event.stopPropagation()">${levelSelect(m)}</td>
+      <td onclick="event.stopPropagation()">${analysisNeedSelect(m)}</td>
+      <td class="mat-note" onclick="event.stopPropagation()"><input value="${escapeAttr(m.note||'')}" onfocus="selectMaterialFromList('${m.id}')" onblur="mNote('${m.id}',this.value)" placeholder="調査備考"></td>
+      <td onclick="event.stopPropagation()">${sampleCountSelect(m)}</td>
+      <td class="${sampleEnabledByIndex(m,0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,0)}</td>
+      <td class="${sampleEnabledByIndex(m,1)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,1)}</td>
+      <td class="${sampleEnabledByIndex(m,2)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,2)}</td>
+      <td class="${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePartSelect(m)}</td>
+      <td class="sample-check ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${sampleCheckInput(m)}</td>
+      <td class="sample-date ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${sampleDateInput(m)}</td>
+      <td class="row-marker" title="${escapeAttr((i+1)+' '+joinRecord(m.usageParts||[])+' '+(m.name||''))}">${materialRowMarker(m,i+1)}</td>
+    </tr>`;
+  });
+  if(!records.length)rows+='<tr><td colspan="16" class="muted-cell">対象建材はまだありません</td></tr>';
+  const table=document.getElementById('materialsTable'); if(table){table.innerHTML=rows; table.classList.toggle('color-mode',colorMode);}
+}
+const __reviewOriginalSeed=seed;
+seed=function(){
+  __reviewOriginalSeed();
+  const reviewSeeds=[
+    ['i7','内部','壁','仕上塗材'],
+    ['i8','内部','壁','仕上塗材'],
+    ['i9','内部','壁','仕上塗材'],
+    ['i10','内部','壁','仕上塗材'],
+    ['i13','内部','壁','仕上塗材']
+  ];
+  reviewSeeds.forEach(([roomId,area,part,name])=>setName(roomId,area,part,name,true));
+  state.queue=[];
+};
+
+
+/* v0.10.9 review2: grouped checkbox picker for merge/delete */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+    .group-check-picker{border:1px solid var(--line);border-radius:10px;background:#fff;max-height:260px;overflow:auto;padding:6px;margin-top:6px;}
+    .material-pick-group{border-bottom:1px solid #edf2f7;padding:4px 0 6px;}
+    .material-pick-group:last-child{border-bottom:0;}
+    .material-pick-group-title{font-size:12px;font-weight:700;color:#334155;background:#f8fafc;border-radius:7px;padding:4px 7px;margin:2px 0 4px;}
+    .material-pick-row{display:flex;align-items:center;gap:7px;padding:5px 6px;border-radius:7px;font-size:12px;line-height:1.25;cursor:pointer;}
+    .material-pick-row:hover{background:#f8fafc;}
+    .material-pick-row input{width:16px;height:16px;flex:0 0 auto;accent-color:var(--main);}
+    .material-pick-main{display:flex;gap:8px;align-items:center;min-width:0;}
+    .material-pick-no{font-weight:700;color:#1e3a8a;white-space:nowrap;}
+    .material-pick-name{font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px;}
+    .material-pick-inputid{color:#64748b;white-space:nowrap;font-size:11.5px;}
+    .drawer-material-target.review2{background:#fbfcff;}
+    .drawer-material-target.review2 h5{font-size:13px;border-left:4px solid var(--main);padding-left:6px;}
+  `;
+  document.head.appendChild(style);
+})();
+function reviewGroupedMaterials(){
+  const records=activeMaterials().slice().sort(reviewBaseSort);
+  const groups=[];
+  const map=new Map();
+  records.forEach(m=>{
+    const base=String(m.base||splitMaterialName(m.name||'').base||m.name||'未分類');
+    if(!map.has(base)){map.set(base,[]);groups.push([base,map.get(base)]);}
+    map.get(base).push(m);
+  });
+  return groups;
+}
+function materialPickLine(m,noMap){
+  const no=noMap&&noMap[m.id]?noMap[m.id]:'-';
+  return `<span class="material-pick-main"><span class="material-pick-no">No.${esc(no)}</span><span class="material-pick-name">${esc(m.name||'')}</span><span class="material-pick-inputid">ID:${esc(m.inputId||'')}</span></span>`;
+}
+function groupedCheckPickerHtml(cls,checkedIds=[],single=false){
+  const checked=new Set((checkedIds||[]).filter(Boolean));
+  const noMap=materialNoMap(activeMaterials());
+  const groups=reviewGroupedMaterials();
+  if(!groups.length)return '<div class="hint">対象建材がありません</div>';
+  return `<div class="group-check-picker">${groups.map(([base,items])=>`
+    <div class="material-pick-group">
+      <div class="material-pick-group-title">${esc(base)}</div>
+      ${items.map(m=>`
+        <label class="material-pick-row">
+          <input type="checkbox" class="${cls}" value="${esc(m.id)}" ${checked.has(m.id)?'checked':''} ${single?`onchange="if(this.checked){document.querySelectorAll('.${cls}').forEach(x=>{if(x!==this)x.checked=false;});}"`:''}>
+          ${materialPickLine(m,noMap)}
+        </label>`).join('')}
+    </div>`).join('')}</div>`;
+}
+function checkedValuesByClass(cls){
+  return Array.from(document.querySelectorAll('.'+cls)).filter(x=>x.checked).map(x=>x.value).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);
+}
+function mergeSelectedMaterialsFromDrawer(){
+  const toId=checkedValuesByClass('merge-target-check')[0]||'';
+  const to=materialById(toId);
+  const fromIds=checkedValuesByClass('merge-source-check').filter(id=>id!==toId);
+  if(!to)return alert('統合先の建材を選んでください');
+  if(!fromIds.length)return alert('統合する建材を選んでください');
+  const names=fromIds.map(id=>materialById(id)?.name).filter(Boolean).join('、');
+  if(!confirm(`${names} を ${to.name} に統合します。仕上表上の該当セルも統合先に置換します。`))return;
+  remember();
+  for(const fromId of fromIds){
+    const from=materialById(fromId); if(!from||from.id===to.id)continue;
+    forEachMaterialUse(from.id,(r,area,part,line)=>replaceCellMaterial(r.id,area,part,line,to));
+    mergeNotes(to,from);
+    from.active=false; from.mergedTo=to.id; from.mergedAt=new Date().toISOString();
+    addSystemMemo(from,`統合：${from.name} → ${to.name}`);
+    addSystemMemo(to,`統合受入：${from.name} を統合`);
+    addQueue('建材統合',`${from.name} → ${to.name}`);
+  }
+  selectedMaterialId=to.id;
+  compactMaterialSuffixes();
+  closeDrawer();
+  renderAll();
+}
+function deleteSelectedMaterialsFromDrawer(){
+  const ids=checkedValuesByClass('delete-target-check');
+  if(!ids.length)return alert('削除する建材を選んでください');
+  const lines=[];
+  for(const id of ids){
+    const m=materialById(id); if(!m)continue;
+    const places=materialPlacesForWarning(id);
+    lines.push(places?`${m.name}：${places} にあります`:`${m.name}：仕上表上の使用なし`);
+  }
+  if(!confirm(`${lines.join('\n')}\n\n仕上表から消しますか？`))return;
+  remember();
+  for(const id of ids){
+    const m=materialById(id); if(!m)continue;
+    clearMaterialFromFinishSheet(id);
+    m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
+    addSystemMemo(m,`削除：${m.name} をリストから除外`);
+    addQueue('建材削除',m.name);
+    if(selectedMaterialId===id)selectedMaterialId=null;
+  }
+  compactMaterialSuffixes();
+  closeDrawer();
+  renderAll();
+}
+function updateDrawerMaterialOps(){
+  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
+  let box=document.getElementById('drawerMaterialOps');
+  if(!box){box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box'; body.insertBefore(box, body.firstChild);}
+  const records=activeMaterials().slice().sort(reviewBaseSort);
+  const defaultTarget=(records.find(x=>x.id===selectedMaterialId)||records[0]||{}).id||'';
+  const defaultSource=(records.find(x=>x.id!==defaultTarget)||{}).id||'';
+  box.innerHTML=`<h4>建材リスト操作</h4>
+    <div class="hint">統合と削除を分けて操作します。建材はベース名ごとにまとめ、A/B/C順で表示します。</div>
+    <div class="drawer-material-target review2">
+      <h5>統合</h5>
+      <div class="hint">統合先の建材</div>
+      ${groupedCheckPickerHtml('merge-target-check',[defaultTarget],true)}
+      <div class="hint" style="margin-top:9px">統合する建材</div>
+      ${groupedCheckPickerHtml('merge-source-check',defaultSource?[defaultSource]:[],false)}
+      <div class="drawer-material-actions"><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
+      <div class="picker-note">例：仕上塗材Aを統合先にして、仕上塗材B/Cをチェック。</div>
+    </div>
+    <div class="drawer-material-target review2">
+      <h5>削除</h5>
+      <div class="hint">削除する建材</div>
+      ${groupedCheckPickerHtml('delete-target-check',defaultTarget?[defaultTarget]:[],false)}
+      <div class="drawer-material-actions"><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
+      <div class="picker-note">削除時は、仕上表に残っている使用箇所を確認してから消します。</div>
+    </div>`;
+}
+
+
+
+/* v0.10.9 review3: collapsible picker for merge/delete */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+    .collapse-picker-wrap{margin-top:6px;}
+    .collapse-picker-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:#fff;border-radius:10px;min-height:36px;padding:7px 10px;font-size:12px;color:#0f172a;text-align:left;}
+    .collapse-picker-toggle:hover{background:#f8fafc;}
+    .collapse-picker-summary{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .collapse-picker-arrow{flex:0 0 auto;color:#64748b;font-weight:700;}
+    .collapse-picker-panel{display:none;border:1px solid var(--line);border-radius:10px;background:#fff;max-height:300px;overflow:auto;padding:6px;margin-top:6px;}
+    .collapse-picker-panel.open{display:block;}
+    .collapse-picker-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #edf2f7;margin:6px -6px -6px;padding:7px;display:flex;justify-content:flex-end;gap:6px;}
+    .selected-list{font-size:11.5px;color:#334155;margin:5px 0 0 2px;line-height:1.45;}
+    .selected-list .empty{color:#94a3b8;}
+    .selected-chip{display:inline-block;border:1px solid #dbeafe;background:#eff6ff;border-radius:999px;padding:2px 7px;margin:2px 3px 0 0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;}
+    .drawer-material-target.review3{background:#fbfcff;}
+    .drawer-material-target.review3 h5{font-size:13px;border-left:4px solid var(--main);padding-left:6px;}
+  `;
+  document.head.appendChild(style);
+})();
+function pickerSummaryText(cls,placeholder){
+  const vals=checkedValuesByClass(cls);
+  if(!vals.length)return placeholder||'選択してください';
+  const noMap=materialNoMap(activeMaterials());
+  const labels=vals.map(id=>{const m=materialById(id); return m?`No.${noMap[id]||'-'} ${m.name||''} ID:${m.inputId||''}`:''}).filter(Boolean);
+  if(labels.length<=1)return labels[0]||placeholder||'選択してください';
+  return `${labels[0]} ほか${labels.length-1}件`;
+}
+function selectedChipHtml(cls){
+  const vals=checkedValuesByClass(cls);
+  if(!vals.length)return '<span class="empty">未選択</span>';
+  const noMap=materialNoMap(activeMaterials());
+  return vals.map(id=>{const m=materialById(id); if(!m)return ''; return `<span class="selected-chip">No.${esc(noMap[id]||'-')} ${esc(m.name||'')} ID:${esc(m.inputId||'')}</span>`;}).join('');
+}
+function refreshPickerSummaries(){
+  const map=[
+    ['mergeTargetSummary','merge-target-check','統合先を選択してください','mergeTargetSelected'],
+    ['mergeSourceSummary','merge-source-check','さらに選択…','mergeSourceSelected'],
+    ['deleteTargetSummary','delete-target-check','さらに選択…','deleteTargetSelected']
+  ];
+  map.forEach(([sid,cls,ph,lid])=>{
+    const s=document.getElementById(sid); if(s)s.textContent=pickerSummaryText(cls,ph);
+    const l=document.getElementById(lid); if(l)l.innerHTML=selectedChipHtml(cls);
+  });
+}
+function toggleCollapsePicker(id){
+  const el=document.getElementById(id); if(!el)return;
+  const willOpen=!el.classList.contains('open');
+  document.querySelectorAll('.collapse-picker-panel.open').forEach(x=>{if(x.id!==id)x.classList.remove('open')});
+  el.classList.toggle('open',willOpen);
+  refreshPickerSummaries();
+}
+function closeCollapsePicker(id){const el=document.getElementById(id); if(el)el.classList.remove('open'); refreshPickerSummaries();}
+function handleSinglePickerChange(input,pickerId){
+  if(input.checked){document.querySelectorAll('.'+input.className).forEach(x=>{if(x!==input)x.checked=false;}); closeCollapsePicker(pickerId);}
+  refreshPickerSummaries();
+}
+function groupedCheckPickerHtml(cls,checkedIds=[],single=false,pickerId=''){
+  const checked=new Set((checkedIds||[]).filter(Boolean));
+  const noMap=materialNoMap(activeMaterials());
+  const groups=reviewGroupedMaterials();
+  if(!groups.length)return '<div class="hint">対象建材がありません</div>';
+  return `<div class="group-check-picker compact-in-collapse">${groups.map(([base,items])=>`
+    <div class="material-pick-group">
+      <div class="material-pick-group-title">${esc(base)}</div>
+      ${items.map(m=>`
+        <label class="material-pick-row">
+          <input type="checkbox" class="${cls}" value="${esc(m.id)}" ${checked.has(m.id)?'checked':''} ${single?`onchange="handleSinglePickerChange(this,'${pickerId}')"`:`onchange="refreshPickerSummaries()"`}>
+          ${materialPickLine(m,noMap)}
+        </label>`).join('')}
+    </div>`).join('')}</div>`;
+}
+function collapsiblePickerHtml(title,summaryId,selectedId,pickerId,cls,checkedIds,single,placeholder){
+  return `<div class="collapse-picker-wrap">
+    <button type="button" class="collapse-picker-toggle" onclick="toggleCollapsePicker('${pickerId}')">
+      <span id="${summaryId}" class="collapse-picker-summary">${esc(placeholder||'選択してください')}</span>
+      <span class="collapse-picker-arrow">▼</span>
+    </button>
+    <div id="${selectedId}" class="selected-list"><span class="empty">未選択</span></div>
+    <div id="${pickerId}" class="collapse-picker-panel">
+      ${groupedCheckPickerHtml(cls,checkedIds,single,pickerId)}
+      ${single?'':`<div class="collapse-picker-actions"><button class="btn small" onclick="closeCollapsePicker('${pickerId}')">選択完了</button></div>`}
+    </div>
+  </div>`;
+}
+function updateDrawerMaterialOps(){
+  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
+  let box=document.getElementById('drawerMaterialOps');
+  if(!box){box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box'; body.insertBefore(box, body.firstChild);}
+  const records=activeMaterials().slice().sort(reviewBaseSort);
+  const defaultTarget=(records.find(x=>x.id===selectedMaterialId)||{}).id||'';
+  box.innerHTML=`<h4>建材リスト操作</h4>
+    <div class="hint">必要な欄だけ開いて選択します。統合先は1つ選ぶと自動で閉じます。</div>
+    <div class="drawer-material-target review3">
+      <h5>統合</h5>
+      <div class="hint">統合先の建材</div>
+      ${collapsiblePickerHtml('統合先の建材','mergeTargetSummary','mergeTargetSelected','mergeTargetPicker','merge-target-check',defaultTarget?[defaultTarget]:[],true,'統合先を選択してください')}
+      <div class="hint" style="margin-top:9px">統合する建材</div>
+      ${collapsiblePickerHtml('統合する建材','mergeSourceSummary','mergeSourceSelected','mergeSourcePicker','merge-source-check',[],false,'さらに選択…')}
+      <div class="drawer-material-actions"><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
+      <div class="picker-note">例：仕上塗材Aを統合先にして、仕上塗材B/Cをチェック。</div>
+    </div>
+    <div class="drawer-material-target review3">
+      <h5>削除</h5>
+      <div class="hint">削除する建材</div>
+      ${collapsiblePickerHtml('削除する建材','deleteTargetSummary','deleteTargetSelected','deleteTargetPicker','delete-target-check',[],false,'さらに選択…')}
+      <div class="drawer-material-actions"><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
+      <div class="picker-note">削除時は、仕上表に残っている使用箇所を確認してから消します。</div>
+    </div>`;
+  refreshPickerSummaries();
+}
+
+
+/* v0.10.9 review4: merge source exclusion + flat list cells */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+    /* 建材リスト本体：丸い入力枠を消して、普通の表セル表示に寄せる */
+    .material-record-table td.mat-name input,
+    .material-record-table td.mat-note input{
+      border:0!important;
+      border-radius:0!important;
+      background:transparent!important;
+      box-shadow:none!important;
+      padding:1px 0!important;
+    }
+    .material-record-table td.mat-name input:focus,
+    .material-record-table td.mat-note input:focus{
+      outline:1px solid var(--main)!important;
+      outline-offset:1px!important;
+      background:#fff!important;
+    }
+    .material-record-table .wrap2{
+      border:0!important;
+      border-radius:0!important;
+      background:transparent!important;
+      padding:0!important;
+    }
+    .material-record-table .mat-place,
+    .material-record-table .mat-part,
+    .material-record-table .mat-name,
+    .material-record-table .mat-note{
+      border-radius:0!important;
+    }
+    /* 統合先に選んだ建材は、統合する建材の候補から隠す */
+    .material-pick-row.excluded-by-target{display:none!important;}
+    .material-pick-group.empty-by-target{display:none!important;}
+  `;
+  document.head.appendChild(style);
+})();
+function refreshMergeSourceExclusion(){
+  const target=document.querySelector('.merge-target-check:checked')?.value||'';
+  document.querySelectorAll('.merge-source-check').forEach(input=>{
+    const row=input.closest('.material-pick-row');
+    if(!row)return;
+    const isExcluded=!!target && input.value===target;
+    if(isExcluded)input.checked=false;
+    row.classList.toggle('excluded-by-target',isExcluded);
+  });
+  document.querySelectorAll('#mergeSourcePicker .material-pick-group').forEach(group=>{
+    const rows=Array.from(group.querySelectorAll('.material-pick-row'));
+    const visible=rows.some(row=>!row.classList.contains('excluded-by-target'));
+    group.classList.toggle('empty-by-target',!visible);
+  });
+}
+const __review4RefreshPickerSummaries=refreshPickerSummaries;
+refreshPickerSummaries=function(){
+  refreshMergeSourceExclusion();
+  __review4RefreshPickerSummaries();
+};
+handleSinglePickerChange=function(input,pickerId){
+  if(input.checked){
+    document.querySelectorAll('.'+input.className).forEach(x=>{if(x!==input)x.checked=false;});
+  }
+  refreshMergeSourceExclusion();
+  closeCollapsePicker(pickerId);
+  refreshPickerSummaries();
+};
+const __review4ToggleCollapsePicker=toggleCollapsePicker;
+toggleCollapsePicker=function(id){
+  __review4ToggleCollapsePicker(id);
+  refreshMergeSourceExclusion();
+  refreshPickerSummaries();
+};
+
+
+/* v0.10.9 review5: select button + removable chips + delete unused first */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+    .select-button-wrap{margin-top:6px;}
+    .select-open-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 11px;font-size:12px;font-weight:700;color:#0f172a;box-shadow:0 1px 0 rgba(15,23,42,.03);}
+    .select-open-btn:hover{background:#f8fafc;}
+    .select-open-btn .plus{font-size:13px;color:#2563eb;}
+    .chip-list{margin:6px 0 0;display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+    .chip-list .empty{font-size:11.5px;color:#94a3b8;}
+    .pick-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #bfdbfe;background:#eff6ff;color:#0f172a;border-radius:999px;padding:3px 8px;font-size:11.5px;max-width:100%;cursor:pointer;}
+    .pick-chip:hover{background:#dbeafe;border-color:#93c5fd;}
+    .pick-chip .chip-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px;}
+    .pick-chip .chip-x{font-weight:900;color:#2563eb;}
+    .chip-help{font-size:10.5px;color:#64748b;margin:3px 0 0 2px;}
+    .select-panel{display:none;border-top:1px solid #e2e8f0;margin-top:7px;padding-top:6px;max-height:290px;overflow:auto;}
+    .select-panel.open{display:block;}
+    .select-panel-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #edf2f7;margin:6px 0 0;padding:7px 0 1px;display:flex;justify-content:flex-end;gap:6px;}
+    .delete-section-title{font-size:12px;font-weight:800;color:#334155;background:#f1f5f9;border-left:4px solid #94a3b8;padding:5px 7px;margin:4px 0 5px;}
+    .delete-section-title.unused{border-left-color:#22c55e;background:#f0fdf4;}
+    .delete-section-title.used{border-left-color:#f97316;background:#fff7ed;}
+    .material-pick-use{font-size:10.5px;color:#f97316;white-space:nowrap;margin-left:auto;}
+    .material-pick-row.used-row .material-pick-main{max-width:calc(100% - 70px);}
+  `;
+  document.head.appendChild(style);
+})();
+function selectedChipHtmlV5(cls){
+  const vals=checkedValuesByClass(cls);
+  if(!vals.length)return '<span class="empty">未選択</span>';
+  const noMap=materialNoMap(activeMaterials());
+  return vals.map(id=>{
+    const m=materialById(id); if(!m)return '';
+    const label=`No.${noMap[id]||'-'} ${m.name||''} ID:${m.inputId||''}`;
+    return `<button type="button" class="pick-chip" title="押すと選択解除" onclick="removePickerSelectionV5('${escapeAttr(cls)}','${escapeAttr(id)}')"><span class="chip-text">${esc(label)}</span><span class="chip-x">×</span></button>`;
+  }).join('');
+}
+function refreshPickerChipsV5(){
+  [['mergeTargetChips','merge-target-check'],['mergeSourceChips','merge-source-check'],['deleteTargetChips','delete-target-check']].forEach(([id,cls])=>{
+    const el=document.getElementById(id); if(el)el.innerHTML=selectedChipHtmlV5(cls);
+  });
+  refreshMergeSourceExclusionV5();
+}
+function removePickerSelectionV5(cls,id){
+  document.querySelectorAll('.'+cls).forEach(input=>{if(input.value===id)input.checked=false;});
+  refreshPickerChipsV5();
+}
+function toggleSelectPanelV5(id){
+  const el=document.getElementById(id); if(!el)return;
+  const willOpen=!el.classList.contains('open');
+  document.querySelectorAll('.select-panel.open').forEach(x=>{if(x.id!==id)x.classList.remove('open')});
+  el.classList.toggle('open',willOpen);
+  refreshPickerChipsV5();
+}
+function closeSelectPanelV5(id){const el=document.getElementById(id); if(el)el.classList.remove('open'); refreshPickerChipsV5();}
+function handleSinglePickerChangeV5(input,pickerId){
+  if(input.checked){
+    document.querySelectorAll('.'+input.className).forEach(x=>{if(x!==input)x.checked=false;});
+    closeSelectPanelV5(pickerId);
+  }
+  refreshPickerChipsV5();
+}
+function groupByBaseV5(items){
+  const groups=[]; const map=new Map();
+  items.slice().sort(reviewBaseSort).forEach(m=>{
+    const base=String(m.base||splitMaterialName(m.name||'').base||m.name||'未分類');
+    if(!map.has(base)){map.set(base,[]);groups.push([base,map.get(base)]);}
+    map.get(base).push(m);
+  });
+  return groups;
+}
+function materialPickRowV5(m,noMap,cls,checked,single,pickerId,extra=''){
+  return `<label class="material-pick-row ${extra?'used-row':''}">
+    <input type="checkbox" class="${cls}" value="${esc(m.id)}" ${checked.has(m.id)?'checked':''} ${single?`onchange="handleSinglePickerChangeV5(this,'${pickerId}')"`:`onchange="refreshPickerChipsV5()"`}>
+    ${materialPickLine(m,noMap)}${extra}
+  </label>`;
+}
+function groupedCheckPickerHtmlV5(cls,checkedIds=[],single=false,pickerId='',mode='normal'){
+  const checked=new Set((checkedIds||[]).filter(Boolean));
+  const records=activeMaterials().slice().sort(reviewBaseSort);
+  const noMap=materialNoMap(activeMaterials());
+  if(!records.length)return '<div class="hint">対象建材がありません</div>';
+  if(mode==='delete'){
+    const unused=[]; const used=[];
+    records.forEach(m=>{
+      const places=materialPlacesForWarning(m.id);
+      if(places)used.push({m,places}); else unused.push({m,places:''});
+    });
+    const section=(title,items,klass,showPlaces)=>{
+      if(!items.length)return '';
+      return `<div class="delete-section-title ${klass}">${title}</div>`+
+        groupByBaseV5(items.map(x=>x.m)).map(([base,groupItems])=>`
+          <div class="material-pick-group">
+            <div class="material-pick-group-title">${esc(base)}</div>
+            ${groupItems.map(m=>{
+              const found=items.find(x=>x.m.id===m.id);
+              const extra=showPlaces&&found&&found.places?`<span class="material-pick-use">${esc(found.places)}</span>`:'';
+              return materialPickRowV5(m,noMap,cls,checked,false,pickerId,extra);
+            }).join('')}
+          </div>`).join('');
+    };
+    return `<div class="group-check-picker compact-in-collapse delete-priority-picker">
+      ${section('仕上表で未使用',unused,'unused',false)}
+      ${section('仕上表で使用中',used,'used',true)}
+    </div>`;
+  }
+  const groups=groupByBaseV5(records);
+  return `<div class="group-check-picker compact-in-collapse">${groups.map(([base,items])=>`
+    <div class="material-pick-group">
+      <div class="material-pick-group-title">${esc(base)}</div>
+      ${items.map(m=>materialPickRowV5(m,noMap,cls,checked,single,pickerId,'')).join('')}
+    </div>`).join('')}</div>`;
+}
+function selectButtonPickerHtmlV5(label,chipId,pickerId,cls,checkedIds,single=false,mode='normal'){
+  return `<div class="select-button-wrap">
+    <button type="button" class="select-open-btn" onclick="toggleSelectPanelV5('${pickerId}')"><span class="plus">＋</span>選択する</button>
+    <div id="${chipId}" class="chip-list"><span class="empty">未選択</span></div>
+    <div class="chip-help">選択済みチップを押すと解除できます。</div>
+    <div id="${pickerId}" class="select-panel">
+      ${groupedCheckPickerHtmlV5(cls,checkedIds,single,pickerId,mode)}
+      ${single?'':`<div class="select-panel-actions"><button class="btn small" onclick="closeSelectPanelV5('${pickerId}')">選択完了</button></div>`}
+    </div>
+  </div>`;
+}
+function refreshMergeSourceExclusionV5(){
+  const target=document.querySelector('.merge-target-check:checked')?.value||'';
+  document.querySelectorAll('.merge-source-check').forEach(input=>{
+    const row=input.closest('.material-pick-row'); if(!row)return;
+    const isExcluded=!!target && input.value===target;
+    if(isExcluded)input.checked=false;
+    row.classList.toggle('excluded-by-target',isExcluded);
+  });
+  document.querySelectorAll('#mergeSourcePicker .material-pick-group').forEach(group=>{
+    const rows=Array.from(group.querySelectorAll('.material-pick-row'));
+    const visible=rows.some(row=>!row.classList.contains('excluded-by-target'));
+    group.classList.toggle('empty-by-target',!visible);
+  });
+}
+function updateDrawerMaterialOps(){
+  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
+  let box=document.getElementById('drawerMaterialOps');
+  if(!box){box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box'; body.insertBefore(box, body.firstChild);}
+  const records=activeMaterials().slice().sort(reviewBaseSort);
+  const defaultTarget=(records.find(x=>x.id===selectedMaterialId)||{}).id||'';
+  box.innerHTML=`<h4>建材リスト操作</h4>
+    <div class="hint">[選択する] を押して建材を選びます。選択済みチップを押すと解除できます。</div>
+    <div class="drawer-material-target review3">
+      <h5>統合</h5>
+      <div class="hint">統合先の建材</div>
+      ${selectButtonPickerHtmlV5('統合先の建材','mergeTargetChips','mergeTargetPicker','merge-target-check',defaultTarget?[defaultTarget]:[],true,'normal')}
+      <div class="hint" style="margin-top:10px">統合する建材</div>
+      ${selectButtonPickerHtmlV5('統合する建材','mergeSourceChips','mergeSourcePicker','merge-source-check',[],false,'normal')}
+      <div class="drawer-material-actions"><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
+      <div class="picker-note">統合先に選んだ建材は、統合する建材の候補から外れます。</div>
+    </div>
+    <div class="drawer-material-target review3">
+      <h5>削除</h5>
+      <div class="hint">削除する建材</div>
+      ${selectButtonPickerHtmlV5('削除する建材','deleteTargetChips','deleteTargetPicker','delete-target-check',[],false,'delete')}
+      <div class="drawer-material-actions"><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
+      <div class="picker-note">削除候補は「仕上表で未使用」を先に表示します。使用中建材は削除時に確認します。</div>
+    </div>`;
+  refreshPickerChipsV5();
+}
+function deleteSelectedMaterialsFromDrawer(){
+  const ids=checkedValuesByClass('delete-target-check');
+  if(!ids.length)return alert('削除する建材を選んでください');
+  const noMap=materialNoMap(activeMaterials());
+  const usedLines=[];
+  const deleteNames=[];
+  for(const id of ids){
+    const m=materialById(id); if(!m)continue;
+    deleteNames.push(`No.${noMap[id]||'-'} ${m.name}`);
+    const places=materialPlacesForWarning(id);
+    if(places)usedLines.push(`No.${noMap[id]||'-'} ${m.name} は ${places} にあります。`);
+  }
+  if(usedLines.length){
+    if(!confirm(`${usedLines.join('\n')}\n\n仕上表からも消しますか？`))return;
+  }else{
+    if(!confirm(`${deleteNames.join('、')} を削除しますか？`))return;
+  }
+  remember();
+  for(const id of ids){
+    const m=materialById(id); if(!m)continue;
+    clearMaterialFromFinishSheet(id);
+    m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
+    addSystemMemo(m,`削除：${m.name} をリストから除外`);
+    addQueue('建材削除',m.name);
+    if(selectedMaterialId===id)selectedMaterialId=null;
+  }
+  compactMaterialSuffixes();
+  closeDrawer();
+  renderAll();
+}
+
 initProjects(); renderAll();
 </script>
 </body>
