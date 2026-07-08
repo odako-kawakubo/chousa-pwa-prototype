@@ -1,1 +1,6 @@
-{"version":"v0.11.0-camera-review","base":"v0.10.9"}
+{
+  "version": "v0.11.1",
+  "name": "chousa-pwa-prototype",
+  "updated": "2026-07-08",
+  "notes": "写真タブ目視/採取レイアウト、サムネ選択、カメラ仮組み込みレビュー版"
+}
