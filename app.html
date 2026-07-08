@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.11.0 写真タブレビュー</title>
+<title>調査システムPWA プロトタイプ v0.11.2</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1050,7 +1050,7 @@ input[list]::-webkit-calendar-picker-indicator{
 .sample-stage-title{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;font-weight:700;color:#334155;}
 
 
-/* v0.11.1 photo thumb select */
+/* v0.11.2 photo thumb select */
 .photo-stage-tile{cursor:pointer;transition:.12s ease;}
 .photo-stage-tile.selected{outline:2px solid #2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.08);}
 .photo-stage-tile .stage-add{position:absolute;left:4px;top:4px;width:18px;height:18px;border-radius:6px;border:1px solid #bfdbfe;background:#fff;color:#2563eb;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px;}
@@ -1067,13 +1067,31 @@ input[list]::-webkit-calendar-picker-indicator{
 .photo-preview-body{flex:1;display:flex;align-items:center;justify-content:center;background:#eef2f7;color:#475569;font-size:18px;text-align:center;line-height:1.6;}
 .photo-material-lines{font-size:12px;color:#475569;line-height:1.45;margin-top:2px;}
 
+/* v0.11.4 visual photo default/collapse review */
+.photo-frame-card.visual-has-input{border-color:#bfdbfe;background:#eff6ff;}
+.photo-frame-card.visual-empty{background:#fff;border-style:dashed;}
+.photo-frame-card.visual-collapsed{grid-template-columns:1fr auto;cursor:pointer;}
+.photo-frame-card.visual-collapsed .photo-frame-title{margin-bottom:0;}
+.photo-input-badge{display:inline-flex;align-items:center;border:1px solid #bfdbfe;background:#fff;border-radius:999px;padding:2px 7px;font-size:11px;color:#1e40af;white-space:nowrap;}
+.photo-input-badge.empty{border-color:#e2e8f0;background:#f8fafc;color:#64748b;}
+.photo-frame-toggle{font-weight:800;color:#2563eb;min-width:18px;text-align:center;}
+
+/* v0.11.2 visual photo alignment */
+.photo-frame-title.visual-title{display:grid;grid-template-columns:minmax(76px,90px) 86px 76px;align-items:center;justify-content:start;gap:8px;margin-bottom:6px;}
+.photo-frame-title.visual-title b{min-width:0;white-space:nowrap;}
+.photo-frame-title.visual-title .visual-count{text-align:left;white-space:nowrap;}
+.photo-frame-card.visual-collapsed{grid-template-columns:1fr;cursor:pointer;}
+.photo-frame-card.visual-collapsed .photo-frame-title{margin-bottom:0;}
+.photo-frame-card .photo-camera-inline{align-self:center;}
+@media(max-width:850px){.photo-frame-title.visual-title{grid-template-columns:minmax(72px,1fr) 82px 72px;}}
+
 </style>
 </head>
 <body>
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill">v0.11.1</span>
+  <span class="pill">v0.11.2</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">同期待ち 0件</span>
   
@@ -1196,7 +1214,7 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 <script>
-const APP_VERSION='0.10.8-0.10.8-other12-partlabel';
+const APP_VERSION='0.11.2';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -1223,7 +1241,7 @@ const state={
    '外部':[{id:'e1',floor:'外部',no:'外部',name:'',lines:2},{id:'e2',floor:'外部',no:'東面',name:'',lines:2},{id:'e3',floor:'外部',no:'西面',name:'',lines:2},{id:'e4',floor:'外部',no:'南面',name:'',lines:2},{id:'e5',floor:'外部',no:'北面',name:'',lines:2}],
    '内部':[{id:'i1',floor:'1階',no:'1-1',name:'',lines:2},{id:'i2',floor:'1階',no:'1-2',name:'',lines:2},{id:'i3',floor:'1階',no:'1-3',name:'',lines:2},{id:'i4',floor:'1階',no:'1-4',name:'',lines:2},{id:'i5',floor:'1階',no:'1-5',name:'',lines:2},{id:'i6',floor:'1階',no:'1-6',name:'',lines:2},{id:'i7',floor:'1階',no:'1-7',name:'',lines:2},{id:'i8',floor:'1階',no:'1-8',name:'',lines:2},{id:'i9',floor:'1階',no:'1-9',name:'',lines:2},{id:'i10',floor:'1階',no:'1-10',name:'',lines:2},{id:'s1',floor:'階段',no:'S-1',name:'',lines:2},{id:'s2',floor:'階段',no:'S-2',name:'',lines:2},{id:'i13',floor:'2階',no:'2-1',name:'',lines:2},{id:'i14',floor:'2階',no:'2-2',name:'',lines:2},{id:'i15',floor:'2階',no:'2-3',name:'',lines:2},{id:'i16',floor:'2階',no:'2-4',name:'',lines:2},{id:'i17',floor:'2階',no:'2-5',name:'',lines:2},{id:'i18',floor:'2階',no:'2-6',name:'',lines:2},{id:'i19',floor:'2階',no:'2-7',name:'',lines:2},{id:'i20',floor:'2階',no:'2-8',name:'',lines:2},{id:'i21',floor:'2階',no:'2-9',name:'',lines:2},{id:'i22',floor:'2階',no:'2-10',name:'',lines:2},{id:'i23',floor:'3階',no:'3-1',name:'',lines:2},{id:'i24',floor:'3階',no:'3-2',name:'',lines:2},{id:'i25',floor:'3階',no:'3-3',name:'',lines:2},{id:'i26',floor:'3階',no:'3-4',name:'',lines:2},{id:'i27',floor:'3階',no:'3-5',name:'',lines:2},{id:'i28',floor:'3階',no:'3-6',name:'',lines:2},{id:'i29',floor:'3階',no:'3-7',name:'',lines:2},{id:'i30',floor:'3階',no:'3-8',name:'',lines:2},{id:'i31',floor:'3階',no:'3-9',name:'',lines:2},{id:'i32',floor:'3階',no:'3-10',name:'',lines:2},{id:'r1',floor:'屋上',no:'R-1',name:'',lines:2},{id:'r2',floor:'屋上',no:'R-2',name:'',lines:2}]
  },
- cells:{}, materials:[], materialCandidates:defaultMaterialCandidates.map(x=>({part:x[0],type:x[1],name:x[2]})), partCandidates:[...defaultPartCandidates], projectMaterialCandidates:[], projectPartCandidates:[], photos:[{roomId:'i1',type:'全景'},{roomId:'i1',type:'看板'},{roomId:'i2',type:'床'}], samples:[], queue:[]
+ cells:{}, materials:[], materialCandidates:defaultMaterialCandidates.map(x=>({part:x[0],type:x[1],name:x[2]})), partCandidates:[...defaultPartCandidates], projectMaterialCandidates:[], projectPartCandidates:[], photos:[], samples:[], queue:[]
 };
 let defaultRoomsByArea=null;
 function roomsForArea(area){return state.roomsByArea[area]||[]}
@@ -1486,7 +1504,7 @@ function mNote(id,value){const m=state.materials.find(x=>x.id===id); if(m){remem
 function renderPhotos(){document.getElementById('photoRooms').innerHTML=allRooms().map(r=>`<div class="room-item ${r.id===activePhotoRoom?'active':''}" onclick="activePhotoRoom='${r.id}';renderPhotos()"><b>${esc(r.no)} ${esc(r.name||r.floor)}</b><br><span class="hint">写真 ${state.photos.filter(p=>p.roomId===r.id).length}枚</span></div>`).join(''); const r=findRoom(activePhotoRoom); document.getElementById('photoTitle').textContent=r?`${r.no} ${r.name||r.floor}`:'部屋'; const photos=state.photos.filter(p=>p.roomId===activePhotoRoom); document.getElementById('photoGrid').innerHTML=photos.map((p,i)=>`<div class="photo-box">${p.type}<br>写真 ${i+1}<br><span>未同期</span></div>`).join('')||'<div class="hint">まだ写真がありません</div>'}
 function renderSamples(){let rows='<tr><th>試料ID</th><th>建材</th><th>採取場所</th><th>採取部位</th><th>結果</th></tr>'; for(const s of state.samples){const m=state.materials.find(x=>x.id===s.materialId); rows+=`<tr><td>${s.id}</td><td>${m?m.name:'-'}</td><td>${s.place}</td><td>${s.part}</td><td>未</td></tr>`} document.getElementById('samplesTable').innerHTML=rows}
 function renderSync(){const photoWait=state.photos.length; document.getElementById('unsyncedPill').textContent=`同期待ち ${state.queue.length+photoWait}件`; const mini=document.getElementById('miniUnsynced'); if(mini)mini.textContent=state.queue.length+photoWait; document.getElementById('syncFinish').textContent=state.queue.filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')).length; document.getElementById('syncMaterials').textContent=state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length; document.getElementById('syncPhotos').textContent=photoWait; document.getElementById('syncList').innerHTML=state.queue.length?state.queue.map(q=>`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`).join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>'}
-function renderAll(){renderFinish();renderMaterials();renderRecords();renderPhotos();renderSamples();renderSync();renderSettings();updateHistoryButtons()}
+function renderAll(){renderFinish();renderMaterials();renderRecords();renderPhotos();renderSamples();renderSync();renderSettings();updateHistoryButtons();scheduleStateSave()}
 function showTab(id){document.querySelectorAll('.content').forEach(x=>x.style.display='none'); const target=document.getElementById(id)||document.getElementById('finish'); target.style.display='block'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===target.id));}
 function toggleSection(name){collapsed[name]=!collapsed[name]; renderFinish()}
 function updateRoom(id,field,value){const r=findRoom(id); if(!r)return; remember(); r[field]=normalizeInput(value); addQueue('部屋情報変更',`${r.no} ${r.name}`); renderAll()}
@@ -1528,6 +1546,7 @@ function getCameraLaunchParams(mode){
 }
 function launchCamera(mode){
   const url='camera.html?'+getCameraLaunchParams(mode).toString();
+  saveStateToStorage();
   window.location.href=url;
 }
 
@@ -1589,15 +1608,15 @@ function esc(s){return String(s||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&l
 
 
 // v0.8.9: 外部/内部を行固定ではなく仕上表内タブで切替
-let activeFinishArea = '外部';
+let activeFinishArea = '内部';
 function switchFinishArea(area){
   activeFinishArea = area;
   renderFinish();
 }
 function renderFinishAreaTabs(){
   return `<div class="finish-area-tabs">
-    <button class="finish-area-tab ${activeFinishArea==='外部'?'active':''}" onclick="switchFinishArea('外部')">外部</button>
     <button class="finish-area-tab ${activeFinishArea==='内部'?'active':''}" onclick="switchFinishArea('内部')">内部</button>
+    <button class="finish-area-tab ${activeFinishArea==='外部'?'active':''}" onclick="switchFinishArea('外部')">外部</button>
   </div>`;
 }
 function renderFinish(){
@@ -2037,7 +2056,36 @@ const projectMeta={
 };
 let activeProjectId='odk';
 const projectStore={};
+const PWA_STORAGE_KEY='chousa-pwa-state-v0.11';
+let persistenceEnabled=false;
+let persistTimer=null;
 function cloneData(obj){return JSON.parse(JSON.stringify(obj))}
+function saveStateToStorage(){
+  if(!persistenceEnabled)return;
+  try{
+    saveActiveProject();
+    localStorage.setItem(PWA_STORAGE_KEY, JSON.stringify({activeProjectId, projectStore, savedAt:new Date().toISOString()}));
+  }catch(e){console.warn('状態保存に失敗',e);}
+}
+function scheduleStateSave(){
+  if(!persistenceEnabled)return;
+  clearTimeout(persistTimer);
+  persistTimer=setTimeout(saveStateToStorage,80);
+}
+function restoreStateFromStorage(){
+  try{
+    const raw=localStorage.getItem(PWA_STORAGE_KEY);
+    if(!raw)return false;
+    const data=JSON.parse(raw);
+    if(!data || !data.projectStore)return false;
+    Object.keys(projectStore).forEach(k=>delete projectStore[k]);
+    Object.assign(projectStore,data.projectStore);
+    activeProjectId=data.activeProjectId || 'odk';
+    if(projectStore[activeProjectId]){restoreState(projectStore[activeProjectId]); sanitizePhotoRecords();}
+    return true;
+  }catch(e){console.warn('保存状態の復元に失敗',e);return false;}
+}
+function sanitizePhotoRecords(){state.photos=(state.photos||[]).filter(p=>p && (p.photoMode||p.kind));}
 function resetStateForBlankProject(){
   state.roomsByArea=cloneData(defaultRoomsByArea);
   state.cells={};
@@ -2087,7 +2135,7 @@ function initProjects(){
   resetStateForBlankProject();
   projectStore.blank=snapshotState();
   activeProjectId='odk';
-  restoreState(projectStore.odk);
+  if(!restoreStateFromStorage())restoreState(projectStore.odk);
   renderProjectList();
 }
 
@@ -2746,6 +2794,15 @@ toggleCollapsePicker=function(id){
     .delete-section-title.used{border-left-color:#f97316;background:#fff7ed;}
     .material-pick-use{font-size:10.5px;color:#f97316;white-space:nowrap;margin-left:auto;}
     .material-pick-row.used-row .material-pick-main{max-width:calc(100% - 70px);}
+    .drawer-accordion{border:1px solid var(--line);border-radius:12px;background:#fbfcff;margin-top:10px;overflow:hidden;}
+    .drawer-accordion-head{width:100%;border:0;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:42px;padding:10px 12px;font-weight:800;color:#172033;text-align:left;}
+    .drawer-accordion-head:hover{background:#f8fafc;}
+    .drawer-accordion-title{display:flex;align-items:center;gap:7px;}
+    .drawer-accordion-arrow{color:#64748b;font-size:12px;font-weight:900;}
+    .drawer-accordion-note{font-size:11px;color:#64748b;font-weight:600;}
+    .drawer-accordion-body{display:none;border-top:1px solid #e5eaf3;padding:10px 11px 12px;}
+    .drawer-accordion.open .drawer-accordion-body{display:block;}
+    .drawer-material-actions .btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.2);}
   `;
   document.head.appendChild(style);
 })();
@@ -2764,6 +2821,28 @@ function refreshPickerChipsV5(){
     const el=document.getElementById(id); if(el)el.innerHTML=selectedChipHtmlV5(cls);
   });
   refreshMergeSourceExclusionV5();
+  updateDrawerDangerButtonsV5();
+}
+function updateDrawerDangerButtonsV5(){
+  const mergeBtn=document.getElementById('drawerMergeBtn');
+  if(mergeBtn)mergeBtn.disabled=!(checkedValuesByClass('merge-target-check').length&&checkedValuesByClass('merge-source-check').length);
+  const deleteBtn=document.getElementById('drawerDeleteBtn');
+  if(deleteBtn)deleteBtn.disabled=!checkedValuesByClass('delete-target-check').length;
+}
+function toggleDrawerAccordionV5(id){
+  const item=document.getElementById(id); if(!item)return;
+  const willOpen=!item.classList.contains('open');
+  document.querySelectorAll('#drawerMaterialOps .drawer-accordion.open').forEach(x=>{
+    if(x.id!==id){
+      x.classList.remove('open');
+      const n=x.querySelector('.drawer-accordion-note'); if(n)n.textContent='開く';
+      const a=x.querySelector('.drawer-accordion-arrow'); if(a)a.textContent='▶';
+    }
+  });
+  item.classList.toggle('open',willOpen);
+  const note=item.querySelector('.drawer-accordion-note'); if(note)note.textContent=willOpen?'閉じる':'開く';
+  const arrow=item.querySelector('.drawer-accordion-arrow'); if(arrow)arrow.textContent=willOpen?'▼':'▶';
+  refreshPickerChipsV5();
 }
 function removePickerSelectionV5(cls,id){
   document.querySelectorAll('.'+cls).forEach(input=>{if(input.value===id)input.checked=false;});
@@ -2867,22 +2946,32 @@ function updateDrawerMaterialOps(){
   const records=activeMaterials().slice().sort(reviewBaseSort);
   const defaultTarget=(records.find(x=>x.id===selectedMaterialId)||{}).id||'';
   box.innerHTML=`<h4>建材リスト操作</h4>
-    <div class="hint">[選択する] を押して建材を選びます。選択済みチップを押すと解除できます。</div>
-    <div class="drawer-material-target review3">
-      <h5>統合</h5>
-      <div class="hint">統合先の建材</div>
-      ${selectButtonPickerHtmlV5('統合先の建材','mergeTargetChips','mergeTargetPicker','merge-target-check',defaultTarget?[defaultTarget]:[],true,'normal')}
-      <div class="hint" style="margin-top:10px">統合する建材</div>
-      ${selectButtonPickerHtmlV5('統合する建材','mergeSourceChips','mergeSourcePicker','merge-source-check',[],false,'normal')}
-      <div class="drawer-material-actions"><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
-      <div class="picker-note">統合先に選んだ建材は、統合する建材の候補から外れます。</div>
+    <div class="hint">統合・削除は必要な時だけ開きます。誤操作防止のため、最初は中身を閉じています。</div>
+    <div class="drawer-accordion" id="drawerMergeAccordion">
+      <button type="button" class="drawer-accordion-head" onclick="toggleDrawerAccordionV5('drawerMergeAccordion')">
+        <span class="drawer-accordion-title"><span class="drawer-accordion-arrow">▶</span> 統合</span>
+        <span class="drawer-accordion-note">開く</span>
+      </button>
+      <div class="drawer-accordion-body">
+        <div class="hint">統合先の建材</div>
+        ${selectButtonPickerHtmlV5('統合先の建材','mergeTargetChips','mergeTargetPicker','merge-target-check',defaultTarget?[defaultTarget]:[],true,'normal')}
+        <div class="hint" style="margin-top:10px">統合する建材</div>
+        ${selectButtonPickerHtmlV5('統合する建材','mergeSourceChips','mergeSourcePicker','merge-source-check',[],false,'normal')}
+        <div class="drawer-material-actions"><button id="drawerMergeBtn" class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()" disabled>統合</button></div>
+        <div class="picker-note">統合先に選んだ建材は、統合する建材の候補から外れます。</div>
+      </div>
     </div>
-    <div class="drawer-material-target review3">
-      <h5>削除</h5>
-      <div class="hint">削除する建材</div>
-      ${selectButtonPickerHtmlV5('削除する建材','deleteTargetChips','deleteTargetPicker','delete-target-check',[],false,'delete')}
-      <div class="drawer-material-actions"><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
-      <div class="picker-note">削除候補は「仕上表で未使用」を先に表示します。使用中建材は削除時に確認します。</div>
+    <div class="drawer-accordion" id="drawerDeleteAccordion">
+      <button type="button" class="drawer-accordion-head" onclick="toggleDrawerAccordionV5('drawerDeleteAccordion')">
+        <span class="drawer-accordion-title"><span class="drawer-accordion-arrow">▶</span> 削除</span>
+        <span class="drawer-accordion-note">開く</span>
+      </button>
+      <div class="drawer-accordion-body">
+        <div class="hint">削除する建材</div>
+        ${selectButtonPickerHtmlV5('削除する建材','deleteTargetChips','deleteTargetPicker','delete-target-check',[],false,'delete')}
+        <div class="drawer-material-actions"><button id="drawerDeleteBtn" class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()" disabled>削除</button></div>
+        <div class="picker-note">削除候補は「仕上表で未使用」を先に表示します。使用中建材は削除時に確認します。</div>
+      </div>
     </div>`;
   refreshPickerChipsV5();
 }
@@ -2927,6 +3016,7 @@ let activeSamplePointKey = '';
 let activeSampleStage = '';
 let selectedPhotoRep = {};
 let selectedPhotoKey = '';
+let visualFrameOpen = {};
 const photoGroupOpen = {external:true, internal:true, floors:{}};
 const circleNums=['①','②','③'];
 const sampleStageOrder=['採取前','採取中','採取後','断面'];
@@ -2943,8 +3033,8 @@ function togglePhotoGroup(key){
   else photoGroupOpen.floors[key]=!(photoGroupOpen.floors[key]!==false);
   renderPhotos({preserveScroll:true});
 }
-function photoGroupMark(open){return open ? '−' : '＋'}
-function getRoomPhotoCount(roomId){return photoCount(p=>p.roomId===roomId && (p.photoMode==='visual'||p.kind==='visual'||p.type==='目視'||!p.photoMode))}
+function photoGroupMark(open){return open ? '▼' : '▶'}
+function getRoomPhotoCount(roomId){return photoCount(p=>p.roomId===roomId && !p.deleted && (p.photoMode==='visual'||p.kind==='visual'||p.type==='目視'))}
 function materialPhotoCount(materialId){return photoCount(p=>p.materialId===materialId && (p.photoMode==='sample'||p.kind==='sample'||p.type==='採取'))}
 function roomArea(roomId){
   if((state.roomsByArea['外部']||[]).some(r=>r.id===roomId))return '外部';
@@ -2954,37 +3044,99 @@ function photoMaterialLabel(id,text){
   const m=id?materialById(id):null;
   return (m&&m.name) || text || '-';
 }
+function visualDefaultPartsForArea(area){return area==='外部' ? ['床','犬走','外壁','屋根','軒裏','その他'] : ['床','巾木','壁','天井','その他'];}
+function getVisualCellForDefaultPart(roomId,area,label,line){
+  if(label==='その他')return {cell:null, slot:'その他', partLabel:'その他'};
+  let cell=getCell(roomId,area,label,'name',line);
+  let slot=label;
+  if(area==='外部' && (label==='床'||label==='犬走')){
+    const exactHas=cell && ((cell.text||'').trim()||cell.materialId);
+    if(!exactHas){cell=getCell(roomId,area,'床 犬走','name',line); slot='床 犬走';}
+  }
+  return {cell, slot, partLabel:label};
+}
 function getRoomVisualTargets(roomId){
   const room=findRoom(roomId);
   if(!room)return [];
   const area=roomArea(roomId);
-  const fixed=area==='外部'?externalParts:internalParts;
   const targets=[];
-  for(let line=0;line<roomLineCount(room);line++){
-    for(const p of fixed){
-      const c=getCell(roomId,area,p,'name',line);
-      const has=(c&&((c.text||'').trim()||c.materialId));
-      if(!has)continue;
-      targets.push({key:`${roomId}|${area}|${p}|${line}`,roomId,area,line,part:p,partLabel:p,materialId:c.materialId||'',materialName:photoMaterialLabel(c.materialId,c.text),slot:p});
+  const pushDefaultPart=(label)=>{
+    const materials=[];
+    for(let line=0;line<roomLineCount(room);line++){
+      const info=getVisualCellForDefaultPart(roomId,area,label,line);
+      const c=info.cell;
+      const has=!!(c&&((c.text||'').trim()||c.materialId));
+      if(has){
+        materials.push({
+          partLabel:label,
+          materialId:c.materialId||'',
+          materialName:photoMaterialLabel(c.materialId,c.text),
+          slot:info.slot,
+          line
+        });
+      }
     }
-    for(const slot of otherSlots){
-      const c=getCell(roomId,area,slot,'name',line);
-      const has=(c&&((c.text||'').trim()||c.materialId));
-      if(!has)continue;
-      const pc=getCell(roomId,area,slot,'part',line);
-      const label=(pc&&pc.text&&pc.text.trim()) ? pc.text.trim() : 'その他';
-      targets.push({key:`${roomId}|${area}|${slot}|${line}`,roomId,area,line,part:label,partLabel:label,materialId:c.materialId||'',materialName:photoMaterialLabel(c.materialId,c.text),slot});
+    targets.push({
+      key:`${roomId}|${area}|${label}`,
+      roomId,area,part:label,partLabel:label,slot:label,
+      materialId:materials[0]?.materialId||'',
+      materialName:materials[0]?.materialName||'',
+      materials,
+      hasInput:materials.length>0
+    });
+  };
+  for(const label of visualDefaultPartsForArea(area)){
+    if(label==='その他'){
+      const materials=[];
+      for(let line=0;line<roomLineCount(room);line++){
+        for(const slot of otherSlots){
+          const c=getCell(roomId,area,slot,'name',line);
+          const has=!!(c&&((c.text||'').trim()||c.materialId));
+          if(!has)continue;
+          const pc=getCell(roomId,area,slot,'part',line);
+          const partName=(pc&&pc.text&&pc.text.trim())?pc.text.trim():'その他';
+          materials.push({
+            partLabel:partName,
+            materialId:c.materialId||'',
+            materialName:photoMaterialLabel(c.materialId,c.text),
+            slot,
+            line
+          });
+        }
+      }
+      targets.push({
+        key:`${roomId}|${area}|その他`,
+        roomId,area,part:'その他',partLabel:'その他',slot:'その他',
+        materialId:materials[0]?.materialId||'',
+        materialName:materials[0]?.materialName||'',
+        materials,
+        hasInput:materials.length>0
+      });
+    }else{
+      pushDefaultPart(label);
     }
   }
   if(activeVisualPhotoTargetKey && !targets.some(t=>t.key===activeVisualPhotoTargetKey)) activeVisualPhotoTargetKey='';
   if(!activeVisualPhotoTargetKey && targets[0]) activeVisualPhotoTargetKey=targets[0].key;
   return targets;
 }
+function isVisualFrameOpen(t){
+  const v=visualFrameOpen[t.key];
+  if(typeof v==='boolean')return v;
+  return !!(t.hasInput || visualFramePhotoCount(t)>0);
+}
+function toggleVisualFrame(key){
+  const target=getRoomVisualTargets(activePhotoRoom).find(t=>t.key===key);
+  const current=target ? isVisualFrameOpen(target) : !!visualFrameOpen[key];
+  visualFrameOpen[key]=!current;
+  if(!current)activeVisualPhotoTargetKey=key;
+  renderPhotos({preserveScroll:true});
+}
 function visualFramePhotoCount(t){
-  return photoCount(p=>p.photoMode==='visual' && p.roomId===t.roomId && (p.targetKey===t.key || (p.targetPart===t.partLabel && (!t.materialId || p.materialId===t.materialId))));
+  return photoCount(p=>!p.deleted && p.photoMode==='visual' && p.roomId===t.roomId && (p.targetKey===t.key || (!p.targetKey && p.targetPart===t.partLabel && (!t.materialId || p.materialId===t.materialId))));
 }
 function getVisualFramePhotos(t){
-  return (state.photos||[]).filter(p=>p.photoMode==='visual' && p.roomId===t.roomId && (p.targetKey===t.key || (p.targetPart===t.partLabel && (!t.materialId || p.materialId===t.materialId))));
+  return (state.photos||[]).filter(p=>!p.deleted && p.photoMode==='visual' && p.roomId===t.roomId && (p.targetKey===t.key || (!p.targetKey && p.targetPart===t.partLabel && (!t.materialId || p.materialId===t.materialId))));
 }
 function selectVisualPhotoRoom(roomId){
   if(roomId){activePhotoRoom=roomId; activeVisualPhotoTargetKey='';}
@@ -3061,14 +3213,33 @@ function renderStageTile(label,count,isNext,opts){
   const add=`<span class="stage-add" onclick="event.stopPropagation();${opts.addAction||''}">＋</span>`;
   return `<div class="photo-stage-tile ${n>0?'done':'missing'} ${isNext?'next':''} ${selected?'selected':''}" onclick="event.stopPropagation();${opts.selectAction||''}">${add}<b>${esc(label)}</b><span>${n>0?'撮影済み':'未撮影'}</span>${n>0?`<span class="photo-count-badge">${n}</span>`:''}</div>`;
 }
+function visualMaterialLines(t){
+  const items=(t.materials&&t.materials.length)?t.materials:[];
+  if(!items.length)return '仕上表未入力';
+  return items.map(x=>{
+    const name=materialInputNameLabel(x.materialId,x.materialName);
+    return t.partLabel==='その他' ? `${x.partLabel}　${name}` : name;
+  }).join('<br>');
+}
 function renderVisualFrameCard(t){
   const photos=visualPhotoList(t);
   const count=photos.length;
   const selected=t.key===activeVisualPhotoTargetKey;
-  const materialLabel=materialInputNameLabel(t.materialId,t.materialName);
-  return `<div class="photo-frame-card ${selected?'active':''}" onclick="selectVisualTarget('${escapeAttr(t.key)}')">
-    <div><div class="photo-frame-title"><b>${esc(t.partLabel)}</b><span class="hint">${count}枚</span></div><div class="photo-material-lines">${esc(materialLabel)}</div></div>
-    <div>${renderStageTile(t.partLabel,count,false,{selected,selectAction:`selectVisualTarget('${escapeAttr(t.key)}')`,addAction:`launchVisualPartCamera('${escapeAttr(t.key)}')`})}${selected?renderPhotoPickList('visual',t.key,t.partLabel,photos):''}</div>
+  const hasInput=!!t.hasInput;
+  const open=isVisualFrameOpen(t);
+  const materialLabel=visualMaterialLines(t);
+  const badge=hasInput ? '<span class="photo-input-badge">入力あり</span>' : '<span class="photo-input-badge empty">未入力</span>';
+  const mark=open?'▼':'▶';
+  const title=`<div class="photo-frame-title visual-title" onclick="event.stopPropagation();toggleVisualFrame('${escapeAttr(t.key)}')" style="cursor:pointer"><b><span class="photo-frame-toggle">${mark}</span> ${esc(t.partLabel)}</b><span>${badge}</span><span class="hint visual-count">写真 ${count}枚</span></div>`;
+  if(!open){
+    return `<div class="photo-frame-card visual-empty visual-collapsed ${selected?'active':''}" onclick="toggleVisualFrame('${escapeAttr(t.key)}')">${title}</div>`;
+  }
+  return `<div class="photo-frame-card ${hasInput?'visual-has-input':'visual-empty'} ${selected?'active':''}">
+    <div>
+      ${title}
+      <div class="photo-material-lines">${materialLabel}</div>
+    </div>
+    <div onclick="selectVisualTarget('${escapeAttr(t.key)}')">${renderStageTile(t.partLabel,count,false,{selected,selectAction:`selectVisualTarget('${escapeAttr(t.key)}')`,addAction:`launchVisualPartCamera('${escapeAttr(t.key)}')`})}${selected?renderPhotoPickList('visual',t.key,t.partLabel,photos):''}</div>
     <div class="photo-camera-inline"><button class="btn small primary" onclick="event.stopPropagation();launchVisualPartCamera('${escapeAttr(t.key)}')">カメラ起動</button></div>
   </div>`;
 }
@@ -3093,11 +3264,10 @@ function renderVisualRoomList(rooms){
   internal.forEach(r=>{const f=r.floor||'内部'; (floorMap[f]||(floorMap[f]=[])).push(r);});
   const roomRow=room=>`<div class="photo-target-item grouped ${room.id===activePhotoRoom?'active':''}" data-room-id="${esc(room.id)}" onclick="selectVisualPhotoRoom(this.dataset.roomId)"><b>${esc(room.no)}${room.name?`　${esc(room.name)}`:''}</b><div class="meta">目視写真 ${getRoomPhotoCount(room.id)}枚</div></div>`;
   const extOpen=photoGroupOpen.external!==false;
-  const intOpen=photoGroupOpen.internal!==false;
   const extHtml=external.length?`<div class="photo-group-head photo-group-toggle" onclick="togglePhotoGroup('external')"><span>外部</span><span class="mark">${photoGroupMark(extOpen)}</span></div>${extOpen?external.map(roomRow).join(''):''}`:'';
   const floors=Object.keys(floorMap).sort((a,b)=>String(a).localeCompare(String(b),'ja'));
-  const internalHtml=intOpen?floors.map(f=>{const open=photoGroupOpen.floors[f]!==false; return `<div class="photo-subgroup-head photo-group-toggle" onclick="togglePhotoGroup('${escapeAttr(f)}')"><span>${esc(f)}</span><span class="mark">${photoGroupMark(open)}</span></div>${open?floorMap[f].map(roomRow).join(''):''}`;}).join(''):'';
-  return `<div class="photo-target-list-head">目視調査 部屋</div>${extHtml}<div class="photo-group-head photo-group-toggle" onclick="togglePhotoGroup('internal')"><span>内部</span><span class="mark">${photoGroupMark(intOpen)}</span></div>${internalHtml}`;
+  const internalHtml=floors.map(f=>{const open=photoGroupOpen.floors[f]!==false; return `<div class="photo-subgroup-head photo-group-toggle" onclick="togglePhotoGroup('${escapeAttr(f)}')"><span>${esc(f)}</span><span class="mark">${photoGroupMark(open)}</span></div>${open?floorMap[f].map(roomRow).join(''):''}`;}).join('');
+  return `<div class="photo-target-list-head">目視調査 部屋</div>${extHtml}${internalHtml}`;
 }
 function renderPhotos(opts){
   opts=opts||{};
@@ -3108,7 +3278,7 @@ function renderPhotos(opts){
   if(visualBtn)visualBtn.classList.toggle('active',activePhotoMode==='visual');
   if(sampleBtn)sampleBtn.classList.toggle('active',activePhotoMode==='sample');
   const hint=document.getElementById('photoModeHint');
-  if(hint)hint.textContent=activePhotoMode==='visual' ? '仕上表で値が入っている部位ごとに目視写真枠を作ります。' : '左は建材単位、右は採取数ぶんの箇所ブロック。各ブロックからカメラを起動します。';
+  if(hint)hint.textContent=activePhotoMode==='visual' ? '入力ありは展開、未入力は折りたたみ。開閉は ▶ / ▼、追加は ＋ で統一します。' : '左は建材単位、右は採取数ぶんの箇所ブロック。各ブロックからカメラを起動します。';
   const body=document.getElementById('photoModeBody');
   if(!body)return;
   if(activePhotoMode==='sample'){
@@ -3123,7 +3293,7 @@ function renderPhotos(opts){
     const targets=getRoomVisualTargets(r.id);
     const activeTarget=targets.find(t=>t.key===activeVisualPhotoTargetKey)||targets[0];
     if(activeTarget && activeTarget.key!==activeVisualPhotoTargetKey) activeVisualPhotoTargetKey=activeTarget.key;
-    body.innerHTML=`<div class="photo-target-layout"><div class="photo-target-list">${renderVisualRoomList(rooms)}</div><div class="photo-review-panel"><div class="photo-review-panel-head"><h4>${r.id?`${esc(r.no)} ${esc(r.name||r.floor)}`:'部屋'}</h4><span class="hint">写真枠 ${targets.length}件</span></div><div class="photo-detail-body">${targets.length?targets.map(renderVisualFrameCard).join(''):'<div class="photo-empty">この部屋には仕上表で値が入っている部位がありません。</div>'}</div></div></div>`;
+    body.innerHTML=`<div class="photo-target-layout"><div class="photo-target-list">${renderVisualRoomList(rooms)}</div><div class="photo-review-panel"><div class="photo-review-panel-head"><h4>${r.id?`${esc(r.no)} ${esc(r.name||r.floor)}`:'部屋'}</h4><span class="hint">入力ありだけ初期展開</span></div><div class="photo-detail-body">${targets.length?targets.map(renderVisualFrameCard).join(''):'<div class="photo-empty">写真枠がありません。</div>'}</div></div></div>`;
   }
   if(opts.preserveScroll){
     const newList=document.querySelector('#photoModeBody .photo-target-list');
@@ -3155,6 +3325,7 @@ function launchCameraWithTarget(mode,target){
     const room=findRoom(target.roomId)||findRoom(activePhotoRoom)||{};
     params.set('mode','survey'); params.set('photoMode','visual'); params.set('roomId',target.roomId||room.id||''); params.set('roomNo',room.no||''); params.set('roomName',room.name||''); params.set('targetKey',target.key||''); params.set('targetPart',target.partLabel||target.part||''); params.set('materialId',target.materialId||''); params.set('materialName',target.materialName||''); params.delete('sampleNo'); params.set('defaultStatus','visual');
   }else{params.set('mode','survey'); params.set('photoMode','visual'); params.delete('sampleNo'); params.set('defaultStatus','visual');}
+  saveStateToStorage();
   window.location.href='camera.html?'+params.toString();
 }
 function addPhoto(board){
@@ -3173,12 +3344,13 @@ function addPhoto(board){
   }
   renderAll();
 }
-initProjects(); renderAll();
+initProjects(); persistenceEnabled=true; renderAll();
 
 window.addEventListener('load',()=>{
   const tab=new URLSearchParams(location.search).get('tab');
   if(tab) showTab(tab);
 });
+window.addEventListener('beforeunload',saveStateToStorage);
 </script>
 </body>
 </html>
