@@ -1,4 +1,4 @@
-# 調査システムPWA Prototype v0.12.2 SharePoint写真
+# 調査システムPWA Prototype v0.12.2aa SharePoint写真
 
 v0.11.2のUIを維持し、v0.12.0のFirebase materialRecords同期に加えて、写真本体をSharePoint/OneDriveへアップロードする試作版です。
 
@@ -29,3 +29,8 @@ iPad/iPhoneからMicrosoftログインする場合、Entra IDアプリ登録のS
 `http://192.168.1.46:5500/app.html`
 
 GitHub Pagesで使う場合も、そのURLを追加してください。
+
+
+## v0.12.2a 修正
+- Microsoftログイン用 MSAL.js のCDN読込にフォールバックを追加。
+- `alcdn.msauth.net` がブロックされる環境でも `jsdelivr` から読みに行くように変更。

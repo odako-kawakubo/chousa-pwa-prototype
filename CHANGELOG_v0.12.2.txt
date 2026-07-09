@@ -1,4 +1,4 @@
-# v0.12.2 SharePoint写真アップロード試作
+# v0.12.2aa SharePoint写真アップロード試作
 
 - v0.12.1のFirebase Storage版は使わず、写真本体の保存先をSharePoint/OneDriveに変更。
 - Microsoft Entra IDアプリ登録の clientId / tenantId を設定。

@@ -1231,7 +1231,10 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 
-<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+<!-- MSAL.js: Microsoft Graph/SharePoint upload login library.
+     Primary CDN + fallback CDN because some networks block alcdn.msauth.net. -->
+<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"
+  onerror="document.write('<script src=&quot;https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.38.3/lib/msal-browser.min.js&quot;><\/script>')"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
@@ -1777,7 +1780,7 @@ async function handlePhotoFileSelected(event){
   }catch(err){
     console.error(err);
     try{await window.FirebaseSync.savePhotoRecord(projectId,photoId,{...baseRecord,uploadStatus:'error',errorMessage:String(err&&err.message||err)});}catch(e){console.error(e);}
-    alert('写真アップロードに失敗しました。Microsoftログイン、SharePoint/OneDriveフォルダ権限、または通信状態を確認してください。\n'+(err&&err.message?err.message:err));
+    alert('写真アップロードに失敗しました。Microsoftログイン、SharePoint/OneDriveフォルダ権限、通信状態、またはMSALライブラリ読込を確認してください。\n'+(err&&err.message?err.message:err));
     setFirebasePill('写真アップロード失敗','warn');
   }
 }
