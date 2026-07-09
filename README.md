@@ -1,14 +1,23 @@
-# 調査システムPWA Prototype v0.11.2
+# 調査システムPWA v0.12.0 Firebase正本化版
 
-## 配置方法
+旧プロトタイプを全置換しやすいように、不要な `.git`、旧 `camera.html`、旧テストHTML、重い調査図mockは省いた最小構成です。
 
-GitHub Pages 用リポジトリ直下へ、このZIP内のファイルを上書きしてください。
+## ファイル
 
-Pages は GitHub Actions 方式を想定しています。
+- `index.html`：`app.html`へ転送
+- `app.html`：本体
+- `version.json`：バージョン確認用
+- `.nojekyll`：GitHub Pages用
+- `CHANGELOG_v0.12.0.txt`：変更点
 
-- Settings → Pages → Source: GitHub Actions
-- Actions → Deploy static site to Pages
+## 使い方
 
-## 主な変更点
+1. ZIPの中身をGitHub Pages用リポジトリ直下へ上書き
+2. VS Code Live Server または GitHub Pagesで `app.html` を開く
+3. 端末名を入力
+4. 案件ID `26000001` のまま「接続」
+5. 必要なら「サンプル作成」
 
-詳しくは `CHANGELOG_v0.11.2.txt` を確認してください。
+## 注意
+
+Firebase Firestoreは `survey-pwa-test` に接続する設定が入っています。現在のFirestoreルールがテストモードの場合、公開運用には使わないでください。

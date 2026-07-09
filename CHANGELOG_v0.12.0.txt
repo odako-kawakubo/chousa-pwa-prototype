@@ -1,0 +1,29 @@
+調査システムPWA v0.12.0 Firebase正本化版
+
+方針
+- Firestore materialRecords を正本に変更
+- appState.materialRecords を端末内キャッシュに変更
+- 仕上表・建材リスト・写真・レコード表示は appState から描画
+- 編集入口は仕上表・建材リスト
+- レコード表示は確認/デバッグ用
+
+追加
+- Firebase接続
+- 案件ID単位の materialRecords 購読
+- PC/iPadリアルタイム同期
+- 仕上表セル編集 → materialRecord 作成/更新
+- 建材リスト編集 → materialRecord 更新
+- レコード確認画面
+- 同期状態表示
+- 端末名 localStorage 保存
+
+入力ルール
+- 建材名・備考は確定後同期
+- 採取数・分析要否・レベルは即同期
+
+省いたもの
+- .git 一式
+- 旧 camera.html
+- 旧調査図 mock
+- 旧更新履歴の重複CSS/JS
+- 旧テストHTML群

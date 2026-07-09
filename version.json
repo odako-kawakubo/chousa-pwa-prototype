@@ -1,6 +1,5 @@
 {
-  "version": "0.11.2",
-  "app": "app.html",
-  "updated": "2026-07-08",
-  "note": "写真タブ目視UI調整、操作パネル折りたたみ、カメラ戻り時の状態保持を反映"
+  "version": "0.12.0-firebase",
+  "name": "調査システムPWA Firebase正本化プロトタイプ",
+  "updated": "2026-07-09"
 }
