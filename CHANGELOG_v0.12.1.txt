@@ -1,0 +1,21 @@
+# CHANGELOG v0.12.1
+
+## テーマ
+Firebase Storage 仮運用による写真共有テスト
+
+## 追加
+- v0.12.0の既存UI維持版をベースに、写真タブへ「写真選択/共有」を追加
+- Firebase Storageへ写真本体をアップロード
+- Firestore `projects/{projectId}/photos/{photoId}` に写真メタを保存
+- Firestore `materialRecords/{materialId}.photoRefs` に写真IDを紐付け
+- PC / iPad / iPhone の複数端末で写真メタとサムネを同期
+- 写真プレビューで実画像を表示
+
+## 方針
+- 現時点では Firebase Storage を仮の写真本体置き場にする
+- 将来はアップロード先を SharePoint に差し替える
+- Firestore の photoRecord 構造は SharePoint 差し替え後も使える形にする
+
+## 注意
+- Firebase Storage を有効化し、テスト用Storageルールを設定する必要あり
+- camera.html は残置。v0.12.1では写真共有ボタンからの画像選択/撮影を優先
