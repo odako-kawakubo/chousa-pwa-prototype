@@ -1308,47 +1308,76 @@ async function graphFetch(url, options){
 }
 
 let msalClient = null;
+let msalRedirectHandled = false;
 let sharePointFolderCache = null;
 window.MicrosoftPhotoUpload = {
   async init(){
     if (!window.msal) throw new Error('MSALライブラリを読み込めませんでした');
-    if (msalClient) return msalClient;
-    msalClient = new window.msal.PublicClientApplication({
-      auth: {
-        clientId: MICROSOFT_CLIENT_ID,
-        authority: 'https://login.microsoftonline.com/' + MICROSOFT_TENANT_ID,
-        redirectUri: window.location.origin + window.location.pathname
-      },
-      cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: false }
-    });
-    setMicrosoftPill('MS準備OK', 'warn');
+    if (!msalClient) {
+      msalClient = new window.msal.PublicClientApplication({
+        auth: {
+          clientId: MICROSOFT_CLIENT_ID,
+          authority: 'https://login.microsoftonline.com/' + MICROSOFT_TENANT_ID,
+          redirectUri: window.location.origin + window.location.pathname
+        },
+        cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: false }
+      });
+    }
+
+    // Popup がブロックされる環境向けに redirect ログインを使う。
+    // redirect から戻った直後の認証結果をここで回収する。
+    if (!msalRedirectHandled) {
+      msalRedirectHandled = true;
+      try {
+        const result = await msalClient.handleRedirectPromise();
+        if (result && result.account) {
+          msalClient.setActiveAccount(result.account);
+          setMicrosoftPill('MS: ' + (result.account.username || 'ログイン済'), 'ok');
+        }
+      } catch (err) {
+        console.warn('MS redirect result error', err);
+      }
+    }
+
+    const account = await this.getAccount(false);
+    if (account) setMicrosoftPill('MS: ' + (account.username || 'ログイン済'), 'ok');
+    else setMicrosoftPill('MS未ログイン', 'warn');
     return msalClient;
   },
-  async getAccount(){
-    await this.init();
+  async getAccount(ensureInit = true){
+    if (ensureInit) await this.init();
+    const active = msalClient.getActiveAccount && msalClient.getActiveAccount();
+    if (active) return active;
     const accounts = msalClient.getAllAccounts();
-    return accounts && accounts[0] ? accounts[0] : null;
+    if (accounts && accounts[0]) {
+      msalClient.setActiveAccount(accounts[0]);
+      return accounts[0];
+    }
+    return null;
   },
   async login(){
     await this.init();
-    let account = await this.getAccount();
-    if (!account) {
-      const result = await msalClient.loginPopup({ scopes: GRAPH_SCOPES, prompt: 'select_account' });
-      account = result.account;
+    let account = await this.getAccount(false);
+    if (account) {
+      setMicrosoftPill(account.username ? ('MS: ' + account.username) : 'MSログイン済', 'ok');
+      return account;
     }
-    setMicrosoftPill(account && account.username ? ('MS: ' + account.username) : 'MSログイン済', 'ok');
-    return account;
+    setMicrosoftPill('MSログインへ移動', 'warn');
+    await msalClient.loginRedirect({ scopes: GRAPH_SCOPES, prompt: 'select_account' });
+    return null;
   },
   async getAccessToken(){
     await this.init();
-    let account = await this.getAccount();
-    if (!account) account = await this.login();
+    const account = await this.getAccount(false);
+    if (!account) {
+      throw new Error('Microsoft未ログインです。先に「Microsoftログイン」を押してログインしてください。');
+    }
     try {
       const result = await msalClient.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
       return result.accessToken;
     } catch (err) {
-      const result = await msalClient.acquireTokenPopup({ scopes: GRAPH_SCOPES, account });
-      return result.accessToken;
+      console.warn('acquireTokenSilent failed', err);
+      throw new Error('Microsoftトークン取得に失敗しました。もう一度「Microsoftログイン」を押してから試してください。');
     }
   },
   async getUploadFolder(){
@@ -1740,9 +1769,20 @@ function activePhotoUploadContext(){
     materialId:target.materialId||'', materialName:target.materialName||'', inputId:(materialById(target.materialId)||{}).inputId||''
   };
 }
-function choosePhotoForActiveTarget(){
+async function choosePhotoForActiveTarget(){
   const ctx=activePhotoUploadContext();
   if(!ctx)return alert('写真枠を選択してください');
+  if(window.MicrosoftPhotoUpload){
+    try{
+      await window.MicrosoftPhotoUpload.init();
+      const account=await window.MicrosoftPhotoUpload.getAccount(false);
+      if(!account){
+        return alert('先に「Microsoftログイン」を押してログインしてください。ログイン後にもう一度「写真選択/共有」を押してください。');
+      }
+    }catch(err){
+      return alert('Microsoftログイン準備に失敗しました。\n'+(err&&err.message?err.message:err));
+    }
+  }
   const input=document.getElementById('photoUploadInput');
   if(!input)return alert('写真選択欄が見つかりません');
   input.value='';

@@ -1,1 +1,5 @@
-{"version":"0.12.2a","name":"SharePoint photo upload test","base":"0.12.1","date":"2026-07-09"}
+{
+  "version": "0.12.2b",
+  "name": "sharepoint-photo-redirect-login",
+  "updated": "2026-07-09"
+}
