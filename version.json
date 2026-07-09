@@ -1,6 +1,1 @@
-{
-  "version": "0.12.1",
-  "name": "firebase-photo-share",
-  "date": "2026-07-09",
-  "base": "0.12.0-firebase-ui-keep"
-}
+{"version":"0.12.2","name":"SharePoint photo upload test","base":"0.12.1","date":"2026-07-09"}

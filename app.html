@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.12.1 写真共有</title>
+<title>調査システムPWA プロトタイプ v0.12.2 SharePoint写真</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1086,7 +1086,7 @@ input[list]::-webkit-calendar-picker-indicator{
 @media(max-width:850px){.photo-frame-title.visual-title{grid-template-columns:minmax(72px,1fr) 82px 72px;}}
 
 
-/* v0.12.1 Firebase Storage photo share */
+/* v0.12.2 SharePoint / OneDrive photo share */
 .photo-uploading{opacity:.72;pointer-events:none;}
 .photo-pick-thumb.has-image{background-size:cover;background-position:center;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85);overflow:hidden;}
 .photo-pick-thumb.has-image::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(15,23,42,.08),rgba(15,23,42,.48));}
@@ -1095,17 +1095,19 @@ input[list]::-webkit-calendar-picker-indicator{
 .photo-box.camera-linked.has-image::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(15,23,42,.08),rgba(15,23,42,.55));}
 .photo-box.camera-linked.has-image > span,.photo-box.camera-linked.has-image > b{position:relative;z-index:1;}
 .photo-upload-input{display:none;}
+.ms-login-ok{color:#15803d}.ms-login-warn{color:#c2410c}
 </style>
 </head>
 <body>
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill">v0.12.1 写真共有</span>
+  <span class="pill">v0.12.2 SharePoint写真</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">同期待ち 0件</span>
   <span class="pill" id="firebasePill">Firebase 未接続</span>
   <span class="pill" id="devicePill">端末未設定</span>
+  <span class="pill" id="msPill">MS未ログイン</span>
   
 </header>
 <div class="app">
@@ -1181,6 +1183,7 @@ input[list]::-webkit-calendar-picker-indicator{
               <span class="pill">カメラ仮組み込み</span>
             </div>
             <div class="right">
+              <button class="btn small" onclick="msLogin()">Microsoftログイン</button>
               <button class="btn small primary" id="photoCameraBtn" onclick="launchActivePhotoCamera()">カメラ起動</button>
               <button class="btn small primary" id="photoUploadBtn" onclick="choosePhotoForActiveTarget()">写真選択/共有</button>
               <button class="btn small" onclick="addPhoto(false)">仮写真追加</button>
@@ -1228,6 +1231,7 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 
+<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
@@ -1239,13 +1243,6 @@ import {
   serverTimestamp,
   arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyDwpv3OJQrWP0P-0Jg1XuvdEVYQSK0a6e4",
   authDomain: "survey-pwa-test.firebaseapp.com",
@@ -1255,15 +1252,149 @@ const firebaseConfig = {
   appId: "1:834793037383:web:0b616ce02c7cf3454d1b62"
 };
 
+const MICROSOFT_CLIENT_ID = "f7074fad-6ea0-467b-98db-e308f01950cc";
+const MICROSOFT_TENANT_ID = "538265b8-8d15-49ef-9d51-ca252954de1d";
+const SHAREPOINT_UPLOAD_FOLDER_URL = "https://odawarakoseki-my.sharepoint.com/:f:/g/personal/kawakubo_odawarakoseki_onmicrosoft_com/IgAZI-Ofrt_ZT7pKEZOXg35YATv_9eBDkxeUdJQa2UEHvLQ?e=GZyzvr";
+const SHAREPOINT_UPLOAD_FOLDER_NAME = "調査システムPWAテスト写真";
+const GRAPH_SCOPES = ["User.Read", "Files.ReadWrite", "Sites.ReadWrite.All"];
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 let unsubscribeMaterialRecords = null;
 let unsubscribePhotos = null;
 
 function status(message, cls){
   if (window.onFirebaseStatus) window.onFirebaseStatus(message, cls || '');
 }
+
+
+function setMicrosoftPill(message, cls){
+  const el = document.getElementById('msPill');
+  if (el) {
+    el.textContent = message;
+    el.className = 'pill ' + (cls || '');
+  }
+}
+function base64UrlEncodeUtf8(text){
+  const bytes = new TextEncoder().encode(String(text));
+  let binary = '';
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');
+}
+function graphSharedLinkId(url){
+  return 'u!' + base64UrlEncodeUtf8(url);
+}
+function sanitizeSharePointFileName(name){
+  return String(name || 'photo.jpg').replace(/[\\/:*?"<>|#%{}^~[\]`]/g, '_');
+}
+async function graphFetch(url, options){
+  const token = await window.MicrosoftPhotoUpload.getAccessToken();
+  const res = await fetch(url, {
+    ...(options || {}),
+    headers: {
+      Authorization: 'Bearer ' + token,
+      ...((options && options.headers) || {})
+    }
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error('Graph API error ' + res.status + ': ' + text);
+  }
+  const ct = res.headers.get('content-type') || '';
+  return ct.includes('application/json') ? res.json() : res.text();
+}
+
+let msalClient = null;
+let sharePointFolderCache = null;
+window.MicrosoftPhotoUpload = {
+  async init(){
+    if (!window.msal) throw new Error('MSALライブラリを読み込めませんでした');
+    if (msalClient) return msalClient;
+    msalClient = new window.msal.PublicClientApplication({
+      auth: {
+        clientId: MICROSOFT_CLIENT_ID,
+        authority: 'https://login.microsoftonline.com/' + MICROSOFT_TENANT_ID,
+        redirectUri: window.location.origin + window.location.pathname
+      },
+      cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: false }
+    });
+    setMicrosoftPill('MS準備OK', 'warn');
+    return msalClient;
+  },
+  async getAccount(){
+    await this.init();
+    const accounts = msalClient.getAllAccounts();
+    return accounts && accounts[0] ? accounts[0] : null;
+  },
+  async login(){
+    await this.init();
+    let account = await this.getAccount();
+    if (!account) {
+      const result = await msalClient.loginPopup({ scopes: GRAPH_SCOPES, prompt: 'select_account' });
+      account = result.account;
+    }
+    setMicrosoftPill(account && account.username ? ('MS: ' + account.username) : 'MSログイン済', 'ok');
+    return account;
+  },
+  async getAccessToken(){
+    await this.init();
+    let account = await this.getAccount();
+    if (!account) account = await this.login();
+    try {
+      const result = await msalClient.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
+      return result.accessToken;
+    } catch (err) {
+      const result = await msalClient.acquireTokenPopup({ scopes: GRAPH_SCOPES, account });
+      return result.accessToken;
+    }
+  },
+  async getUploadFolder(){
+    if (sharePointFolderCache) return sharePointFolderCache;
+    setMicrosoftPill('保存先確認中', 'warn');
+    const shareId = graphSharedLinkId(SHAREPOINT_UPLOAD_FOLDER_URL);
+    const item = await graphFetch('https://graph.microsoft.com/v1.0/shares/' + shareId + '/driveItem');
+    const driveId = item && item.parentReference && item.parentReference.driveId;
+    const itemId = item && item.id;
+    if (!driveId || !itemId) throw new Error('SharePoint/OneDriveフォルダを特定できませんでした');
+    sharePointFolderCache = { driveId, itemId, name: item.name || SHAREPOINT_UPLOAD_FOLDER_NAME, webUrl: item.webUrl || SHAREPOINT_UPLOAD_FOLDER_URL };
+    setMicrosoftPill('MS保存先OK', 'ok');
+    return sharePointFolderCache;
+  },
+  async uploadPhotoBlob(projectId, photoId, fileName, blob){
+    await this.login();
+    const folder = await this.getUploadFolder();
+    const safeName = sanitizeSharePointFileName(fileName || (photoId + '.jpg'));
+    setMicrosoftPill('SharePointアップロード中', 'warn');
+    const uploadUrl = 'https://graph.microsoft.com/v1.0/drives/' + encodeURIComponent(folder.driveId) + '/items/' + encodeURIComponent(folder.itemId) + ':/' + encodeURIComponent(safeName) + ':/content';
+    const uploaded = await graphFetch(uploadUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': blob.type || 'application/octet-stream' },
+      body: blob
+    });
+    const account = await this.getAccount();
+    setMicrosoftPill('SharePoint保存済', 'ok');
+    return {
+      uploadProvider: 'sharepoint',
+      uploadStatus: 'uploaded',
+      storagePath: '',
+      sharePointFolderName: folder.name,
+      sharePointFolderUrl: folder.webUrl,
+      sharePointItemId: uploaded.id || '',
+      sharePointDriveId: folder.driveId,
+      sharePointUrl: uploaded.webUrl || '',
+      downloadUrl: uploaded['@microsoft.graph.downloadUrl'] || uploaded.webUrl || '',
+      uploadedBy: account && account.username ? account.username : '',
+      uploadedAtClient: new Date().toISOString()
+    };
+  }
+};
+window.MicrosoftPhotoUpload.init().catch(err => {
+  console.warn(err);
+  setMicrosoftPill('MS未初期化', 'warn');
+});
+window.msLogin = function(){
+  window.MicrosoftPhotoUpload.login().catch(err => alert('Microsoftログインに失敗しました。\n' + (err && err.message ? err.message : err)));
+};
 
 window.FirebaseSync = {
   projectId: null,
@@ -1309,12 +1440,8 @@ window.FirebaseSync = {
   },
   async uploadPhotoBlob(projectId, photoId, fileName, blob){
     if (!projectId || !photoId || !blob) throw new Error('写真アップロード情報が不足しています');
-    const safeName = String(fileName || (photoId + '.jpg')).replace(/[\\/:*?"<>|#%{}^~[\]`]/g, '_');
-    const path = `projects/${projectId}/photos/${photoId}_${safeName}`;
-    const ref = storageRef(storage, path);
-    const result = await uploadBytes(ref, blob, { contentType: blob.type || 'image/jpeg' });
-    const downloadUrl = await getDownloadURL(result.ref);
-    return { storagePath: result.ref.fullPath, downloadUrl };
+    if (!window.MicrosoftPhotoUpload) throw new Error('Microsoftアップロード機能が初期化されていません');
+    return await window.MicrosoftPhotoUpload.uploadPhotoBlob(projectId, photoId, fileName, blob);
   },
   async savePhotoRecord(projectId, photoId, data){
     if (!projectId || !photoId) return;
@@ -1337,7 +1464,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.12.1';
+const APP_VERSION='0.12.2';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -1561,7 +1688,7 @@ function syncCurrentRecordAfterCell(roomId,area,part,line){
   if(c && c.materialId) saveMaterialRecordToFirebase(c.materialId,'仕上表');
 }
 
-/* v0.12.1 写真共有：Firebase Storageを仮の写真本体置き場にする */
+/* v0.12.2 SharePoint写真：SharePoint/OneDriveを仮の写真本体置き場にする */
 function photoDisplayUrl(p){return p && (p.downloadUrl || p.sharePointUrl || p.localPreviewUrl || p.dataUrl || '');}
 function importPhotoRecordFromFirebase(p){
   return {
@@ -1573,7 +1700,7 @@ function importPhotoRecordFromFirebase(p){
     materialId:p.materialId||'', materialName:p.materialName||'', inputId:p.inputId||'',
     sampleStage:p.sampleStage||p.stage||'', samplePointKey:p.samplePointKey||'', sampleIndex:p.sampleIndex, sampleNo:p.sampleNo||'',
     fileName:p.fileName||'', storagePath:p.storagePath||'', downloadUrl:p.downloadUrl||'', sharePointUrl:p.sharePointUrl||'',
-    uploadProvider:p.uploadProvider||'firebase', uploadStatus:p.uploadStatus||'uploaded',
+    uploadProvider:p.uploadProvider||'sharepoint', uploadStatus:p.uploadStatus||'uploaded',
     takenBy:p.takenBy||'', takenAtClient:p.takenAtClient||p.createdAtClient||'',
     deleted:!!p.deleted
   };
@@ -1638,7 +1765,7 @@ async function handlePhotoFileSelected(event){
   const fileName=buildPhotoFileName(ctx,file);
   const baseRecord={
     photoId, projectId, ...ctx, fileName,
-    uploadProvider:'firebase', uploadStatus:'uploading',
+    uploadProvider:'sharepoint', uploadStatus:'uploading',
     takenBy:getDeviceName(), takenAtClient:new Date().toISOString(), appVersion:APP_VERSION
   };
   try{
@@ -1650,7 +1777,7 @@ async function handlePhotoFileSelected(event){
   }catch(err){
     console.error(err);
     try{await window.FirebaseSync.savePhotoRecord(projectId,photoId,{...baseRecord,uploadStatus:'error',errorMessage:String(err&&err.message||err)});}catch(e){console.error(e);}
-    alert('写真アップロードに失敗しました。Firebase Storageの有効化/ルールを確認してください。\n'+(err&&err.message?err.message:err));
+    alert('写真アップロードに失敗しました。Microsoftログイン、SharePoint/OneDriveフォルダ権限、または通信状態を確認してください。\n'+(err&&err.message?err.message:err));
     setFirebasePill('写真アップロード失敗','warn');
   }
 }

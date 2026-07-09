@@ -1,0 +1,14 @@
+# v0.12.2 SharePoint写真アップロード試作
+
+- v0.12.1のFirebase Storage版は使わず、写真本体の保存先をSharePoint/OneDriveに変更。
+- Microsoft Entra IDアプリ登録の clientId / tenantId を設定。
+- MSAL.jsによるMicrosoftログインを追加。
+- 写真タブに「Microsoftログイン」ボタンを追加。
+- 写真選択/共有時に、指定OneDriveフォルダ「調査システムPWAテスト写真」へGraph APIでアップロード。
+- アップロード成功後、Firestore projects/{projectId}/photos/{photoId} に写真メタを保存。
+- materialRecords/{materialId}.photoRefs に photoId を追加。
+- PC/iPad/iPhoneはFirestoreの写真メタを購読して写真カードを表示。
+
+注意:
+- ローカルテスト時は Entra ID のリダイレクトURIに http://localhost:5500/app.html が必要。
+- iPad/iPhoneやGitHub PagesでMicrosoftログインする場合は、そのURLもEntra IDのSPAリダイレクトURIへ追加する必要あり。
