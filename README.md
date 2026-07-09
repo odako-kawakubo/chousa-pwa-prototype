@@ -1,4 +1,4 @@
-# 調査システムPWA Prototype v0.12.2d
+# 調査システムPWA Prototype v0.12.2e
 
 ## 内容
 
@@ -10,7 +10,7 @@ v0.12.2cからの修正版です。
 - 写真本体はOneDriveへアップロード
 - 写真メタはFirestoreへ保存
 - OneDrive保存先は「調査システムPWAテスト写真」
-- v0.12.2dではフォルダ名検索で取得したfolder itemIdに対してアップロードします
+- v0.12.2eではフォルダ名検索で取得したfolder itemIdに対してアップロードします
 
 ## ローカル確認URL
 
