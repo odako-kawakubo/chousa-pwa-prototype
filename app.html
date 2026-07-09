@@ -1059,6 +1059,15 @@ input[list]::-webkit-calendar-picker-indicator{
 .photo-pick-thumb{position:relative;width:82px;height:58px;border:1px solid #cbd5e1;border-radius:9px;background:linear-gradient(135deg,#f8fafc,#eaf2ff);display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:#334155;cursor:pointer;line-height:1.25;}
 .photo-pick-thumb.selected{border-color:#2563eb;outline:2px solid rgba(37,99,235,.2);background:#eff6ff;color:#1e40af;}
 .photo-pick-thumb .rep{position:absolute;right:-6px;top:-7px;background:#16a34a;color:#fff;border:2px solid #fff;border-radius:999px;font-size:10px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;}
+.photo-pick-thumb.delete-mode{border-style:solid;}
+.photo-pick-thumb.delete-selected{border-color:#dc2626;outline:2px solid rgba(220,38,38,.22);background:#fff1f2;color:#991b1b;}
+.photo-pick-thumb .photo-check{position:absolute;left:-6px;top:-7px;min-width:20px;height:20px;border-radius:999px;background:#fff;border:2px solid #cbd5e1;color:#64748b;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.photo-pick-thumb.delete-selected .photo-check{background:#dc2626;border-color:#fff;color:#fff;}
+.photo-block-action-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.photo-select-actions{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap;}
+.photo-select-actions .danger{border-color:#fecaca;color:#991b1b;background:#fff5f5;}
+.photo-select-actions .selecting{border-color:#2563eb;color:#1e40af;background:#eff6ff;}
+
 .photo-preview-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:9999;align-items:center;justify-content:center;padding:20px;}
 .photo-preview-modal.open{display:flex;}
 .photo-preview-card{width:min(720px,94vw);height:min(560px,86vh);background:#fff;border-radius:16px;border:1px solid var(--line);box-shadow:0 18px 48px rgba(15,23,42,.28);display:flex;flex-direction:column;overflow:hidden;}
@@ -1184,6 +1193,7 @@ input[list]::-webkit-calendar-picker-indicator{
             </div>
             <div class="right">
               <button class="btn small" onclick="msLogin()">Microsoftログイン</button>
+              <button class="btn small" onclick="msLogout()">Microsoftログアウト</button>
               <button class="btn small primary" id="photoCameraBtn" onclick="launchActivePhotoCamera()">カメラ起動</button>
               <button class="btn small primary" id="photoUploadBtn" onclick="choosePhotoForActiveTarget()">写真選択/共有</button>
               <button class="btn small" onclick="addPhoto(false)">仮写真追加</button>
@@ -1244,7 +1254,8 @@ import {
   setDoc,
   onSnapshot,
   serverTimestamp,
-  arrayUnion
+  arrayUnion,
+  arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyDwpv3OJQrWP0P-0Jg1XuvdEVYQSK0a6e4",
@@ -1370,6 +1381,28 @@ window.MicrosoftPhotoUpload = {
     await msalClient.loginRedirect({ scopes: GRAPH_SCOPES, prompt: 'select_account' });
     return null;
   },
+  async logout(){
+    await this.init();
+    const account = await this.getAccount(false);
+    sharePointFolderCache = null;
+    setMicrosoftPill('MSログアウト中', 'warn');
+    if (account) {
+      await msalClient.logoutRedirect({
+        account,
+        postLogoutRedirectUri: window.location.origin + window.location.pathname
+      });
+      return;
+    }
+    try {
+      Object.keys(localStorage).forEach(key => {
+        if (key.toLowerCase().includes('msal')) localStorage.removeItem(key);
+      });
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.toLowerCase().includes('msal')) sessionStorage.removeItem(key);
+      });
+    } catch (e) {}
+    setMicrosoftPill('MS未ログイン', 'warn');
+  },
   async getAccessToken(){
     await this.init();
     const account = await this.getAccount(false);
@@ -1468,6 +1501,14 @@ window.MicrosoftPhotoUpload = {
       uploadedBy: account && account.username ? account.username : '',
       uploadedAtClient: new Date().toISOString()
     };
+  },
+  async deletePhotoItem(itemId){
+    if (!itemId) throw new Error('OneDrive削除対象IDがありません');
+    await this.login();
+    setMicrosoftPill('OneDrive写真削除中', 'warn');
+    await graphFetch('https://graph.microsoft.com/v1.0/me/drive/items/' + encodeURIComponent(itemId), { method: 'DELETE' });
+    setMicrosoftPill('OneDrive写真削除済', 'ok');
+    return true;
   }
 };
 window.MicrosoftPhotoUpload.init().catch(err => {
@@ -1476,6 +1517,13 @@ window.MicrosoftPhotoUpload.init().catch(err => {
 });
 window.msLogin = function(){
   window.MicrosoftPhotoUpload.login().catch(err => alert('Microsoftログインに失敗しました。\n' + (err && err.message ? err.message : err)));
+};
+window.msLogout = function(){
+  if (!window.MicrosoftPhotoUpload) {
+    alert('Microsoftログアウト機能が初期化されていません');
+    return;
+  }
+  window.MicrosoftPhotoUpload.logout().catch(err => alert('Microsoftログアウトに失敗しました。\n' + (err && err.message ? err.message : err)));
 };
 
 window.FirebaseSync = {
@@ -1541,12 +1589,32 @@ window.FirebaseSync = {
         updatedAt: serverTimestamp()
       }, { merge: true });
     }
+  },
+  async deletePhotoRecord(projectId, photoId, data){
+    if (!projectId || !photoId) return;
+    const ref = doc(db, 'projects', projectId, 'photos', photoId);
+    await setDoc(ref, {
+      ...(data || {}),
+      photoId,
+      deleted: true,
+      uploadStatus: 'deleted',
+      deletedAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    if (data && data.materialId) {
+      const materialRef = doc(db, 'projects', projectId, 'materialRecords', data.materialId);
+      await setDoc(materialRef, {
+        materialId: data.materialId,
+        photoRefs: arrayRemove(photoId),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    }
   }
 };
 </script>
 
 <script>
-const APP_VERSION='0.12.2';
+const APP_VERSION='0.12.2f';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -1790,7 +1858,7 @@ function importPhotoRecordFromFirebase(p){
 function applyFirebasePhotoRecords(records){
   appState.photoRecords={};
   records.forEach(r=>{appState.photoRecords[r.photoId||r.id]=r;});
-  state.photos=records.map(importPhotoRecordFromFirebase).filter(p=>p.photoId||p.id);
+  state.photos=records.map(importPhotoRecordFromFirebase).filter(p=>(p.photoId||p.id) && !p.deleted);
   renderPhotos({preserveScroll:true});
   renderSync();
 }
@@ -3648,6 +3716,8 @@ let activeSamplePointKey = '';
 let activeSampleStage = '';
 let selectedPhotoRep = {};
 let selectedPhotoKey = '';
+let photoDeleteMode = {};
+let photoDeleteSelection = {};
 let visualFrameOpen = {};
 const photoGroupOpen = {external:true, internal:true, floors:{}};
 const circleNums=['①','②','③'];
@@ -3824,6 +3894,93 @@ function selectedRepIndex(prefix,key,stage,photos){
   return Math.max(0, Math.min((photos||[]).length-1, v));
 }
 function setRepPhoto(prefix,key,stage,index){selectedPhotoRep[photoRepKey(prefix,key,stage)]=Number(index||0);renderPhotos({preserveScroll:true});}
+function photoIdOf(p){return p && (p.photoId||p.id||'');}
+function photoDeleteBlockKey(prefix,key,stage){return `${prefix}|${key||''}|${stage||''}`;}
+function isPhotoDeleteMode(prefix,key,stage){return !!photoDeleteMode[photoDeleteBlockKey(prefix,key,stage)];}
+function togglePhotoDeleteMode(prefix,key,stage){
+  const bk=photoDeleteBlockKey(prefix,key,stage);
+  photoDeleteMode[bk]=!photoDeleteMode[bk];
+  if(!photoDeleteMode[bk]) delete photoDeleteSelection[bk];
+  renderPhotos({preserveScroll:true});
+}
+function selectedPhotoIdsInBlock(prefix,key,stage){
+  const bk=photoDeleteBlockKey(prefix,key,stage);
+  return Object.keys(photoDeleteSelection[bk]||{}).filter(id=>photoDeleteSelection[bk][id]);
+}
+function togglePhotoDeleteSelection(prefix,key,stage,photoId){
+  const bk=photoDeleteBlockKey(prefix,key,stage);
+  photoDeleteMode[bk]=true;
+  photoDeleteSelection[bk]=photoDeleteSelection[bk]||{};
+  photoDeleteSelection[bk][photoId]=!photoDeleteSelection[bk][photoId];
+  if(!photoDeleteSelection[bk][photoId]) delete photoDeleteSelection[bk][photoId];
+  renderPhotos({preserveScroll:true});
+}
+function clearPhotoDeleteSelection(prefix,key,stage){
+  const bk=photoDeleteBlockKey(prefix,key,stage);
+  delete photoDeleteSelection[bk];
+  photoDeleteMode[bk]=false;
+  renderPhotos({preserveScroll:true});
+}
+async function deleteOnePhotoRecord(photoId, opts){
+  opts=opts||{};
+  const p=(state.photos||[]).find(x=>photoIdOf(x)===photoId);
+  if(!p)throw new Error('削除対象の写真が見つかりません: '+photoId);
+  const projectId=appState.currentProjectId||currentFirestoreProjectId();
+  let physicalDeleted=false;
+  let physicalError='';
+  try{
+    if(p.sharePointItemId && window.MicrosoftPhotoUpload){
+      await window.MicrosoftPhotoUpload.deletePhotoItem(p.sharePointItemId);
+      physicalDeleted=true;
+    }else{
+      physicalError='OneDrive itemIdなし';
+    }
+  }catch(err){
+    physicalError=(err&&err.message?err.message:String(err));
+    if(!opts.forceAppOnly)throw err;
+  }
+  if(window.FirebaseSync && window.FirebaseSync.deletePhotoRecord){
+    await window.FirebaseSync.deletePhotoRecord(projectId,photoId,{
+      materialId:p.materialId||'',
+      deletedBy:getDeviceName(),
+      physicalDeleted,
+      physicalDeleteError:physicalError
+    });
+  }
+  state.photos=(state.photos||[]).filter(x=>photoIdOf(x)!==photoId);
+  return {photoId, physicalDeleted, physicalError};
+}
+async function deleteSelectedPhotos(prefix,key,stage){
+  const ids=selectedPhotoIdsInBlock(prefix,key,stage);
+  if(!ids.length)return alert('削除する写真を選択してください。');
+  if(!confirm(`選択した写真 ${ids.length}枚を削除しますか？\nOneDriveの写真本体とアプリ上の写真カードを削除します。`))return;
+  const failed=[];
+  for(const id of ids){
+    try{
+      await deleteOnePhotoRecord(id,{forceAppOnly:false});
+    }catch(err){
+      failed.push({id, message:err&&err.message?err.message:String(err)});
+    }
+  }
+  if(failed.length){
+    const ok=confirm(`OneDrive本体削除に失敗した写真が ${failed.length}枚あります。\nアプリ上の写真カードだけ削除しますか？\n\n`+failed.map(x=>x.id+': '+x.message).join('\n'));
+    if(ok){
+      for(const f of failed){
+        try{await deleteOnePhotoRecord(f.id,{forceAppOnly:true});}catch(err){console.error(err);}
+      }
+    }
+  }
+  clearPhotoDeleteSelection(prefix,key,stage);
+  setFirebasePill('写真削除済','ok');
+  renderPhotos({preserveScroll:true});
+  renderSync();
+}
+function renderPhotoBlockActions(prefix,key,stage,photos,cameraAction){
+  const count=(photos||[]).length;
+  const mode=isPhotoDeleteMode(prefix,key,stage);
+  const selectedCount=selectedPhotoIdsInBlock(prefix,key,stage).length;
+  return `<div class="photo-block-action-stack"><div class="photo-select-actions"><button class="btn small ${mode?'selecting':''}" onclick="event.stopPropagation();togglePhotoDeleteMode('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}')">選択${mode?`中 ${selectedCount}`:''}</button><button class="btn small danger" ${count?'':'disabled'} onclick="event.stopPropagation();deleteSelectedPhotos('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}')">削除</button></div><div class="photo-camera-inline"><button class="btn small primary" onclick="event.stopPropagation();${cameraAction}">カメラ起動</button></div></div>`;
+}
 function openPhotoPreview(title, body){
   const modal=document.getElementById('photoPreviewModal');
   if(!modal)return;
@@ -3835,13 +3992,18 @@ function closePhotoPreview(){const modal=document.getElementById('photoPreviewMo
 function renderPhotoPickList(prefix,key,stage,photos){
   if(!photos || !photos.length)return `<div class="photo-pick-list"><div class="photo-pick-title">${esc(stage)}：まだ写真がありません</div></div>`;
   const rep=selectedRepIndex(prefix,key,stage,photos);
-  return `<div class="photo-pick-list"><div class="photo-pick-title">${esc(stage)} 写真選択：クリックで代表、ダブルクリックで拡大</div>${photos.map((p,i)=>{
+  const deleteMode=isPhotoDeleteMode(prefix,key,stage);
+  const selectedCount=selectedPhotoIdsInBlock(prefix,key,stage).length;
+  return `<div class="photo-pick-list"><div class="photo-pick-title">${esc(stage)} 写真選択：${deleteMode?`削除対象を選択中（${selectedCount}枚）`:'クリックで代表、ダブルクリックで拡大'}</div>${photos.map((p,i)=>{
     const url=photoDisplayUrl(p);
     const bg=url?` style="background-image:url('${escapeAttr(url)}')"`:'';
     const cls=url?'has-image':'';
+    const pid=photoIdOf(p);
+    const delSelected=deleteMode && !!(photoDeleteSelection[photoDeleteBlockKey(prefix,key,stage)]||{})[pid];
     const body=url?`<span>写真${i+1}</span>`:`写真${i+1}`;
     const preview=url?`<img src=&quot;${escapeAttr(url)}&quot; style=&quot;max-width:100%;max-height:100%;object-fit:contain&quot;>`:`${esc(stage)}<br>写真 ${i+1}<br><span style=&quot;font-size:13px&quot;>${esc(p.uploadStatus||'プレビューなし')}</span>`;
-    return `<div class="photo-pick-thumb ${cls} ${i===rep?'selected':''}"${bg} onclick="event.stopPropagation();setRepPhoto('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}',${i})" ondblclick="event.stopPropagation();openPhotoPreview('${escapeAttr(stage)} 写真${i+1}','${preview}')">${body}${i===rep?'<span class="rep">代</span>':''}</div>`;
+    const click=deleteMode?`togglePhotoDeleteSelection('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}','${escapeAttr(pid)}')`:`setRepPhoto('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}',${i})`;
+    return `<div class="photo-pick-thumb ${cls} ${i===rep&&!deleteMode?'selected':''} ${deleteMode?'delete-mode':''} ${delSelected?'delete-selected':''}"${bg} onclick="event.stopPropagation();${click}" ondblclick="event.stopPropagation();openPhotoPreview('${escapeAttr(stage)} 写真${i+1}','${preview}')">${deleteMode?`<span class="photo-check">${delSelected?'✓':''}</span>`:''}${body}${i===rep&&!deleteMode?'<span class="rep">代</span>':''}</div>`;
   }).join('')}</div>`;
 }
 function selectSampleStage(pointKey,stage){activeSamplePointKey=pointKey||activeSamplePointKey; activeSampleStage=stage||''; renderPhotos({preserveScroll:true});}
@@ -3879,7 +4041,7 @@ function renderVisualFrameCard(t){
       <div class="photo-material-lines">${materialLabel}</div>
     </div>
     <div onclick="selectVisualTarget('${escapeAttr(t.key)}')">${renderStageTile(t.partLabel,count,false,{selected,selectAction:`selectVisualTarget('${escapeAttr(t.key)}')`,addAction:`launchVisualPartCamera('${escapeAttr(t.key)}')`})}${selected?renderPhotoPickList('visual',t.key,t.partLabel,photos):''}</div>
-    <div class="photo-camera-inline"><button class="btn small primary" onclick="event.stopPropagation();launchVisualPartCamera('${escapeAttr(t.key)}')">カメラ起動</button></div>
+    ${renderPhotoBlockActions('visual',t.key,t.partLabel,photos,`launchVisualPartCamera('${escapeAttr(t.key)}')`)}
   </div>`;
 }
 function renderSamplePointBlock(point){
@@ -3893,7 +4055,7 @@ function renderSamplePointBlock(point){
   return `<div class="sample-point-block ${point.key===activeSamplePointKey?'active':''}" onclick="selectSamplePoint('${escapeAttr(point.key)}')">
     <div class="sample-point-title"><b>${esc(point.blockLabel)}</b><span class="hint">次回：${esc(next)}</span></div>
     <div class="sample-point-meta">採取場所：${esc(point.place||'-')} / 採取部位：${esc(point.part||'-')} / 試料No.${esc(point.sampleNo||'-')}</div>
-    <div class="sample-stage-summary"><div class="photo-stage-strip">${visualTile}${stageTiles}</div>${point.key===activeSamplePointKey && selectedStage?renderPhotoPickList('sample',point.key,selectedStage,selectedPhotos):''}<div class="photo-camera-inline"><button class="btn small primary" onclick="event.stopPropagation();launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(selectedStage||next)}')">カメラ起動</button></div></div>
+    <div class="sample-stage-summary"><div class="photo-stage-strip">${visualTile}${stageTiles}</div>${point.key===activeSamplePointKey && selectedStage?renderPhotoPickList('sample',point.key,selectedStage,selectedPhotos):''}${renderPhotoBlockActions('sample',point.key,selectedStage||next,selectedPhotos,`launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(selectedStage||next)}')`)}</div>
   </div>`;
 }
 function renderVisualRoomList(rooms){
