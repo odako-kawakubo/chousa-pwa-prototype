@@ -1,23 +1,27 @@
-# 調査システムPWA v0.12.0 Firebase正本化版
+# 調査システムPWA v0.12.0 UI維持版
 
-旧プロトタイプを全置換しやすいように、不要な `.git`、旧 `camera.html`、旧テストHTML、重い調査図mockは省いた最小構成です。
+このZIPは、Firebase正本化ZIPで仕上表UIが大きく変わってしまったため、いったん既存プロトタイプのUIを維持するための戻し用です。
 
-## ファイル
+## 方針
 
-- `index.html`：`app.html`へ転送
-- `app.html`：本体
-- `version.json`：バージョン確認用
-- `.nojekyll`：GitHub Pages用
-- `CHANGELOG_v0.12.0.txt`：変更点
+- app.html の仕上表UIは元プロトタイプのまま維持
+- camera.html は残す
+- 調査図モックは含めない
+- Firebase本体統合は、このUIを崩さずに差し込み直す前提
 
-## 使い方
+## 含まれるファイル
 
-1. ZIPの中身をGitHub Pages用リポジトリ直下へ上書き
-2. VS Code Live Server または GitHub Pagesで `app.html` を開く
-3. 端末名を入力
-4. 案件ID `26000001` のまま「接続」
-5. 必要なら「サンプル作成」
+- index.html
+- app.html
+- camera.html
+- version.json
+- README.md
+- CHANGELOG_v0.12.0_UI_KEEP.txt
+- .nojekyll
+- .gitattributes
 
 ## 注意
 
-Firebase Firestoreは `survey-pwa-test` に接続する設定が入っています。現在のFirestoreルールがテストモードの場合、公開運用には使わないでください。
+この版は「仕上表を変えない」ことを優先した戻し版です。
+Firestore同期層はまだ本体 app.html には差し込んでいません。
+次にやる場合は、仕上表のHTML/CSS/描画処理を触らず、materialRecordsのデータ層だけを差し込む方針で進めます。

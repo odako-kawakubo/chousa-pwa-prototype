@@ -1,0 +1,20 @@
+# CHANGELOG v0.12.0 UI_KEEP
+
+## 目的
+
+Firebase正本化のための全置換ZIPで、既存の仕上表UIを大きく変更してしまったため、元プロトタイプUIを維持する版として作成。
+
+## 内容
+
+- 既存 app.html を維持
+- 既存 camera.html を維持
+- index.html を維持
+- 調査図モックは含めない
+- Firebase統合は未適用
+
+## 次の修正方針
+
+- 仕上表の見た目・列構成・操作感は変更しない
+- Firebaseはデータ層として追加する
+- 画面から直接Firestoreへ書かず、共通関数 updateMaterialRecord() を通す
+- 仕上表/建材リストは materialRecords のビューとして扱う
