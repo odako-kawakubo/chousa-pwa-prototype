@@ -1,27 +1,30 @@
-# 調査システムPWA v0.12.0 UI維持版
+# 調査システムPWA Prototype v0.12.0 Firebase UI維持版
 
-このZIPは、Firebase正本化ZIPで仕上表UIが大きく変わってしまったため、いったん既存プロトタイプのUIを維持するための戻し用です。
+この版は、送付ZIPの v0.11.2 をベースに、仕上表UIを作り替えずに Firebase Firestore 同期層を差し込んだ版です。
 
-## 方針
+## 使い方
+1. GitHub PagesまたはLive Serverで `app.html` を開く
+2. 初回表示時に端末名を入力
+3. 現在の案件番号を Firestore projectId として `projects/{案件番号}/materialRecords` を購読
+4. PC/iPadで同じ案件を開いて、仕上表・建材リスト編集を確認
 
-- app.html の仕上表UIは元プロトタイプのまま維持
-- camera.html は残す
-- 調査図モックは含めない
-- Firebase本体統合は、このUIを崩さずに差し込み直す前提
+## Firestore
+Firebase configは `survey-pwa-test` のものを組み込み済みです。
 
-## 含まれるファイル
+データパス例：
 
-- index.html
-- app.html
-- camera.html
-- version.json
-- README.md
-- CHANGELOG_v0.12.0_UI_KEEP.txt
-- .nojekyll
-- .gitattributes
+```text
+projects/26070101/materialRecords/R001
+```
+
+## 構成
+- `index.html`
+- `app.html`
+- `camera.html`
+- `version.json`
+- `CHANGELOG_v0.12.0.txt`
+- `.nojekyll`
+- `.gitattributes`
 
 ## 注意
-
-この版は「仕上表を変えない」ことを優先した戻し版です。
-Firestore同期層はまだ本体 app.html には差し込んでいません。
-次にやる場合は、仕上表のHTML/CSS/描画処理を触らず、materialRecordsのデータ層だけを差し込む方針で進めます。
+Firestoreルールがテストモードの場合、公開運用はしないでください。

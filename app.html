@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.11.2</title>
+<title>調査システムPWA プロトタイプ v0.12.0 Firebase</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1091,9 +1091,11 @@ input[list]::-webkit-calendar-picker-indicator{
 <header>
   <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill">v0.11.2</span>
+  <span class="pill">v0.12.0 Firebase</span>
   <span class="pill ok" id="onlinePill">オンライン</span>
   <span class="pill warn" id="unsyncedPill">同期待ち 0件</span>
+  <span class="pill" id="firebasePill">Firebase 未接続</span>
+  <span class="pill" id="devicePill">端末未設定</span>
   
 </header>
 <div class="app">
@@ -1200,7 +1202,7 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.10.6<br>・内部バージョンをv0.10.6に整理<br>・設定横にレコードタブを追加<br>・建材リストの見出し行を削除<br>・建材リストを建材レコード方式へ変更<br>・仕上表→建材レコード→建材リストの集計表示を追加<br>・部位/使用箇所を建材ID単位で集計<br>・レベル/分析要否/採取情報の編集欄を追加<br>・統合/削除のプロトタイプ操作を追加<br>・初期表示データをマイクラ風30建材サンプルに拡充</div></div></div></aside>
+<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.12.0<br>・内部バージョンをv0.10.6に整理<br>・設定横にレコードタブを追加<br>・建材リストの見出し行を削除<br>・建材リストを建材レコード方式へ変更<br>・仕上表→建材レコード→建材リストの集計表示を追加<br>・部位/使用箇所を建材ID単位で集計<br>・レベル/分析要否/採取情報の編集欄を追加<br>・統合/削除のプロトタイプ操作を追加<br>・初期表示データをマイクラ風30建材サンプルに拡充</div></div></div></aside>
 
 <div class="update-modal" id="updateModal"><div class="update-card"><h3>最新版に更新</h3><div class="hint" id="updateMessage">アプリ本体のキャッシュだけ削除して最新版を読み込みます。<br>案件データや未同期データは削除しません。</div><div class="update-actions"><button class="btn" onclick="hideUpdatePrompt()">キャンセル</button><a class="btn primary" id="hardReloadLink" href="./app.html" onclick="confirmAppUpdate(event)">更新する</a></div></div></div>
 <datalist id="materialSuggest"></datalist>
@@ -1213,8 +1215,68 @@ input[list]::-webkit-calendar-picker-indicator{
   </div>
 </div>
 
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDwpv3OJQrWP0P-0Jg1XuvdEVYQSK0a6e4",
+  authDomain: "survey-pwa-test.firebaseapp.com",
+  projectId: "survey-pwa-test",
+  storageBucket: "survey-pwa-test.firebasestorage.app",
+  messagingSenderId: "834793037383",
+  appId: "1:834793037383:web:0b616ce02c7cf3454d1b62"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+let unsubscribeMaterialRecords = null;
+
+function status(message, cls){
+  if (window.onFirebaseStatus) window.onFirebaseStatus(message, cls || '');
+}
+
+window.FirebaseSync = {
+  projectId: null,
+  async connectMaterialRecords(projectId, onRecords){
+    if (!projectId) return;
+    if (unsubscribeMaterialRecords) unsubscribeMaterialRecords();
+    this.projectId = projectId;
+    status('Firebase 接続中: ' + projectId, 'warn');
+    const colRef = collection(db, 'projects', projectId, 'materialRecords');
+    unsubscribeMaterialRecords = onSnapshot(colRef, snap => {
+      const records = [];
+      snap.forEach(d => records.push({ id: d.id, ...d.data() }));
+      records.sort((a,b) => Number(a.inputId || 999999) - Number(b.inputId || 999999) || String(a.materialId || a.id).localeCompare(String(b.materialId || b.id)));
+      status('Firebase 同期中: ' + projectId + ' / ' + records.length + '件', 'ok');
+      onRecords(records);
+    }, err => {
+      console.error(err);
+      status('Firebase エラー: ' + err.message, 'warn');
+    });
+  },
+  async saveMaterialRecord(projectId, materialId, data){
+    if (!projectId || !materialId) return;
+    const ref = doc(db, 'projects', projectId, 'materialRecords', materialId);
+    await setDoc(ref, {
+      ...data,
+      materialId,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  }
+};
+</script>
+
 <script>
-const APP_VERSION='0.11.2';
+const APP_VERSION='0.12.0';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -1243,6 +1305,198 @@ const state={
  },
  cells:{}, materials:[], materialCandidates:defaultMaterialCandidates.map(x=>({part:x[0],type:x[1],name:x[2]})), partCandidates:[...defaultPartCandidates], projectMaterialCandidates:[], projectPartCandidates:[], photos:[], samples:[], queue:[]
 };
+
+/* v0.12.0 Firebase正本化：UIは維持して、materialRecords同期層だけ差し込み */
+const appState={
+  currentProjectId:'',
+  deviceName:localStorage.getItem('deviceName')||'',
+  materialRecords:{},
+  firebaseReady:false,
+  applyingRemote:false,
+  bootstrappedProjects:{}
+};
+function getDeviceName(){
+  if(!appState.deviceName){
+    appState.deviceName=prompt('この端末名を入力してください','事務所PC')||'未設定端末';
+    localStorage.setItem('deviceName',appState.deviceName);
+  }
+  return appState.deviceName;
+}
+function currentFirestoreProjectId(){
+  const meta=projectMeta && projectMeta[activeProjectId];
+  return (meta && meta.no) ? String(meta.no) : String(activeProjectId||'26000001');
+}
+function setFirebasePill(text,cls){
+  const el=document.getElementById('firebasePill');
+  if(el){el.textContent=text; el.className='pill '+(cls==='ok'?'ok':cls==='warn'?'warn':'');}
+  const dev=document.getElementById('devicePill');
+  if(dev)dev.textContent='端末: '+(appState.deviceName||'未設定');
+}
+window.onFirebaseStatus=(message,cls)=>setFirebasePill(message,cls);
+function collectFinishPositions(materialId){
+  const out=[];
+  for(const r of allRooms()){
+    for(const area of ['外部','内部']){
+      const fixed=area==='外部'?externalParts:internalParts;
+      for(let line=0;line<roomLineCount(r);line++){
+        for(const p of fixed){
+          const c=getCell(r.id,area,p,'name',line);
+          if(c.materialId===materialId)out.push({roomId:r.id,area,part:p,slot:p,line,roomNo:r.no||'',roomName:r.name||'',floor:r.floor||''});
+        }
+        for(const slot of otherSlots){
+          const c=getCell(r.id,area,slot,'name',line);
+          if(c.materialId===materialId){
+            const pc=getCell(r.id,area,slot,'part',line);
+            out.push({roomId:r.id,area,part:pc.text||slot,slot,line,roomNo:r.no||'',roomName:r.name||'',floor:r.floor||''});
+          }
+        }
+      }
+    }
+  }
+  return out;
+}
+function serializeMaterialRecord(m){
+  const usage=collectMaterialUsage(m.id);
+  ensureMaterialRecordDefaults(m,usage);
+  return {
+    materialId:m.id,
+    inputId:m.inputId||'',
+    materialName:m.name||'',
+    normalizedName:normalizeInput(m.name||''),
+    baseName:m.base||splitMaterialName(m.name||'').base||'',
+    suffix:m.suffix||'',
+    active:m.active!==false,
+    deleted:!!m.deleted,
+    mergedTo:m.mergedTo||'',
+    level:m.level||'-',
+    analysisNeed:m.analysisNeed||'採取・分析',
+    analysisRequired:(m.analysisNeed||'採取・分析')==='採取・分析',
+    sampleCount:m.sampleCount===undefined?'':m.sampleCount,
+    samplePlaces:Array.isArray(m.samplePlaces)?m.samplePlaces:['','',''],
+    samplePart:m.samplePart||'',
+    sampleDate:m.sampleDate||'',
+    sampleChecked:!!m.sampleChecked,
+    sampleNo:m.sampleNo||'',
+    surveyMemo:m.note||'',
+    usageParts:usage.parts,
+    usagePlaces:usage.places,
+    finishTablePositions:collectFinishPositions(m.id),
+    analysisResult:m.analysisResult||'',
+    analysisNote:m.analysisNote||'',
+    systemMemo:Array.isArray(m.systemMemo)?m.systemMemo:[],
+    updatedBy:getDeviceName(),
+    updatedAtClient:new Date().toISOString(),
+    appVersion:APP_VERSION
+  };
+}
+function importMaterialRecordFromFirebase(r){
+  const id=r.materialId||r.id;
+  const name=r.materialName||r.name||'';
+  const parsed=splitMaterialName(name);
+  return {
+    id,
+    inputId:r.inputId||Number(String(id||'').replace(/^R/,''))||'',
+    base:r.baseName||r.base||parsed.base||name,
+    suffix:r.suffix||parsed.suffix||'',
+    name,
+    method:r.method||'firebase',
+    note:r.surveyMemo||r.note||'',
+    active:r.active!==false,
+    deleted:!!r.deleted,
+    mergedTo:r.mergedTo||'',
+    level:r.level||'-',
+    analysisNeed:r.analysisNeed||(r.analysisRequired===false?'目視':'採取・分析'),
+    sampleCount:r.sampleCount===undefined?'':r.sampleCount,
+    samplePlaces:Array.isArray(r.samplePlaces)?r.samplePlaces:['','',''],
+    samplePart:r.samplePart||'',
+    sampleDate:r.sampleDate||'',
+    sampleChecked:!!r.sampleChecked,
+    sampleNo:r.sampleNo||'',
+    analysisResult:r.analysisResult||'',
+    analysisNote:r.analysisNote||'',
+    systemMemo:Array.isArray(r.systemMemo)?r.systemMemo:[],
+    finishTablePositions:Array.isArray(r.finishTablePositions)?r.finishTablePositions:[],
+    usageParts:Array.isArray(r.usageParts)?r.usageParts:[],
+    usagePlaces:Array.isArray(r.usagePlaces)?r.usagePlaces:[]
+  };
+}
+function applyFinishPositionsFromFirebase(records){
+  const positioned=records.filter(r=>Array.isArray(r.finishTablePositions)&&r.finishTablePositions.length);
+  if(!positioned.length)return;
+  const ids=new Set(positioned.map(r=>r.materialId||r.id));
+  for(const key of Object.keys(state.cells)){
+    const c=state.cells[key];
+    if(c && c.materialId && ids.has(c.materialId)) delete state.cells[key];
+  }
+  for(const rec of positioned){
+    const m=materialById(rec.materialId||rec.id);
+    if(!m)continue;
+    for(const pos of rec.finishTablePositions){
+      if(!findRoom(pos.roomId))continue;
+      const slot=pos.slot||pos.part;
+      const line=Number(pos.line||0);
+      if(otherSlots.includes(slot)){
+        if(pos.part && !otherSlots.includes(pos.part)) setRaw(pos.roomId,pos.area,slot,'part',{text:pos.part,status:'part_only'},line);
+      }
+      applyMaterialToCell(pos.roomId,pos.area,slot,line,m);
+    }
+  }
+}
+function applyFirebaseMaterialRecords(records){
+  appState.materialRecords={};
+  records.forEach(r=>{appState.materialRecords[r.materialId||r.id]=r;});
+  if(!records.length){
+    // Firestoreが空なら、現在のUI状態を初期データとして投入する。
+    if(!appState.bootstrappedProjects[appState.currentProjectId]){
+      appState.bootstrappedProjects[appState.currentProjectId]=true;
+      setTimeout(()=>saveAllMaterialRecordsToFirebase('初期投入'),300);
+    }
+    return;
+  }
+  appState.applyingRemote=true;
+  const imported=records.map(importMaterialRecordFromFirebase).filter(m=>m.id);
+  state.materials=imported;
+  const maxR=imported.reduce((n,m)=>Math.max(n,Number(String(m.id).replace(/^R/,''))||0),0);
+  const maxInput=imported.reduce((n,m)=>Math.max(n,Number(m.inputId)||0),0);
+  materialSeq=Math.max(materialSeq,maxR+1);
+  inputSeq=Math.max(inputSeq,maxInput+1);
+  applyFinishPositionsFromFirebase(records);
+  appState.applyingRemote=false;
+  renderAll();
+}
+function saveMaterialRecordToFirebase(id,reason){
+  if(appState.applyingRemote)return;
+  const m=materialById(id); if(!m || !window.FirebaseSync)return;
+  const projectId=appState.currentProjectId||currentFirestoreProjectId();
+  window.FirebaseSync.saveMaterialRecord(projectId,m.id,serializeMaterialRecord(m)).then(()=>{
+    setFirebasePill('Firebase 保存済: '+(reason||m.name),'ok');
+  }).catch(err=>{
+    console.error(err); setFirebasePill('Firebase 保存エラー','warn');
+  });
+}
+function saveAllMaterialRecordsToFirebase(reason){
+  if(!window.FirebaseSync)return;
+  activeMaterials().forEach(m=>saveMaterialRecordToFirebase(m.id,reason||'全件保存'));
+}
+function connectFirebaseForActiveProject(){
+  getDeviceName();
+  const projectId=currentFirestoreProjectId();
+  appState.currentProjectId=projectId;
+  setFirebasePill('Firebase 接続準備: '+projectId,'warn');
+  const run=()=>{
+    if(window.FirebaseSync){
+      window.FirebaseSync.connectMaterialRecords(projectId,applyFirebaseMaterialRecords);
+    }else{
+      setTimeout(run,200);
+    }
+  };
+  run();
+}
+function syncCurrentRecordAfterCell(roomId,area,part,line){
+  const c=getCell(roomId,area,part,'name',line);
+  if(c && c.materialId) saveMaterialRecordToFirebase(c.materialId,'仕上表');
+}
+
 let defaultRoomsByArea=null;
 function roomsForArea(area){return state.roomsByArea[area]||[]}
 function allRooms(){return [...roomsForArea('外部'),...roomsForArea('内部')]}
@@ -2056,7 +2310,7 @@ const projectMeta={
 };
 let activeProjectId='odk';
 const projectStore={};
-const PWA_STORAGE_KEY='chousa-pwa-state-v0.11';
+const PWA_STORAGE_KEY='chousa-pwa-state-v0.12';
 let persistenceEnabled=false;
 let persistTimer=null;
 function cloneData(obj){return JSON.parse(JSON.stringify(obj))}
@@ -3344,7 +3598,73 @@ function addPhoto(board){
   }
   renderAll();
 }
-initProjects(); persistenceEnabled=true; renderAll();
+
+
+/* v0.12.0 Firebase保存入口ラップ：既存UIの関数名は維持 */
+(function(){
+  const originalOnNameBlur=onNameBlur;
+  onNameBlur=function(roomId,area,part,line,value){
+    originalOnNameBlur(roomId,area,part,line,value);
+    syncCurrentRecordAfterCell(roomId,area,part,line);
+  };
+  const originalOnIdBlur=onIdBlur;
+  onIdBlur=function(roomId,area,part,line,value){
+    originalOnIdBlur(roomId,area,part,line,value);
+    syncCurrentRecordAfterCell(roomId,area,part,line);
+  };
+  const originalOnPartBlur=onPartBlur;
+  onPartBlur=function(roomId,area,slot,line,value){
+    originalOnPartBlur(roomId,area,slot,line,value);
+    syncCurrentRecordAfterCell(roomId,area,slot,line);
+  };
+  const originalRegisterName=registerName;
+  registerName=function(roomId,area,part,line=0,shouldRender=true){
+    originalRegisterName(roomId,area,part,line,shouldRender);
+    syncCurrentRecordAfterCell(roomId,area,part,line);
+  };
+  const originalUpdateMaterialRecord=updateMaterialRecord;
+  updateMaterialRecord=function(id,field,value){
+    originalUpdateMaterialRecord(id,field,value);
+    saveMaterialRecordToFirebase(id,'建材リスト');
+  };
+  const originalUpdateMaterialSamplePlace=updateMaterialSamplePlace;
+  updateMaterialSamplePlace=function(id,index,value){
+    originalUpdateMaterialSamplePlace(id,index,value);
+    saveMaterialRecordToFirebase(id,'採取場所');
+  };
+  const originalToggleSampleChecked=toggleSampleChecked;
+  toggleSampleChecked=function(id,checked){
+    originalToggleSampleChecked(id,checked);
+    saveMaterialRecordToFirebase(id,'採取チェック');
+  };
+  const originalUpdateMaterialName=updateMaterialName;
+  updateMaterialName=function(id,value){
+    originalUpdateMaterialName(id,value);
+    saveMaterialRecordToFirebase(id,'建材名');
+  };
+  const originalMNote=mNote;
+  mNote=function(id,value){
+    originalMNote(id,value);
+    saveMaterialRecordToFirebase(id,'調査備考');
+  };
+  const originalEditMaterialNote=editMaterialNote;
+  editMaterialNote=function(id){
+    originalEditMaterialNote(id);
+    saveMaterialRecordToFirebase(id,'調査備考');
+  };
+  const originalSwitchProject=switchProject;
+  switchProject=function(id){
+    originalSwitchProject(id);
+    connectFirebaseForActiveProject();
+  };
+  const originalSyncNow=syncNow;
+  syncNow=function(){
+    originalSyncNow();
+    saveAllMaterialRecordsToFirebase('手動同期');
+  };
+})();
+
+initProjects(); persistenceEnabled=true; renderAll(); connectFirebaseForActiveProject();
 
 window.addEventListener('load',()=>{
   const tab=new URLSearchParams(location.search).get('tab');

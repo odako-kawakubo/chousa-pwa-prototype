@@ -1,6 +1,5 @@
 {
-  "version": "0.11.2",
+  "version": "0.12.0",
   "app": "app.html",
-  "updated": "2026-07-08",
-  "note": "写真タブ目視UI調整、操作パネル折りたたみ、カメラ戻り時の状態保持を反映"
+  "note": "Firebase materialRecords sync / UI keep"
 }
