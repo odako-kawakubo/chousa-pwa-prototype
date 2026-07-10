@@ -1,4 +1,0 @@
-v0.12.2b
-- MSAL popup login を redirect login に変更
-- popup_window_error 対策
-- 写真選択前のMicrosoftログイン確認を追加
