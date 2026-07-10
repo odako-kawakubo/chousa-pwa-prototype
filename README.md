@@ -1,6 +1,6 @@
-# 調査システムPWA Prototype v0.13.0
+# 調査システムPWA Prototype v0.13.1
 
-## v0.13.0 電子看板カメラ統合 第1段階
+## v0.13.1 電子看板カメラ統合 第1段階
 
 - `camera.html` を電子看板カメラ v54 ベースへ更新
 - 調査システムから渡した案件名・住所・部屋・試料情報を看板へ初期反映
@@ -45,3 +45,7 @@ GitHub Pagesで使う場合は Pages の app.html URL も追加してくださ�
 - 「選択」「削除」は各ブロックのカメラ起動ボタンの上に配置。
 - 削除時はOneDrive本体削除を試行し、Firestore側は deleted=true に更新する。
 - OneDrive削除失敗時は確認後にアプリ上の写真カードだけ削除可能。
+
+
+## v0.13.1
+電子看板カメラからOneDrive/Firestoreへ写真保存し、materialRecords.photoRefsへ紐付けます。

@@ -2202,7 +2202,7 @@
     #boardEditHost .inner-table tr:nth-child(2) { height: 34.6939%; }
     #boardEditHost .inner-table tr:nth-child(3) { height: 30.6122%; }
 
-    /* v0.13.0 調査システム連携 */
+    /* v0.13.1 調査システム連携 */
     .chousa-return-button {
       position: fixed;
       top: 10px;
@@ -2589,7 +2589,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "v0.13.0-camera-v54";
+    const APP_VERSION = "v0.13.1-camera-v54";
 
     function readChousaCameraContext() {
       const p = new URLSearchParams(window.location.search);
@@ -2606,6 +2606,7 @@
         roomNo: p.get("roomNo") || "",
         roomName: p.get("roomName") || "",
         targetPart: p.get("targetPart") || "",
+        targetKey: p.get("targetKey") || "",
         materialId: p.get("materialId") || "",
         materialName: p.get("materialName") || "",
         materialNo: p.get("materialNo") || "",
@@ -2614,6 +2615,8 @@
         samplePlace: p.get("samplePlace") || "",
         samplePart: p.get("samplePart") || "",
         samplePointKey: p.get("samplePointKey") || "",
+        sampleIndex: p.get("sampleIndex") || "",
+        sampleBlock: p.get("sampleBlock") || "",
         defaultStatus: p.get("defaultStatus") || "",
         mode,
         returnUrl: p.get("returnUrl") || "app.html?tab=photos"
@@ -5363,6 +5366,70 @@
       startBoardCorrectionSelectMode();
     }
 
+    function buildChousaPhotoRecord(photo, uploaded) {
+      const isSampling = CHOUSA_CAMERA_CONTEXT.mode === "sampling";
+      const stageMap = {
+        before: "採取前",
+        during: "採取中",
+        after: "採取後",
+        section: "断面",
+        visual: "目視"
+      };
+      const photoId = photo.cloudPhotoId || (`P${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7).toUpperCase()}`);
+      photo.cloudPhotoId = photoId;
+      return {
+        photoId,
+        projectId: CHOUSA_CAMERA_CONTEXT.projectId,
+        photoMode: isSampling ? "sample" : "visual",
+        kind: isSampling ? "sample" : "visual",
+        type: isSampling ? "採取" : "目視",
+        photoType: isSampling ? "採取" : "目視",
+        roomId: CHOUSA_CAMERA_CONTEXT.roomId || CHOUSA_CAMERA_CONTEXT.samplePlace || "",
+        roomNo: CHOUSA_CAMERA_CONTEXT.roomNo || CHOUSA_CAMERA_CONTEXT.samplePlace || photo.roomNo || "",
+        roomName: CHOUSA_CAMERA_CONTEXT.roomName || "",
+        targetKey: CHOUSA_CAMERA_CONTEXT.targetKey || "",
+        targetPart: CHOUSA_CAMERA_CONTEXT.targetPart || CHOUSA_CAMERA_CONTEXT.samplePart || "",
+        materialId: CHOUSA_CAMERA_CONTEXT.materialId || "",
+        materialName: CHOUSA_CAMERA_CONTEXT.materialName || "",
+        inputId: CHOUSA_CAMERA_CONTEXT.inputId || "",
+        materialNo: CHOUSA_CAMERA_CONTEXT.materialNo || "",
+        sampleStage: isSampling ? (stageMap[photo.status] || photo.statusLabel || "採取前") : "",
+        samplePointKey: CHOUSA_CAMERA_CONTEXT.samplePointKey || "",
+        sampleIndex: CHOUSA_CAMERA_CONTEXT.sampleIndex ? Number(CHOUSA_CAMERA_CONTEXT.sampleIndex) : null,
+        sampleNo: CHOUSA_CAMERA_CONTEXT.sampleNo || photo.sampleNo || "",
+        sampleBlock: CHOUSA_CAMERA_CONTEXT.sampleBlock || "",
+        fileName: photo.fileName,
+        uploadProvider: "sharepoint",
+        uploadStatus: "uploaded",
+        takenBy: "electronic-board-camera",
+        takenAtClient: photo.createdAt || new Date().toISOString(),
+        appVersion: APP_VERSION,
+        ...(uploaded || {})
+      };
+    }
+
+    async function savePhotosToChousaSystem(photos) {
+      if (!window.CameraCloudSave) throw new Error("写真保存機能が初期化されていません");
+      if (!CHOUSA_CAMERA_CONTEXT.projectId) throw new Error("案件IDがありません。調査システムからカメラを開き直してください");
+
+      const saved = [];
+      for (let i = 0; i < photos.length; i += 1) {
+        const photo = photos[i];
+        showToast(`OneDriveへ保存中 ${i + 1}/${photos.length}`);
+        const blob = dataUrlToBlob(photo.dataUrl);
+        const uploaded = await window.CameraCloudSave.uploadBlob(photo.fileName, blob);
+        const record = buildChousaPhotoRecord(photo, uploaded);
+        await window.CameraCloudSave.savePhotoRecord(record);
+        photo.savedLocal = true;
+        photo.savedAt = new Date().toISOString();
+        photo.uploadStatus = "uploaded";
+        photo.downloadUrl = uploaded.downloadUrl || uploaded.sharePointUrl || "";
+        await savePhotoToIndexedDB(photo);
+        saved.push(photo);
+      }
+      return saved;
+    }
+
     async function saveCurrentPreviewPhoto() {
       if (!capturedPhotos.length) {
         showToast("撮影した写真がありません");
@@ -5370,13 +5437,32 @@
       }
 
       const selectedPhotos = getPreviewPhotos().filter((photo) => photo.selected);
-
       if (!selectedPhotos.length) {
-        showToast("共有する写真をチェックしてください");
+        showToast(HAS_CHOUSA_CONTEXT ? "保存する写真をチェックしてください" : "共有する写真をチェックしてください");
         return;
       }
 
-      await shareOrDownloadPhotos(selectedPhotos);
+      if (!HAS_CHOUSA_CONTEXT) {
+        await shareOrDownloadPhotos(selectedPhotos);
+        return;
+      }
+
+      try {
+        const button = document.querySelector(".btn-save");
+        if (button) button.disabled = true;
+        await savePhotosToChousaSystem(selectedPhotos);
+        renderPreview();
+        showToast("OneDrive・Firestoreへ保存しました");
+        await delay(700);
+        window.location.href = CHOUSA_CAMERA_CONTEXT.returnUrl || "app.html?tab=photos";
+      } catch (error) {
+        console.error(error);
+        showErrorToast("写真保存に失敗しました");
+        window.alert("写真保存に失敗しました。Microsoftログイン、OneDrive権限、通信状態を確認してください。\n" + (error && error.message ? error.message : error));
+      } finally {
+        const button = document.querySelector(".btn-save");
+        if (button) button.disabled = false;
+      }
     }
 
     async function deleteSelectedPreviewPhotos() {
@@ -6324,5 +6410,153 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+
+  <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"
+    onerror="document.write('<script src=&quot;https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.38.3/lib/msal-browser.min.js&quot;><\/script>')"></script>
+  <script type="module">
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, doc, setDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwpv3OJQrWP0P-0Jg1XuvdEVYQSK0a6e4",
+      authDomain: "survey-pwa-test.firebaseapp.com",
+      projectId: "survey-pwa-test",
+      storageBucket: "survey-pwa-test.firebasestorage.app",
+      messagingSenderId: "834793037383",
+      appId: "1:834793037383:web:0b616ce02c7cf3454d1b62"
+    };
+    const MICROSOFT_CLIENT_ID = "f7074fad-6ea0-467b-98db-e308f01950cc";
+    const MICROSOFT_TENANT_ID = "538265b8-8d15-49ef-9d51-ca252954de1d";
+    const UPLOAD_FOLDER_NAME = "調査システムPWAテスト写真";
+    const GRAPH_SCOPES = ["User.Read", "Files.ReadWrite", "Sites.ReadWrite.All"];
+    const firebaseApp = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+    let msalClient = null;
+    let folderCache = null;
+
+    function safeName(value) {
+      return String(value || "photo.jpg").replace(/[\\/:*?"<>|#%{}^~[\]`]/g, "_");
+    }
+    function pathSegment(value) {
+      return encodeURIComponent(String(value || "")).replace(/%20/g, " ");
+    }
+    async function initMsal() {
+      if (!window.msal) throw new Error("MSALライブラリを読み込めませんでした");
+      if (!msalClient) {
+        msalClient = new window.msal.PublicClientApplication({
+          auth: {
+            clientId: MICROSOFT_CLIENT_ID,
+            authority: "https://login.microsoftonline.com/" + MICROSOFT_TENANT_ID,
+            redirectUri: new URL("app.html", window.location.href).origin + new URL("app.html", window.location.href).pathname
+          },
+          cache: { cacheLocation: "localStorage", storeAuthStateInCookie: false }
+        });
+      }
+      return msalClient;
+    }
+    async function getAccount() {
+      const client = await initMsal();
+      const active = client.getActiveAccount && client.getActiveAccount();
+      if (active) return active;
+      const accounts = client.getAllAccounts();
+      if (accounts && accounts[0]) {
+        client.setActiveAccount(accounts[0]);
+        return accounts[0];
+      }
+      throw new Error("Microsoft未ログインです。調査システムへ戻り、Microsoftログインしてから撮影してください");
+    }
+    async function token() {
+      const client = await initMsal();
+      const account = await getAccount();
+      try {
+        const result = await client.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
+        return result.accessToken;
+      } catch (error) {
+        console.warn(error);
+        throw new Error("Microsoft認証の有効期限が切れています。調査システムで再ログインしてください");
+      }
+    }
+    async function graphFetch(url, options = {}) {
+      const accessToken = await token();
+      const response = await fetch(url, {
+        ...options,
+        headers: { Authorization: "Bearer " + accessToken, ...(options.headers || {}) }
+      });
+      if (!response.ok) {
+        const text = await response.text().catch(() => "");
+        throw new Error("Graph API error " + response.status + ": " + text);
+      }
+      const contentType = response.headers.get("content-type") || "";
+      return contentType.includes("application/json") ? response.json() : response.text();
+    }
+    async function getFolder() {
+      if (folderCache) return folderCache;
+      let item = null;
+      try {
+        const found = await graphFetch("https://graph.microsoft.com/v1.0/me/drive/root/search(q='" + encodeURIComponent(UPLOAD_FOLDER_NAME) + "')");
+        item = ((found && found.value) || []).find(x => x && x.folder && x.name === UPLOAD_FOLDER_NAME) || null;
+      } catch (error) {
+        console.warn("folder search failed", error);
+      }
+      if (!item) {
+        try {
+          item = await graphFetch("https://graph.microsoft.com/v1.0/me/drive/root:/" + pathSegment(UPLOAD_FOLDER_NAME));
+          if (!item || !item.folder) item = null;
+        } catch (error) {
+          if (!String(error && error.message || "").includes("404")) console.warn(error);
+        }
+      }
+      if (!item) {
+        item = await graphFetch("https://graph.microsoft.com/v1.0/me/drive/root/children", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: UPLOAD_FOLDER_NAME, folder: {}, "@microsoft.graph.conflictBehavior": "fail" })
+        });
+      }
+      folderCache = item;
+      return item;
+    }
+
+    window.CameraCloudSave = {
+      async uploadBlob(fileName, blob) {
+        const folder = await getFolder();
+        const uploaded = await graphFetch(
+          "https://graph.microsoft.com/v1.0/me/drive/items/" + encodeURIComponent(folder.id) + ":/" + pathSegment(safeName(fileName)) + ":/content",
+          { method: "PUT", headers: { "Content-Type": blob.type || "image/jpeg" }, body: blob }
+        );
+        const account = await getAccount();
+        return {
+          storagePath: "",
+          sharePointFolderName: folder.name || UPLOAD_FOLDER_NAME,
+          sharePointFolderUrl: folder.webUrl || "",
+          sharePointFolderItemId: folder.id || "",
+          sharePointItemId: uploaded.id || "",
+          sharePointDriveId: (uploaded.parentReference && uploaded.parentReference.driveId) || "",
+          sharePointUrl: uploaded.webUrl || "",
+          downloadUrl: uploaded["@microsoft.graph.downloadUrl"] || uploaded.webUrl || "",
+          uploadedBy: account && account.username ? account.username : "",
+          uploadedAtClient: new Date().toISOString()
+        };
+      },
+      async savePhotoRecord(record) {
+        const projectId = record && record.projectId;
+        const photoId = record && record.photoId;
+        if (!projectId || !photoId) throw new Error("Firestore保存情報が不足しています");
+        await setDoc(doc(db, "projects", projectId, "photos", photoId), {
+          ...record,
+          photoId,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        if (record.materialId) {
+          await setDoc(doc(db, "projects", projectId, "materialRecords", record.materialId), {
+            materialId: record.materialId,
+            photoRefs: arrayUnion(photoId),
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        }
+      }
+    };
+  </script>
+
 </body>
 </html>

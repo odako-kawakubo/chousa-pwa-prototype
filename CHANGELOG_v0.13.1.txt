@@ -1,0 +1,11 @@
+v0.13.1
+
+- 目視・サンプリングの代表写真を上段へ表示
+- 2枚目以降を下段へ表示
+- 代表写真の「代」マークを廃止
+- Microsoftログイン/ログアウトを切替式に変更
+- ログイン中はメールアドレスではなくアカウント名を表示
+- 電子看板カメラで選択した写真をOneDriveへアップロード
+- Firestore projects/{projectId}/photos に写真メタを保存
+- materialRecords.photoRefsへphotoIdを追加
+- 保存完了後に調査システム写真タブへ戻る
