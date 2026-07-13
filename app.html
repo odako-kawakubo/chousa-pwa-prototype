@@ -1041,7 +1041,12 @@ input[list]::-webkit-calendar-picker-indicator{
 .photo-stage-strip{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin-top:8px;}
 .photo-stage-tile{position:relative;width:90px;min-height:58px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:11px;color:#334155;line-height:1.25;padding:6px;}
 .photo-stage-tile.missing{border-style:dashed;background:#f8fafc;color:#64748b;}
-.photo-stage-tile.done{border-color:#93c5fd;background:#eff6ff;color:#1e40af;}
+.photo-stage-tile.done{border-color:#93c5fd;background:#eff6ff;color:#1e40af;overflow:hidden;background-size:cover;background-position:center;}
+.photo-stage-tile.done.has-image{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.88);}
+.photo-stage-tile.done.has-image::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(15,23,42,.12),rgba(15,23,42,.58));pointer-events:none;}
+.photo-stage-tile.done.has-image b,.photo-stage-tile.done.has-image .stage-add,.photo-stage-tile.done.has-image .photo-count-badge{position:relative;z-index:2;}
+.photo-stage-tile.done.has-image .stage-add{position:absolute;}
+.photo-stage-tile.done.has-image .photo-count-badge{position:absolute;}
 .photo-stage-tile.next{border-color:#93c5fd;background:#f8fbff;}
 .photo-count-badge{position:absolute;right:-6px;top:-7px;min-width:20px;height:20px;border-radius:999px;background:#2563eb;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid #fff;}
 .sample-stage-summary{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;}
@@ -4014,42 +4019,47 @@ function openPhotoPreview(title, body){
 }
 function closePhotoPreview(){const modal=document.getElementById('photoPreviewModal'); if(modal)modal.classList.remove('open');}
 function renderPhotoPickList(prefix,key,stage,photos){
-  if(!photos || !photos.length)return `<div class="photo-pick-list"><div class="photo-pick-title">${esc(stage)}：まだ写真がありません</div></div>`;
+  if(!photos || !photos.length)return '';
   const rep=selectedRepIndex(prefix,key,stage,photos);
   const deleteMode=isPhotoDeleteMode(prefix,key,stage);
   const selectedCount=selectedPhotoIdsInBlock(prefix,key,stage).length;
 
-  function renderThumb(p,i,isRepresentative){
+  function renderThumb(p,i){
     const url=photoDisplayUrl(p);
     const bg=url?` style="background-image:url('${escapeAttr(url)}')"`:'';
     const cls=url?'has-image':'';
     const pid=photoIdOf(p);
     const delSelected=deleteMode && !!(photoDeleteSelection[photoDeleteBlockKey(prefix,key,stage)]||{})[pid];
-    const body=url?`<span>写真${i+1}</span>`:`写真${i+1}`;
     const preview=url?`<img src=&quot;${escapeAttr(url)}&quot; style=&quot;max-width:100%;max-height:100%;object-fit:contain&quot;>`:`${esc(stage)}<br>写真 ${i+1}<br><span style=&quot;font-size:13px&quot;>${esc(p.uploadStatus||'プレビューなし')}</span>`;
-    let click='';
-    if(deleteMode){
-      click=`togglePhotoDeleteSelection('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}','${escapeAttr(pid)}')`;
-    }else if(!isRepresentative){
-      click=`setRepPhoto('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}',${i})`;
-    }
-    return `<div class="photo-pick-thumb ${cls} ${isRepresentative&&!deleteMode?'selected representative':''} ${deleteMode?'delete-mode':''} ${delSelected?'delete-selected':''}"${bg} onclick="event.stopPropagation();${click||'void 0'}" ondblclick="event.stopPropagation();openPhotoPreview('${escapeAttr(stage)} 写真${i+1}','${preview}')">${deleteMode?`<span class="photo-check">${delSelected?'✓':''}</span>`:''}${body}</div>`;
+    const click=deleteMode
+      ? `togglePhotoDeleteSelection('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}','${escapeAttr(pid)}')`
+      : `setRepPhoto('${escapeAttr(prefix)}','${escapeAttr(key)}','${escapeAttr(stage)}',${i})`;
+    return `<div class="photo-pick-thumb ${cls} ${deleteMode?'delete-mode':''} ${delSelected?'delete-selected':''}"${bg} onclick="event.stopPropagation();${click}" ondblclick="event.stopPropagation();openPhotoPreview('${escapeAttr(stage)} 写真${i+1}','${preview}')">${deleteMode?`<span class="photo-check">${delSelected?'✓':''}</span>`:''}<span>写真${i+1}</span></div>`;
   }
 
-  const representative=renderThumb(photos[rep],rep,true);
-  const others=photos.map((p,i)=>({p,i})).filter(x=>x.i!==rep);
+  const shown=deleteMode
+    ? photos.map((p,i)=>({p,i}))
+    : photos.map((p,i)=>({p,i})).filter(x=>x.i!==rep);
+  if(!shown.length)return '';
   const title=deleteMode
-    ? `${esc(stage)}：削除対象を選択中（${selectedCount}枚）`
-    : `${esc(stage)}：上段が代表写真。下段の写真をクリックすると代表を入れ替えます。`;
-  return `<div class="photo-pick-list"><div class="photo-pick-title">${title}</div><div class="photo-pick-representative"><span class="photo-pick-representative-label">代表写真</span>${representative}</div>${others.length?`<div class="photo-pick-others"><div class="photo-pick-others-label">2枚目以降</div>${others.map(x=>renderThumb(x.p,x.i,false)).join('')}</div>`:''}</div>`;
+    ? `削除対象を選択中（${selectedCount}枚）`
+    : `2枚目以降（クリックで上の写真と入れ替え）`;
+  return `<div class="photo-pick-list"><div class="photo-pick-title">${title}</div><div class="photo-pick-others">${shown.map(x=>renderThumb(x.p,x.i)).join('')}</div></div>`;
 }
 function selectSampleStage(pointKey,stage){activeSamplePointKey=pointKey||activeSamplePointKey; activeSampleStage=stage||''; renderPhotos({preserveScroll:true});}
 function renderStageTile(label,count,isNext,opts){
   opts=opts||{};
-  const n=Number(count||0);
+  const photos=Array.isArray(opts.photos)?opts.photos:[];
+  const n=Number(count||photos.length||0);
   const selected=opts.selected;
+  const rep=n>0 && photos.length ? selectedRepIndex(opts.repPrefix||'',opts.repKey||'',opts.repStage||label,photos) : 0;
+  const representative=photos[rep]||null;
+  const url=photoDisplayUrl(representative);
+  const bg=url?` style="background-image:url('${escapeAttr(url)}')"`:'';
+  const imageClass=url?'has-image':'';
   const add=`<span class="stage-add" onclick="event.stopPropagation();${opts.addAction||''}">＋</span>`;
-  return `<div class="photo-stage-tile ${n>0?'done':'missing'} ${isNext?'next':''} ${selected?'selected':''}" onclick="event.stopPropagation();${opts.selectAction||''}">${add}<b>${esc(label)}</b><span>${n>0?'撮影済み':'未撮影'}</span>${n>0?`<span class="photo-count-badge">${n}</span>`:''}</div>`;
+  const preview=url?` ondblclick="event.stopPropagation();openPhotoPreview('${escapeAttr(label)}','<img src=&quot;${escapeAttr(url)}&quot; style=&quot;max-width:100%;max-height:100%;object-fit:contain&quot;>')"`:'';
+  return `<div class="photo-stage-tile ${n>0?'done':'missing'} ${imageClass} ${isNext?'next':''} ${selected?'selected':''}"${bg} onclick="event.stopPropagation();${opts.selectAction||''}"${preview}>${add}<b>${esc(label)}</b>${n===0?'<span>未撮影</span>':''}${n>0?`<span class="photo-count-badge">${n}</span>`:''}</div>`;
 }
 function visualMaterialLines(t){
   const items=(t.materials&&t.materials.length)?t.materials:[];
@@ -4077,7 +4087,7 @@ function renderVisualFrameCard(t){
       ${title}
       <div class="photo-material-lines">${materialLabel}</div>
     </div>
-    <div onclick="selectVisualTarget('${escapeAttr(t.key)}')">${renderStageTile(t.partLabel,count,false,{selected,selectAction:`selectVisualTarget('${escapeAttr(t.key)}')`,addAction:`launchVisualPartCamera('${escapeAttr(t.key)}')`})}${selected?renderPhotoPickList('visual',t.key,t.partLabel,photos):''}</div>
+    <div onclick="selectVisualTarget('${escapeAttr(t.key)}')">${renderStageTile(t.partLabel,count,false,{selected,photos,repPrefix:'visual',repKey:t.key,repStage:t.partLabel,selectAction:`selectVisualTarget('${escapeAttr(t.key)}')`,addAction:`launchVisualPartCamera('${escapeAttr(t.key)}')`})}${selected?renderPhotoPickList('visual',t.key,t.partLabel,photos):''}</div>
     ${renderPhotoBlockActions('visual',t.key,t.partLabel,photos,`launchVisualPartCamera('${escapeAttr(t.key)}')`)}
   </div>`;
 }
@@ -4086,8 +4096,8 @@ function renderSamplePointBlock(point){
   const next=nextSampleStage(point);
   if(point.key===activeSamplePointKey && !activeSampleStage) activeSampleStage=next;
   const selectedStage=(point.key===activeSamplePointKey ? (activeSampleStage||next) : '');
-  const visualTile=counts['目視'] ? renderStageTile('目視',counts['目視'],false,{selected:selectedStage==='目視',selectAction:`selectSampleStage('${escapeAttr(point.key)}','目視')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','目視')`}) : '';
-  const stageTiles=sampleStageOrder.map(stage=>renderStageTile(stage,counts[stage]||0,stage===next,{selected:selectedStage===stage,selectAction:`selectSampleStage('${escapeAttr(point.key)}','${escapeAttr(stage)}')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(stage)}')`})).join('');
+  const visualTile=counts['目視'] ? renderStageTile('目視',counts['目視'],false,{selected:selectedStage==='目視',photos:samplePhotoList(point,'目視'),repPrefix:'sample',repKey:point.key,repStage:'目視',selectAction:`selectSampleStage('${escapeAttr(point.key)}','目視')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','目視')`}) : '';
+  const stageTiles=sampleStageOrder.map(stage=>renderStageTile(stage,counts[stage]||0,stage===next,{selected:selectedStage===stage,photos:samplePhotoList(point,stage),repPrefix:'sample',repKey:point.key,repStage:stage,selectAction:`selectSampleStage('${escapeAttr(point.key)}','${escapeAttr(stage)}')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(stage)}')`})).join('');
   const selectedPhotos=selectedStage ? samplePhotoList(point,selectedStage) : [];
   return `<div class="sample-point-block ${point.key===activeSamplePointKey?'active':''}" onclick="selectSamplePoint('${escapeAttr(point.key)}')">
     <div class="sample-point-title"><b>${esc(point.blockLabel)}</b><span class="hint">次回：${esc(next)}</span></div>
