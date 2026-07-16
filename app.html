@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA v0.13.3</title>
+<title>調査システムPWA v0.13.4</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1347,7 +1347,7 @@ input[list]::-webkit-calendar-picker-indicator{
 <header class="app-header-compact">
   <button class="btn header-case-btn" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill header-version" id="headerVersion">v0.13.3</span>
+  <span class="pill header-version" id="headerVersion">v0.13.4</span>
   <span class="connection-dot online" id="onlinePill" title="オンライン"></span>
   <span class="header-sync-state" id="firebasePill">同期中…</span>
   <span class="pill header-device" id="devicePill">端末未設定</span>
@@ -1462,7 +1462,7 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.13.3<br>・内部バージョンをv0.10.6に整理<br>・設定横にレコードタブを追加<br>・建材リストの見出し行を削除<br>・建材リストを建材レコード方式へ変更<br>・仕上表→建材レコード→建材リストの集計表示を追加<br>・部位/使用箇所を建材ID単位で集計<br>・レベル/分析要否/採取情報の編集欄を追加<br>・統合/削除のプロトタイプ操作を追加<br>・初期表示データをマイクラ風30建材サンプルに拡充</div></div></div></aside>
+<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-box"><h4>バージョン</h4><div class="hint">現在：v0.13.4<br>・内部バージョンをv0.10.6に整理<br>・設定横にレコードタブを追加<br>・建材リストの見出し行を削除<br>・建材リストを建材レコード方式へ変更<br>・仕上表→建材レコード→建材リストの集計表示を追加<br>・部位/使用箇所を建材ID単位で集計<br>・レベル/分析要否/採取情報の編集欄を追加<br>・統合/削除のプロトタイプ操作を追加<br>・初期表示データをマイクラ風30建材サンプルに拡充</div></div></div></aside>
 
 <div class="update-modal" id="updateModal"><div class="update-card"><h3>最新版に更新</h3><div class="hint" id="updateMessage">アプリ本体のキャッシュだけ削除して最新版を読み込みます。<br>案件データや未同期データは削除しません。</div><div class="update-actions"><button class="btn" onclick="hideUpdatePrompt()">キャンセル</button><a class="btn primary" id="hardReloadLink" href="./app.html" onclick="confirmAppUpdate(event)">更新する</a></div></div></div>
 <datalist id="materialSuggest"></datalist>
@@ -1793,7 +1793,7 @@ window.FirebaseSync = {
       const records = [];
       snap.forEach(d => records.push({ id: d.id, ...d.data() }));
       records.sort((a,b) => Number(a.inputId || 999999) - Number(b.inputId || 999999) || String(a.materialId || a.id).localeCompare(String(b.materialId || b.id)));
-      status('Firebase 同期中: ' + projectId + ' / ' + records.length + '件', 'ok');
+      status('Firebase 同期完了: ' + projectId + ' / ' + records.length + '件', 'ok');
       onRecords(records);
     }, err => {
       console.error(err);
@@ -1888,7 +1888,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.13.3';
+const APP_VERSION='0.13.4';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -2102,13 +2102,25 @@ function applyFirebaseMaterialRecords(records){
   appState.applyingRemote=false;
   renderAll();
 }
+let syncQueueClearTimer=null;
+function scheduleSyncedQueueClear(){
+  clearTimeout(syncQueueClearTimer);
+  syncQueueClearTimer=setTimeout(()=>{
+    state.queue=[];
+    renderSync();
+    scheduleStateSave();
+  },500);
+}
+function cancelSyncedQueueClear(){clearTimeout(syncQueueClearTimer);}
 function saveMaterialRecordToFirebase(id,reason){
   if(appState.applyingRemote)return;
   const m=materialById(id); if(!m || !window.FirebaseSync)return;
   const projectId=appState.currentProjectId||currentFirestoreProjectId();
   window.FirebaseSync.saveMaterialRecord(projectId,m.id,serializeMaterialRecord(m)).then(()=>{
     setFirebasePill('Firebase 保存済: '+(reason||m.name),'ok');
+    scheduleSyncedQueueClear();
   }).catch(err=>{
+    cancelSyncedQueueClear();
     console.error(err); setFirebasePill('Firebase 保存エラー','warn');
   });
 }
@@ -2162,7 +2174,8 @@ function saveProjectStateToFirebase(reason){
   const projectId=appState.currentProjectId||currentFirestoreProjectId();
   window.FirebaseSync.saveProjectState(projectId,serializeProjectState()).then(()=>{
     setFirebasePill('仕上表保存済: '+(reason||'更新'),'ok');
-  }).catch(err=>{console.error(err);setFirebasePill('仕上表保存エラー','warn');});
+    scheduleSyncedQueueClear();
+  }).catch(err=>{cancelSyncedQueueClear();console.error(err);setFirebasePill('仕上表保存エラー','warn');});
 }
 function scheduleProjectStateSync(reason){
   if(appState.applyingRemote)return;
@@ -2184,6 +2197,8 @@ function importPhotoRecordFromFirebase(p){
     fileName:p.fileName||'', storagePath:p.storagePath||'', downloadUrl:p.downloadUrl||'', sharePointUrl:p.sharePointUrl||'',
     uploadProvider:p.uploadProvider||'sharepoint', uploadStatus:p.uploadStatus||'uploaded',
     takenBy:p.takenBy||'', takenAtClient:p.takenAtClient||p.createdAtClient||'',
+    isRepresentative:!!p.isRepresentative,
+    representativeGroupKey:p.representativeGroupKey||'',
     deleted:!!p.deleted
   };
 }
@@ -2607,7 +2622,35 @@ function renderPhotos(options){
   if(newBody)newBody.scrollTop=bodyScroll;
 }
 function renderSamples(){let rows='<tr><th>試料ID</th><th>建材</th><th>採取場所</th><th>採取部位</th><th>結果</th></tr>'; for(const s of state.samples){const m=state.materials.find(x=>x.id===s.materialId); rows+=`<tr><td>${s.id}</td><td>${m?m.name:'-'}</td><td>${s.place}</td><td>${s.part}</td><td>未</td></tr>`} document.getElementById('samplesTable').innerHTML=rows}
-function renderSync(){const photoWait=state.photos.length; const pending=state.queue.length+photoWait; const mini=document.getElementById('miniUnsynced'); if(mini)mini.textContent=pending; const syncState=document.getElementById('firebasePill'); if(syncState&&!String(syncState.textContent).includes('エラー')){syncState.textContent=pending?'同期中…':'同期完了';syncState.className='header-sync-state '+(pending?'warn':'');} document.getElementById('syncFinish').textContent=state.queue.filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')).length; document.getElementById('syncMaterials').textContent=state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length; document.getElementById('syncPhotos').textContent=photoWait; document.getElementById('syncList').innerHTML=state.queue.length?state.queue.map(q=>`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`).join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>'}
+function isPhotoPendingSync(p){
+  const status=String((p&&p.uploadStatus)||'').toLowerCase();
+  return !!(p&&p.dataUrl) && !['uploaded','共有済','同期済'].includes(status) && !p.deleted;
+}
+function renderSync(){
+  const photoWait=(state.photos||[]).filter(isPhotoPendingSync).length;
+  const queueCount=(state.queue||[]).length;
+  const pending=queueCount+photoWait;
+  const mini=document.getElementById('miniUnsynced');
+  if(mini)mini.textContent=pending;
+  const syncState=document.getElementById('firebasePill');
+  if(syncState){
+    const current=String(syncState.textContent||'');
+    const hasError=/エラー|失敗/.test(current);
+    const inProgress=/接続中|接続準備|保存中|アップロード中|反映中/.test(current);
+    if(!online){syncState.textContent='オフライン';syncState.className='header-sync-state warn';}
+    else if(hasError){syncState.className='header-sync-state warn';}
+    else if(inProgress){syncState.textContent='同期中…';syncState.className='header-sync-state warn';}
+    else if(pending){syncState.textContent='未同期あり';syncState.className='header-sync-state warn';}
+    else{syncState.textContent='同期完了';syncState.className='header-sync-state';}
+  }
+  document.getElementById('syncFinish').textContent=(state.queue||[]).filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')||q.type.includes('部屋')).length;
+  document.getElementById('syncMaterials').textContent=(state.queue||[]).filter(q=>q.type.includes('建材')||q.type.includes('登録')||q.type.includes('採取')).length;
+  document.getElementById('syncPhotos').textContent=photoWait;
+  const rows=[];
+  (state.queue||[]).forEach(q=>rows.push(`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`));
+  (state.photos||[]).filter(isPhotoPendingSync).forEach(p=>rows.push(`<div class="sync-row"><span>写真：${esc(p.fileName||photoIdOf(p)||'未命名')}（${esc(p.uploadStatus||'未送信')}）</span></div>`));
+  document.getElementById('syncList').innerHTML=rows.length?rows.join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>';
+}
 function renderAll(){renderFinish();renderMaterials();renderRecords();renderPhotos();renderSamples();renderSync();renderSettings();updateHistoryButtons();scheduleStateSave()}
 function showTab(id){
   document.querySelectorAll('.content').forEach(x=>x.style.display='none');
@@ -4333,11 +4376,42 @@ function samplePhotoList(point, stage){return samplePointPhotos(point).filter(p=
 function visualPhotoList(t){return getVisualFramePhotos(t);}
 function photoRepKey(prefix, key, stage){return `${prefix}|${key||''}|${stage||''}`;}
 function selectedRepIndex(prefix,key,stage,photos){
+  const list=photos||[];
+  const synced=list.findIndex(p=>p&&p.isRepresentative===true);
+  if(synced>=0)return synced;
   const rk=photoRepKey(prefix,key,stage);
   const v=Number(selectedPhotoRep[rk]||0);
-  return Math.max(0, Math.min((photos||[]).length-1, v));
+  return Math.max(0, Math.min(list.length-1, v));
 }
-function setRepPhoto(prefix,key,stage,index){selectedPhotoRep[photoRepKey(prefix,key,stage)]=Number(index||0);renderPhotos({preserveScroll:true});}
+async function setRepPhoto(prefix,key,stage,index){
+  const groupKey=photoRepKey(prefix,key,stage);
+  const photos=prefix==='visual'
+    ? visualPhotoList({key,roomId:(String(key).split('|')[0]||''),partLabel:stage,materialId:''})
+    : (samplePhotoList(currentSamplePointByKey(key)||{},stage)||[]);
+  const selected=photos[Number(index||0)];
+  if(!selected)return;
+  selectedPhotoRep[groupKey]=Number(index||0);
+  for(const p of photos){
+    p.isRepresentative=photoIdOf(p)===photoIdOf(selected);
+    p.representativeGroupKey=groupKey;
+  }
+  renderPhotos({preserveScroll:true});
+  if(!window.FirebaseSync)return;
+  const projectId=appState.currentProjectId||currentFirestoreProjectId();
+  try{
+    setFirebasePill('代表写真を保存中','warn');
+    await Promise.all(photos.filter(p=>photoIdOf(p)).map(p=>window.FirebaseSync.savePhotoRecord(projectId,photoIdOf(p),{
+      isRepresentative:!!p.isRepresentative,
+      representativeGroupKey:groupKey,
+      updatedBy:getDeviceName(),
+      appVersion:APP_VERSION
+    })));
+    setFirebasePill('代表写真を同期済','ok');
+  }catch(err){
+    console.error('代表写真同期エラー',err);
+    setFirebasePill('代表写真同期エラー','warn');
+  }
+}
 function photoIdOf(p){return p && (p.photoId||p.id||'');}
 function photoDeleteBlockKey(prefix,key,stage){return `${prefix}|${key||''}|${stage||''}`;}
 function isPhotoDeleteMode(prefix,key,stage){return !!photoDeleteMode[photoDeleteBlockKey(prefix,key,stage)];}
@@ -4529,7 +4603,7 @@ async function deleteSampleBlockSelected(pointKey){const map=sampleBlockSelected
 function sampleStageColumn(point,stage,next){const photos=samplePhotoList(point,stage),count=photos.length,rep=count?selectedRepIndex('sample',point.key,stage,photos):0,open=!!samplePointExpanded[point.key],selecting=!!sampleBlockSelectionMode[point.key];const tile=renderStageTile(stage,count,stage===next,{selected:point.key===activeSamplePointKey&&activeSampleStage===stage,photos,repPrefix:'sample',repKey:point.key,repStage:stage,selectAction:`selectSampleStage('${escapeAttr(point.key)}','${escapeAttr(stage)}')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(stage)}')`});const extras=open?(selecting?photos.map((p,i)=>({p,i})):photos.map((p,i)=>({p,i})).filter(x=>x.i!==rep)):[];return `<div class="sample-stage-column">${tile}${extras.length?`<div class="sample-extra-stack">${extras.map(x=>{const pid=photoIdOf(x.p),sel=!!(sampleBlockSelected[point.key]||{})[pid],click=selecting?`toggleSampleBlockPhoto('${escapeAttr(point.key)}','${escapeAttr(pid)}')`:`setRepPhoto('sample','${escapeAttr(point.key)}','${escapeAttr(stage)}',${x.i})`;return `<div class="sample-extra-thumb ${sel?'selected-delete':''}" ${photoThumbStyle(x.p)} onclick="event.stopPropagation();${click}" ${photoPreviewAttr(stage,x.p)}>${selecting?`<span class="photo-check">${sel?'✓':''}</span>`:''}</div>`}).join('')}</div>`:''}</div>`}
 function renderSamplePointBlock(point){const counts=sampleStageCounts(point),next=nextSampleStage(point);if(point.key===activeSamplePointKey&&!activeSampleStage)activeSampleStage=next;const open=!!samplePointExpanded[point.key],selecting=!!sampleBlockSelectionMode[point.key],selectedCount=Object.values(sampleBlockSelected[point.key]||{}).filter(Boolean).length;return `<div class="sample-point-block sample-compact ${point.key===activeSamplePointKey?'active':''}" onclick="selectSamplePoint('${escapeAttr(point.key)}')"><div class="sample-compact-head"><div class="sample-compact-info"><b>${esc(point.blockLabel)}</b>　<span class="label">採取場所：</span>${esc(point.place||'-')}　<span class="label">採取部位：</span>${esc(point.part||'-')}</div><span class="sample-next">試料No.${esc(point.sampleNo||'-')}　次回：${esc(next)}</span></div><div class="sample-stage-grid">${sampleStageOrder.map(st=>sampleStageColumn(point,st,next)).join('')}<div class="sample-block-camera"><button class="btn small primary" onclick="event.stopPropagation();launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(activeSampleStage||next)}')">カメラ起動</button></div></div><div class="sample-expand-row"><span class="sample-expand-toggle ${open?'is-open':'is-closed'}" role="button" tabindex="0" onclick="event.stopPropagation();toggleSamplePointExpanded('${escapeAttr(point.key)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleSamplePointExpanded('${escapeAttr(point.key)}')}">${open?'▼ 他の写真':'▶ 他の写真'}</span>${open?`<div class="sample-select-actions"><button class="btn small ${selecting?'selecting':''}" onclick="event.stopPropagation();toggleSampleBlockSelection('${escapeAttr(point.key)}')">${selecting?'選択終了':'選択'}</button>${selecting?`<button class="btn small danger" ${selectedCount?'':'disabled'} onclick="event.stopPropagation();deleteSampleBlockSelected('${escapeAttr(point.key)}')">削除${selectedCount?`（${selectedCount}）`:''}</button>`:''}</div>`:''}</div></div>`}
 
-/* v0.13.3 全体同期入口：v0.13.1の同期ラップを復元し、仕上表・部屋情報も同期 */
+/* v0.13.4 全体同期入口：v0.13.1の同期ラップを復元し、仕上表・部屋情報も同期 */
 (function(){
   const wrap=function(name,after){
     const original=window[name];
@@ -4583,7 +4657,7 @@ window.addEventListener('beforeunload',saveStateToStorage);
 </div>
 
 <script>
-/* v0.13.3: camera photos are stored separately from localStorage. */
+/* v0.13.4: camera photos are stored separately from localStorage. */
 const CHOUSA_PHOTO_DB='chousa-system-photo-cache';
 const CHOUSA_PHOTO_STORE='photos';
 function openChousaPhotoDb(){
@@ -4616,7 +4690,7 @@ async function loadIntegratedPhotoRecords(){
 let integratedCameraContext=null;
 function visualTargetByKey(key){
   const room=findRoom(activePhotoRoom)||allRooms()[0]||{};
-  const targets=buildVisualTargetsForRoom ? buildVisualTargetsForRoom(room.id) : [];
+  const targets=typeof getRoomVisualTargets==='function' ? getRoomVisualTargets(room.id) : [];
   return targets.find(t=>t.key===key)||null;
 }
 function currentSamplePointByKey(key){
@@ -4676,7 +4750,7 @@ function launchSamplePointCamera(pointKey,stage){
 function launchActivePhotoCamera(){
   if(activePhotoMode==='sample') return launchSamplePointCamera(activeSamplePointKey,activeSampleStage||'採取前');
   const room=findRoom(activePhotoRoom)||allRooms()[0]||{};
-  const targets=buildVisualTargetsForRoom ? buildVisualTargetsForRoom(room.id) : [];
+  const targets=typeof getRoomVisualTargets==='function' ? getRoomVisualTargets(room.id) : [];
   const key=activeVisualPhotoTargetKey||(targets[0]&&targets[0].key)||'';
   if(!key)return alert('撮影対象を選択してください。');
   launchVisualPartCamera(key);
@@ -4695,7 +4769,12 @@ async function uploadIntegratedPhotoRecord(record){
     const blob=await dataUrlToBlob(record.dataUrl);
     const uploaded=await window.FirebaseSync.uploadPhotoBlob(projectId,record.photoId,record.fileName||record.photoId+'.jpg',blob);
     Object.assign(record,uploaded,{projectId,uploadStatus:'uploaded',takenBy:getDeviceName(),appVersion:APP_VERSION});
-    await window.FirebaseSync.savePhotoRecord(projectId,record.photoId,record);
+    const remoteRecord={...record};
+    delete remoteRecord.dataUrl;
+    delete remoteRecord.baseDataUrl;
+    delete remoteRecord.thumbnailUrl;
+    delete remoteRecord.localPreviewUrl;
+    await window.FirebaseSync.savePhotoRecord(projectId,record.photoId,remoteRecord);
     await persistIntegratedPhotoRecord(record);
     return true;
   }catch(err){console.error('統合写真アップロード失敗',err);record.uploadStatus='再送待ち';await persistIntegratedPhotoRecord(record);return false;}
