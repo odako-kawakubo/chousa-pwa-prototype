@@ -1,5 +1,4 @@
 {
-  "version": "0.13.1",
-  "name": "camera-v54-photo-save-integration",
-  "updated": "2026-07-10"
+  "version": "0.13.2-fix11",
+  "app": "app.html"
 }

@@ -1,23 +1,11 @@
 {
-  "name": "電子看板カメラ",
-  "short_name": "看板カメラ",
-  "description": "電子看板をカメラ映像に重ねて撮影する調査用カメラアプリ",
-  "start_url": "./?v=54",
+  "name": "調査システムPWA",
+  "short_name": "調査システム",
+  "description": "アスベスト調査・写真撮影統合システム",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
-  "orientation": "any",
-  "icons": [
-    {
-      "src": "./icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "background_color": "#f4f6f8",
+  "theme_color": "#2563eb",
+  "orientation": "any"
 }
