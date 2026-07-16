@@ -863,38 +863,51 @@
       display: none;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: calc(14px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom));
+      justify-content: flex-start;
+      overflow: hidden;
+      padding: calc(8px + env(safe-area-inset-top)) 10px calc(8px + env(safe-area-inset-bottom));
       touch-action: pan-y;
+      overscroll-behavior: none;
     }
 
     #previewOverlay.show {
       display: flex;
     }
 
+    html:has(#previewOverlay.show),
+    body:has(#previewOverlay.show) {
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
     #previewCounter {
       color: #fff;
-      font-size: 17px;
-      font-weight: 900;
-      margin-bottom: 10px;
-      min-height: 24px;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      margin: 0 0 3px;
+      min-height: 12px;
+      flex: 0 0 auto;
     }
 
     #previewImageWrap {
       position: relative;
       width: 100%;
       flex: 1 1 auto;
+      min-height: 0;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       overflow: hidden;
     }
 
     #previewImage {
-      width: min(100%, calc((var(--app-vh) - 168px) * 4 / 3));
       max-width: 100%;
-      max-height: calc(var(--app-vh) - 168px);
+      max-height: 100%;
+      width: auto;
+      height: auto;
       object-fit: contain;
+      object-position: center top;
       background: #111;
       border: 1px solid #333;
       user-select: none;
@@ -904,10 +917,14 @@
 
     #previewMeta {
       color: #fff;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 900;
-      margin-top: 8px;
-      min-height: 18px;
+      line-height: 1.2;
+      margin-top: 3px;
+      min-height: 15px;
+      max-height: 30px;
+      overflow: hidden;
+      flex: 0 0 auto;
       text-align: center;
       word-break: break-all;
     }
@@ -915,11 +932,21 @@
     #previewThumbnails {
       width: 100%;
       max-width: 720px;
+      height: 82px;
+      min-height: 82px;
       display: flex;
+      align-items: center;
       gap: 8px;
       overflow-x: auto;
-      padding: 10px 4px 2px;
+      overflow-y: hidden;
+      padding: 4px 4px 2px;
+      flex: 0 0 82px;
       -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: none;
+      scroll-behavior: auto;
+      scrollbar-width: thin;
     }
 
     #previewOverlay.list-mode #previewImageWrap,
@@ -994,7 +1021,7 @@
       height: auto;
       flex: 1 1 auto;
       min-height: 0;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
       background: #000;
     }
@@ -1034,7 +1061,7 @@
     .thumb-item img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
     }
 
@@ -1153,24 +1180,27 @@
 
 
     .preview-casebar {
-      width: 100%;
-      max-width: 760px;
+      position: absolute;
+      top: calc(8px + env(safe-area-inset-top));
+      left: 10px;
+      z-index: 30005;
+      width: min(62vw, 520px);
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      padding: 0 4px;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
     }
 
     .case-select-button {
       max-width: min(92vw, 620px);
       border: 1px solid rgba(255,255,255,0.28);
       border-radius: 999px;
-      padding: 9px 14px;
+      padding: 5px 10px;
       background: rgba(255,255,255,0.12);
       color: #fff;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 900;
       font-family: inherit;
       overflow: hidden;
@@ -1248,16 +1278,17 @@
       width: 100%;
       display: flex;
       justify-content: center;
-      gap: 8px;
-      padding-top: 12px;
+      gap: 6px;
+      padding-top: 5px;
+      flex: 0 0 auto;
       flex-wrap: wrap;
     }
 
     .preview-button {
       border: none;
       border-radius: 999px;
-      padding: 12px 16px;
-      font-size: 15px;
+      padding: 9px 13px;
+      font-size: 14px;
       font-weight: 900;
       font-family: inherit;
       cursor: pointer;
@@ -1285,8 +1316,8 @@
 
     .preview-topbar {
       position: absolute;
-      top: calc(12px + env(safe-area-inset-top));
-      right: 12px;
+      top: calc(8px + env(safe-area-inset-top));
+      right: 10px;
       z-index: 30010;
       display: flex;
       align-items: center;
@@ -2134,7 +2165,8 @@
     #boardEditDoneButton,
     #editBoardModeButton,
     #boardEditSizeDownButton,
-    #boardEditSizeUpButton {
+    #boardEditSizeUpButton,
+    #boardEditSizeResetButton {
       touch-action: manipulation;
       pointer-events: auto !important;
       -webkit-user-select: none;
@@ -2202,34 +2234,10 @@
     #boardEditHost .inner-table tr:nth-child(2) { height: 34.6939%; }
     #boardEditHost .inner-table tr:nth-child(3) { height: 30.6122%; }
 
-    /* v0.13.1 調査システム連携 */
-    .chousa-return-button {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 37000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      padding: 7px 12px;
-      border: 2px solid rgba(255,255,255,.82);
-      border-radius: 10px;
-      background: rgba(15,23,42,.88);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 900;
-      text-decoration: none;
-      box-shadow: 0 4px 14px rgba(0,0,0,.28);
-      backdrop-filter: blur(5px);
-    }
-    .chousa-return-button.show { display: inline-flex; }
-
   </style>
 </head>
 
 <body>
-  <a id="chousaReturnButton" class="chousa-return-button" href="app.html?tab=photos">← 調査システム</a>
   <div id="appOrientationShell">
   <div id="cameraScreen">
     <div class="left-panel">
@@ -2495,7 +2503,7 @@
 
       <div class="settings-section-title">🔄 アプリ更新</div>
       <div class="settings-version-box">
-        現在：<strong id="settingsVersionText">v54</strong>
+        現在：<strong id="settingsVersionText">v61</strong>
       </div>
       <button class="settings-update-button" type="button" onclick="forceAppUpdate()">最新版を読み込み直す</button>
 
@@ -2568,7 +2576,7 @@
       <div class="board-edit-history-preview" aria-label="編集履歴操作">
         <button id="boardEditUndoButton" type="button" aria-label="戻る">↶</button>
         <button id="boardEditRedoButton" type="button" aria-label="進む">↷</button>
-        <button id="boardEditResetButton" class="board-edit-reset-inline" type="button">最初から</button>
+        <button id="boardEditResetButton" class="board-edit-reset-inline" type="button">元に戻す</button>
       </div>
       <div id="boardEditPhotoStage">
         <img id="boardEditPhotoBackdrop" alt="看板修正対象写真" />
@@ -2578,6 +2586,7 @@
         <button id="boardEditSizeDownButton" type="button">A-</button>
         <span id="boardEditSelectedFieldLabel">件名</span>
         <button id="boardEditSizeUpButton" type="button">A+</button>
+        <button id="boardEditSizeResetButton" type="button">リセット</button>
       </div>
     </div>
 
@@ -2589,45 +2598,11 @@
   </div>
 
   <script>
-    const APP_VERSION = "v0.13.1-camera-v54";
+    const APP_VERSION = "v61";
 
-    function readChousaCameraContext() {
-      const p = new URLSearchParams(window.location.search);
-      const modeRaw = (p.get("mode") || p.get("photoMode") || "survey").toLowerCase();
-      const mode = (modeRaw === "sample" || modeRaw === "sampling") ? "sampling" : "survey";
-      return {
-        from: p.get("from") || "",
-        projectId: p.get("projectId") || "",
-        projectNo: p.get("projectNo") || "",
-        projectName: p.get("projectName") || "",
-        subject: p.get("subject") || p.get("projectName") || "",
-        address: p.get("address") || "",
-        roomId: p.get("roomId") || "",
-        roomNo: p.get("roomNo") || "",
-        roomName: p.get("roomName") || "",
-        targetPart: p.get("targetPart") || "",
-        targetKey: p.get("targetKey") || "",
-        materialId: p.get("materialId") || "",
-        materialName: p.get("materialName") || "",
-        materialNo: p.get("materialNo") || "",
-        inputId: p.get("inputId") || "",
-        sampleNo: p.get("sampleNo") || "",
-        samplePlace: p.get("samplePlace") || "",
-        samplePart: p.get("samplePart") || "",
-        samplePointKey: p.get("samplePointKey") || "",
-        sampleIndex: p.get("sampleIndex") || "",
-        sampleBlock: p.get("sampleBlock") || "",
-        defaultStatus: p.get("defaultStatus") || "",
-        mode,
-        returnUrl: p.get("returnUrl") || "app.html?tab=photos"
-      };
-    }
-
-    const CHOUSA_CAMERA_CONTEXT = readChousaCameraContext();
-    const HAS_CHOUSA_CONTEXT = CHOUSA_CAMERA_CONTEXT.from === "chousa" || Boolean(CHOUSA_CAMERA_CONTEXT.projectId);
     const APP_DATA = {
-      subject: CHOUSA_CAMERA_CONTEXT.subject || "テストビル解体に伴うアスベスト調査",
-      address: CHOUSA_CAMERA_CONTEXT.address || "神奈川県小田原市小八幡2-3-6"
+      subject: "テストビル解体に伴うアスベスト調査",
+      address: "神奈川県小田原市小八幡2-3-6"
     };
 
     const STATUS_LIST = [
@@ -2667,7 +2642,6 @@
     const captureReviewImage = document.getElementById("captureReviewImage");
     const samplingNameHistoryList = document.getElementById("samplingNameHistoryList");
     const cameraGuide = document.getElementById("cameraGuide");
-    const chousaReturnButton = document.getElementById("chousaReturnButton");
 
     const boardLayer = document.querySelector(".board-layer");
     const boardWrap = document.getElementById("boardWrap");
@@ -2803,7 +2777,6 @@
       setupForcedLandscape();
       renderAppVersion();
       checkAppUpdate();
-      setupChousaIntegration();
       initializeBoard();
       setupStatusButtons();
       setupBoardMode();
@@ -2877,51 +2850,27 @@
       button.setAttribute("aria-pressed", document.body.classList.contains("landscape-flipped") ? "true" : "false");
     }
 
-    function setupChousaIntegration() {
-      if (!chousaReturnButton) return;
-      chousaReturnButton.href = CHOUSA_CAMERA_CONTEXT.returnUrl || "app.html?tab=photos";
-      chousaReturnButton.classList.toggle("show", HAS_CHOUSA_CONTEXT);
-    }
-
-    function getLaunchRoomText() {
-      if (CHOUSA_CAMERA_CONTEXT.mode === "sampling") {
-        return CHOUSA_CAMERA_CONTEXT.samplePlace || CHOUSA_CAMERA_CONTEXT.roomNo || "";
-      }
-      return [CHOUSA_CAMERA_CONTEXT.roomNo, CHOUSA_CAMERA_CONTEXT.roomName]
-        .map(value => String(value || "").trim())
-        .filter(Boolean)
-        .join(" ");
-    }
-
     function initializeBoard() {
       const savedBoard = loadSavedBoardForm();
-      subjectText.value = HAS_CHOUSA_CONTEXT ? APP_DATA.subject : (savedBoard.subject || APP_DATA.subject);
-      addressText.value = HAS_CHOUSA_CONTEXT ? APP_DATA.address : (savedBoard.address || APP_DATA.address);
+      subjectText.value = savedBoard.subject || APP_DATA.subject;
+      addressText.value = savedBoard.address || APP_DATA.address;
       syncBoardTextAreaVerticalCenter();
-      const launchRoomText = getLaunchRoomText();
-      roomNoInput.value = HAS_CHOUSA_CONTEXT
-        ? (launchRoomText || roomNoInput.value || "1-1")
-        : (savedBoard.roomNo || roomNoInput.value || "1-1");
-      sampleNoInput.value = HAS_CHOUSA_CONTEXT
-        ? (CHOUSA_CAMERA_CONTEXT.sampleNo || savedBoard.sampleNo || POINT_DISPLAY_DEFAULT)
-        : (savedBoard.sampleNo || sampleNoInput.value || POINT_DISPLAY_DEFAULT);
+      roomNoInput.value = savedBoard.roomNo || roomNoInput.value || "1-1";
+      sampleNoInput.value = savedBoard.sampleNo || sampleNoInput.value || POINT_DISPLAY_DEFAULT;
 
-      if (savedBoard.date && savedBoard.isDateManuallyEdited && !HAS_CHOUSA_CONTEXT) {
+      if (savedBoard.date && savedBoard.isDateManuallyEdited) {
         dateText.textContent = savedBoard.date;
         isDateManuallyEdited = true;
       } else {
         updateCurrentDate();
       }
 
-      if (HAS_CHOUSA_CONTEXT) {
-        boardMode = CHOUSA_CAMERA_CONTEXT.mode;
-      } else if (savedBoard.boardMode === "sampling" || savedBoard.boardMode === "survey") {
+      if (savedBoard.boardMode === "sampling" || savedBoard.boardMode === "survey") {
         boardMode = savedBoard.boardMode;
       }
 
       syncBoardTextareas();
-      const launchStatus = CHOUSA_CAMERA_CONTEXT.defaultStatus || (boardMode === "sampling" ? "before" : "visual");
-      setStatus(HAS_CHOUSA_CONTEXT ? launchStatus : (savedBoard.selectedStatus || "visual"));
+      setStatus(savedBoard.selectedStatus || "visual");
       applyBoardMode();
       setSectionMode(false);
       updatePhotoCount();
@@ -3637,6 +3586,18 @@
       pushBoardEditHistoryDebounced();
     }
 
+    function resetSelectedBoardEditTextSize() {
+      if (!boardEditDraft || !boardEditDraft.fieldTextSize) return;
+      const defaults = { subject: 18, address: 17, room: 24, sample: 24, date: 24 };
+      const field = boardEditSelectedField;
+      if (!(field in defaults)) return;
+      boardEditDraft.fieldTextSize[field] = defaults[field];
+      scheduleBoardEditCanvasRender();
+      pushBoardEditHistoryDebounced();
+      const label = boardEditSelectedFieldLabel ? boardEditSelectedFieldLabel.textContent : "選択項目";
+      showToast(`${label}の文字サイズを初期値に戻しました`);
+    }
+
     function toggleBoardEditModeFromForm() {
       boardEditModeSelect.value = boardEditModeSelect.value === "sampling" ? "survey" : "sampling";
       boardEditModeSelect.dispatchEvent(new Event("input", { bubbles: true }));
@@ -3670,6 +3631,7 @@
       bindTap(document.getElementById("boardEditResetButton"), resetBoardEdit);
       bindTap(document.getElementById("boardEditSizeDownButton"), () => adjustSelectedBoardEditTextSize(-1));
       bindTap(document.getElementById("boardEditSizeUpButton"), () => adjustSelectedBoardEditTextSize(1));
+      bindTap(document.getElementById("boardEditSizeResetButton"), resetSelectedBoardEditTextSize);
       bindTap(document.getElementById("editBoardModeButton"), toggleBoardEditModeFromForm);
       const doneButton = document.getElementById("boardEditDoneButton");
       if (doneButton) {
@@ -3702,7 +3664,7 @@
           date: boardEditDate ? boardEditDate.value || "" : "",
           status: boardEditStatus ? boardEditStatus.value || "visual" : "visual",
           boardMode: boardEditModeSelect && boardEditModeSelect.value === "sampling" ? "sampling" : "survey",
-          fieldTextSize: { ...boardFieldTextSize }
+          fieldTextSize: { ...((boardEditDraft && boardEditDraft.fieldTextSize) || boardFieldTextSize) }
         };
 
         boardEditDraft = structuredCloneBoardData(latestData);
@@ -4265,6 +4227,8 @@
 
       isTakingPhoto = true;
       shootButton.disabled = true;
+      // v61: 撮影開始時の区分を固定し、レビュー中の状態変化を受けない。
+      const lockedPhotoType = { ...getCurrentPhotoType() };
 
       try {
         if (!isDateManuallyEdited) {
@@ -4318,7 +4282,7 @@
         if (boardMode === "sampling") saveSamplingNameHistoryForCurrentCase(roomNoInput.value);
 
         const createdAt = new Date();
-        const photoType = getCurrentPhotoType();
+        const photoType = lockedPhotoType;
         const sampleParts = parseSampleAndPoint(sampleNoInput.value);
         const sampleNo = sampleParts.sampleNo;
         const pointNo = sampleParts.pointNo;
@@ -4345,7 +4309,15 @@
         // 保存成功を確認してから、撮影済み配列と表示枚数へ反映する
         await savePhotoToIndexedDB(photo);
 
+        photo.boardData = getCurrentBoardData();
         capturedPhotos.push(photo);
+        try {
+          const rawContext = new URLSearchParams(location.search).get("context") || "";
+          const context = rawContext ? JSON.parse(decodeURIComponent(rawContext)) : {};
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: "chousa-camera-photo", photo, context }, "*");
+          }
+        } catch (bridgeError) { console.warn("調査システム連携通知に失敗", bridgeError); }
         previewIndex = capturedPhotos.length - 1;
         updatePhotoCount();
 
@@ -4996,7 +4968,8 @@
 
     /* 写真ビューア */
     async function openPreview() {
-      await loadPhotosFromIndexedDB();
+      // v61: セッション内に写真があれば再読込を省略し、表示ボタンの待ち時間を短縮する。
+      if (!capturedPhotos.length) await loadPhotosFromIndexedDB();
 
       selectedCaseSubject = getLatestCaseSubject();
       const photos = getPreviewPhotos();
@@ -5090,14 +5063,32 @@
         item.className = "thumb-item";
         item.classList.toggle("current", index === previewIndex);
         item.classList.toggle("selected", Boolean(photo.selected));
-        item.onclick = () => {
+        let thumbPointerStartX = 0;
+        let thumbPointerStartY = 0;
+        let thumbPointerMoved = false;
+        item.addEventListener("pointerdown", (event) => {
+          thumbPointerStartX = event.clientX;
+          thumbPointerStartY = event.clientY;
+          thumbPointerMoved = false;
+        });
+        item.addEventListener("pointermove", (event) => {
+          if (Math.abs(event.clientX - thumbPointerStartX) > 8 || Math.abs(event.clientY - thumbPointerStartY) > 8) {
+            thumbPointerMoved = true;
+          }
+        });
+        item.addEventListener("click", (event) => {
+          if (thumbPointerMoved) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
           if (isBoardCorrectionSelectMode) {
             selectPhotoForBoardCorrection(index);
             return;
           }
           previewIndex = index;
           renderPreview();
-        };
+        });
 
         const img = document.createElement("img");
         img.src = photo.dataUrl;
@@ -5123,10 +5114,8 @@
         previewThumbnails.appendChild(item);
       });
 
-      const currentThumb = previewThumbnails.querySelector(".thumb-item.current");
-      if (currentThumb) {
-        currentThumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      }
+      // v61: 手動スワイプ後に選択位置へ強制的に戻さない。
+      // サムネ一覧はユーザーが動かした位置を維持する。
     }
 
     function renderPhotoList() {
@@ -5346,8 +5335,16 @@
         photo.dataUrl = newDataUrl;
         photo.subjectName = getCurrentSubjectName();
         photo.roomNo = roomNoInput.value.trim();
-        photo.status = selectedStatus;
-        photo.statusLabel = getStatusLabel(selectedStatus);
+        const correctedType = getCurrentPhotoType();
+        const correctedParts = parseSampleAndPoint(sampleNoInput.value);
+        photo.status = correctedType.value;
+        photo.statusLabel = correctedType.label;
+        photo.statusCode = correctedType.code;
+        photo.sampleNo = correctedParts.sampleNo;
+        photo.pointNo = correctedParts.pointNo;
+        photo.isSection = correctedType.value === SECTION_PHOTO_TYPE.value;
+        // v61: 編集後の新しい基本名に対して、対象写真自身を除外して再採番する。
+        photo.fileName = generatePhotoFileName(photo.sampleNo, photo.pointNo, photo.statusCode, photo.id);
         photo.updatedAt = new Date().toISOString();
 
         await savePhotoToIndexedDB(photo);
@@ -5366,70 +5363,6 @@
       startBoardCorrectionSelectMode();
     }
 
-    function buildChousaPhotoRecord(photo, uploaded) {
-      const isSampling = CHOUSA_CAMERA_CONTEXT.mode === "sampling";
-      const stageMap = {
-        before: "採取前",
-        during: "採取中",
-        after: "採取後",
-        section: "断面",
-        visual: "目視"
-      };
-      const photoId = photo.cloudPhotoId || (`P${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7).toUpperCase()}`);
-      photo.cloudPhotoId = photoId;
-      return {
-        photoId,
-        projectId: CHOUSA_CAMERA_CONTEXT.projectId,
-        photoMode: isSampling ? "sample" : "visual",
-        kind: isSampling ? "sample" : "visual",
-        type: isSampling ? "採取" : "目視",
-        photoType: isSampling ? "採取" : "目視",
-        roomId: CHOUSA_CAMERA_CONTEXT.roomId || CHOUSA_CAMERA_CONTEXT.samplePlace || "",
-        roomNo: CHOUSA_CAMERA_CONTEXT.roomNo || CHOUSA_CAMERA_CONTEXT.samplePlace || photo.roomNo || "",
-        roomName: CHOUSA_CAMERA_CONTEXT.roomName || "",
-        targetKey: CHOUSA_CAMERA_CONTEXT.targetKey || "",
-        targetPart: CHOUSA_CAMERA_CONTEXT.targetPart || CHOUSA_CAMERA_CONTEXT.samplePart || "",
-        materialId: CHOUSA_CAMERA_CONTEXT.materialId || "",
-        materialName: CHOUSA_CAMERA_CONTEXT.materialName || "",
-        inputId: CHOUSA_CAMERA_CONTEXT.inputId || "",
-        materialNo: CHOUSA_CAMERA_CONTEXT.materialNo || "",
-        sampleStage: isSampling ? (stageMap[photo.status] || photo.statusLabel || "採取前") : "",
-        samplePointKey: CHOUSA_CAMERA_CONTEXT.samplePointKey || "",
-        sampleIndex: CHOUSA_CAMERA_CONTEXT.sampleIndex ? Number(CHOUSA_CAMERA_CONTEXT.sampleIndex) : null,
-        sampleNo: CHOUSA_CAMERA_CONTEXT.sampleNo || photo.sampleNo || "",
-        sampleBlock: CHOUSA_CAMERA_CONTEXT.sampleBlock || "",
-        fileName: photo.fileName,
-        uploadProvider: "sharepoint",
-        uploadStatus: "uploaded",
-        takenBy: "electronic-board-camera",
-        takenAtClient: photo.createdAt || new Date().toISOString(),
-        appVersion: APP_VERSION,
-        ...(uploaded || {})
-      };
-    }
-
-    async function savePhotosToChousaSystem(photos) {
-      if (!window.CameraCloudSave) throw new Error("写真保存機能が初期化されていません");
-      if (!CHOUSA_CAMERA_CONTEXT.projectId) throw new Error("案件IDがありません。調査システムからカメラを開き直してください");
-
-      const saved = [];
-      for (let i = 0; i < photos.length; i += 1) {
-        const photo = photos[i];
-        showToast(`OneDriveへ保存中 ${i + 1}/${photos.length}`);
-        const blob = dataUrlToBlob(photo.dataUrl);
-        const uploaded = await window.CameraCloudSave.uploadBlob(photo.fileName, blob);
-        const record = buildChousaPhotoRecord(photo, uploaded);
-        await window.CameraCloudSave.savePhotoRecord(record);
-        photo.savedLocal = true;
-        photo.savedAt = new Date().toISOString();
-        photo.uploadStatus = "uploaded";
-        photo.downloadUrl = uploaded.downloadUrl || uploaded.sharePointUrl || "";
-        await savePhotoToIndexedDB(photo);
-        saved.push(photo);
-      }
-      return saved;
-    }
-
     async function saveCurrentPreviewPhoto() {
       if (!capturedPhotos.length) {
         showToast("撮影した写真がありません");
@@ -5437,32 +5370,13 @@
       }
 
       const selectedPhotos = getPreviewPhotos().filter((photo) => photo.selected);
+
       if (!selectedPhotos.length) {
-        showToast(HAS_CHOUSA_CONTEXT ? "保存する写真をチェックしてください" : "共有する写真をチェックしてください");
+        showToast("共有する写真をチェックしてください");
         return;
       }
 
-      if (!HAS_CHOUSA_CONTEXT) {
-        await shareOrDownloadPhotos(selectedPhotos);
-        return;
-      }
-
-      try {
-        const button = document.querySelector(".btn-save");
-        if (button) button.disabled = true;
-        await savePhotosToChousaSystem(selectedPhotos);
-        renderPreview();
-        showToast("OneDrive・Firestoreへ保存しました");
-        await delay(700);
-        window.location.href = CHOUSA_CAMERA_CONTEXT.returnUrl || "app.html?tab=photos";
-      } catch (error) {
-        console.error(error);
-        showErrorToast("写真保存に失敗しました");
-        window.alert("写真保存に失敗しました。Microsoftログイン、OneDrive権限、通信状態を確認してください。\n" + (error && error.message ? error.message : error));
-      } finally {
-        const button = document.querySelector(".btn-save");
-        if (button) button.disabled = false;
-      }
+      await shareOrDownloadPhotos(selectedPhotos);
     }
 
     async function deleteSelectedPreviewPhotos() {
@@ -5581,6 +5495,11 @@
     function setupPreviewSwipe() {
       previewOverlay.addEventListener("touchstart", (event) => {
         if (!event.touches || event.touches.length !== 1) return;
+        if (event.target && event.target.closest && event.target.closest("#previewThumbnails")) {
+          previewTouchStartX = NaN;
+          previewTouchStartY = NaN;
+          return;
+        }
 
         previewTouchStartX = event.touches[0].clientX;
         previewTouchStartY = event.touches[0].clientY;
@@ -5588,7 +5507,7 @@
 
       previewOverlay.addEventListener("touchend", (event) => {
         if (!event.changedTouches || event.changedTouches.length !== 1) return;
-        if (isPreviewListMode) return;
+        if (isPreviewListMode || !Number.isFinite(previewTouchStartX)) return;
 
         const endX = event.changedTouches[0].clientX;
         const endY = event.changedTouches[0].clientY;
@@ -5740,19 +5659,21 @@
       }).replace(/　/g, " ");
     }
 
-    function generatePhotoFileName(sampleNo, pointNo, statusCode) {
+    function generatePhotoFileName(sampleNo, pointNo, statusCode, excludePhotoId = "") {
       const baseName = `${sampleNo}-${pointNo}-${statusCode}`;
-      const sameCount = capturedPhotos.filter((photo) => {
-        return photo.sampleNo === sampleNo &&
-          photo.pointNo === pointNo &&
-          photo.statusCode === statusCode;
-      }).length;
-
-      if (sameCount === 0) {
-        return `${baseName}.jpg`;
-      }
-
-      return `${baseName}_${String(sameCount + 1).padStart(2, "0")}.jpg`;
+      const used = new Set();
+      capturedPhotos.forEach((photo) => {
+        if (!photo || photo.id === excludePhotoId) return;
+        if (String(photo.sampleNo) !== String(sampleNo) || String(photo.pointNo) !== String(pointNo) || String(photo.statusCode) !== String(statusCode)) return;
+        const file = String(photo.fileName || "");
+        if (file === `${baseName}.jpg`) used.add(1);
+        const match = file.match(new RegExp(`^${baseName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}_(\\d{2,})\\.jpg$`));
+        if (match) used.add(Math.max(2, Number(match[1]) || 0));
+      });
+      if (!used.has(1)) return `${baseName}.jpg`;
+      let next = 2;
+      while (used.has(next)) next += 1;
+      return `${baseName}_${String(next).padStart(2, "0")}.jpg`;
     }
 
     function openPhotoDB() {
@@ -6299,7 +6220,7 @@
 
     async function clearAppCachesAndServiceWorker() {
       try {
-        if ("serviceWorker" in navigator) {
+        if ("serviceWorker" in navigator && new URLSearchParams(location.search).get("embedded") !== "1") {
           const registrations = await navigator.serviceWorker.getRegistrations();
           await Promise.all(registrations.map((registration) => registration.unregister()));
         }
@@ -6400,7 +6321,31 @@
       }, 2400);
     }
   </script>
-  <script>
+  
+<script>
+(function setupChousaIntegration(){
+  const params=new URLSearchParams(location.search);
+  if(params.get('from')!=='chousa')return;
+  window.addEventListener('load',()=>setTimeout(()=>{
+    try{
+      const mode=params.get('cameraMode')==='sampling'?'sampling':'survey';
+      if(typeof setBoardMode==='function') setBoardMode(mode);
+      if(subjectText && params.get('subject')) subjectText.value=params.get('subject');
+      if(addressText && params.get('address')) addressText.value=params.get('address');
+      if(roomNoInput && params.get('roomNo')) roomNoInput.value=params.get('roomNo');
+      if(sampleNoInput && params.get('sampleNo')) sampleNoInput.value=params.get('sampleNo');
+      const stage=params.get('stage');
+      if(stage){
+        const button=[...document.querySelectorAll('[data-photo-type]')].find(b=>b.textContent.trim()===stage);
+        if(button)button.click();
+      }
+      if(typeof saveBoardForm==='function')saveBoardForm();
+      if(typeof renderBoardPreview==='function')renderBoardPreview();
+    }catch(e){console.warn('調査システム初期値の反映に失敗',e)}
+  },200));
+})();
+</script>
+<script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
@@ -6410,153 +6355,5 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-
-  <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"
-    onerror="document.write('<script src=&quot;https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.38.3/lib/msal-browser.min.js&quot;><\/script>')"></script>
-  <script type="module">
-    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getFirestore, doc, setDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwpv3OJQrWP0P-0Jg1XuvdEVYQSK0a6e4",
-      authDomain: "survey-pwa-test.firebaseapp.com",
-      projectId: "survey-pwa-test",
-      storageBucket: "survey-pwa-test.firebasestorage.app",
-      messagingSenderId: "834793037383",
-      appId: "1:834793037383:web:0b616ce02c7cf3454d1b62"
-    };
-    const MICROSOFT_CLIENT_ID = "f7074fad-6ea0-467b-98db-e308f01950cc";
-    const MICROSOFT_TENANT_ID = "538265b8-8d15-49ef-9d51-ca252954de1d";
-    const UPLOAD_FOLDER_NAME = "調査システムPWAテスト写真";
-    const GRAPH_SCOPES = ["User.Read", "Files.ReadWrite", "Sites.ReadWrite.All"];
-    const firebaseApp = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    const db = getFirestore(firebaseApp);
-    let msalClient = null;
-    let folderCache = null;
-
-    function safeName(value) {
-      return String(value || "photo.jpg").replace(/[\\/:*?"<>|#%{}^~[\]`]/g, "_");
-    }
-    function pathSegment(value) {
-      return encodeURIComponent(String(value || "")).replace(/%20/g, " ");
-    }
-    async function initMsal() {
-      if (!window.msal) throw new Error("MSALライブラリを読み込めませんでした");
-      if (!msalClient) {
-        msalClient = new window.msal.PublicClientApplication({
-          auth: {
-            clientId: MICROSOFT_CLIENT_ID,
-            authority: "https://login.microsoftonline.com/" + MICROSOFT_TENANT_ID,
-            redirectUri: new URL("app.html", window.location.href).origin + new URL("app.html", window.location.href).pathname
-          },
-          cache: { cacheLocation: "localStorage", storeAuthStateInCookie: false }
-        });
-      }
-      return msalClient;
-    }
-    async function getAccount() {
-      const client = await initMsal();
-      const active = client.getActiveAccount && client.getActiveAccount();
-      if (active) return active;
-      const accounts = client.getAllAccounts();
-      if (accounts && accounts[0]) {
-        client.setActiveAccount(accounts[0]);
-        return accounts[0];
-      }
-      throw new Error("Microsoft未ログインです。調査システムへ戻り、Microsoftログインしてから撮影してください");
-    }
-    async function token() {
-      const client = await initMsal();
-      const account = await getAccount();
-      try {
-        const result = await client.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
-        return result.accessToken;
-      } catch (error) {
-        console.warn(error);
-        throw new Error("Microsoft認証の有効期限が切れています。調査システムで再ログインしてください");
-      }
-    }
-    async function graphFetch(url, options = {}) {
-      const accessToken = await token();
-      const response = await fetch(url, {
-        ...options,
-        headers: { Authorization: "Bearer " + accessToken, ...(options.headers || {}) }
-      });
-      if (!response.ok) {
-        const text = await response.text().catch(() => "");
-        throw new Error("Graph API error " + response.status + ": " + text);
-      }
-      const contentType = response.headers.get("content-type") || "";
-      return contentType.includes("application/json") ? response.json() : response.text();
-    }
-    async function getFolder() {
-      if (folderCache) return folderCache;
-      let item = null;
-      try {
-        const found = await graphFetch("https://graph.microsoft.com/v1.0/me/drive/root/search(q='" + encodeURIComponent(UPLOAD_FOLDER_NAME) + "')");
-        item = ((found && found.value) || []).find(x => x && x.folder && x.name === UPLOAD_FOLDER_NAME) || null;
-      } catch (error) {
-        console.warn("folder search failed", error);
-      }
-      if (!item) {
-        try {
-          item = await graphFetch("https://graph.microsoft.com/v1.0/me/drive/root:/" + pathSegment(UPLOAD_FOLDER_NAME));
-          if (!item || !item.folder) item = null;
-        } catch (error) {
-          if (!String(error && error.message || "").includes("404")) console.warn(error);
-        }
-      }
-      if (!item) {
-        item = await graphFetch("https://graph.microsoft.com/v1.0/me/drive/root/children", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: UPLOAD_FOLDER_NAME, folder: {}, "@microsoft.graph.conflictBehavior": "fail" })
-        });
-      }
-      folderCache = item;
-      return item;
-    }
-
-    window.CameraCloudSave = {
-      async uploadBlob(fileName, blob) {
-        const folder = await getFolder();
-        const uploaded = await graphFetch(
-          "https://graph.microsoft.com/v1.0/me/drive/items/" + encodeURIComponent(folder.id) + ":/" + pathSegment(safeName(fileName)) + ":/content",
-          { method: "PUT", headers: { "Content-Type": blob.type || "image/jpeg" }, body: blob }
-        );
-        const account = await getAccount();
-        return {
-          storagePath: "",
-          sharePointFolderName: folder.name || UPLOAD_FOLDER_NAME,
-          sharePointFolderUrl: folder.webUrl || "",
-          sharePointFolderItemId: folder.id || "",
-          sharePointItemId: uploaded.id || "",
-          sharePointDriveId: (uploaded.parentReference && uploaded.parentReference.driveId) || "",
-          sharePointUrl: uploaded.webUrl || "",
-          downloadUrl: uploaded["@microsoft.graph.downloadUrl"] || uploaded.webUrl || "",
-          uploadedBy: account && account.username ? account.username : "",
-          uploadedAtClient: new Date().toISOString()
-        };
-      },
-      async savePhotoRecord(record) {
-        const projectId = record && record.projectId;
-        const photoId = record && record.photoId;
-        if (!projectId || !photoId) throw new Error("Firestore保存情報が不足しています");
-        await setDoc(doc(db, "projects", projectId, "photos", photoId), {
-          ...record,
-          photoId,
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-        if (record.materialId) {
-          await setDoc(doc(db, "projects", projectId, "materialRecords", record.materialId), {
-            materialId: record.materialId,
-            photoRefs: arrayUnion(photoId),
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-        }
-      }
-    };
-  </script>
-
 </body>
 </html>

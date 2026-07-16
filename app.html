@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA プロトタイプ v0.13.1 写真代表表示・Microsoftログイン切替</title>
+<title>調査システムPWA v0.13.2</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1088,8 +1088,14 @@ input[list]::-webkit-calendar-picker-indicator{
 .photo-material-lines{font-size:12px;color:#475569;line-height:1.45;margin-top:2px;}
 
 /* v0.11.4 visual photo default/collapse review */
-.photo-frame-card.visual-has-input{border-color:#bfdbfe;background:#eff6ff;}
-.photo-frame-card.visual-empty{background:#fff;border-style:dashed;}
+.photo-frame-card.visual-has-input{border-color:#93c5fd;background:#dbeafe;}
+.photo-frame-card.visual-empty{border-color:#d1d5db;background:#f3f4f6;border-style:solid;}
+.photo-frame-card.visual-empty .visual-info-line{color:#374151;}
+.photo-frame-card.visual-empty .visual-info-line .label{color:#6b7280;}
+.photo-frame-card.visual-empty .visual-empty-thumb{background:#e5e7eb;border-color:#cbd5e1;}
+.photo-frame-card.visual-empty .visual-rep-thumb{border-color:#cbd5e1;}
+.photo-frame-card.visual-empty .visual-expand-toggle.is-closed{background:#f8fafc;border-color:#cbd5e1;color:#64748b;}
+.photo-frame-card.visual-empty .visual-expand-toggle.is-open{background:#e5eefb;border-color:#93c5fd;color:#1d4ed8;}
 .photo-frame-card.visual-collapsed{grid-template-columns:1fr auto;cursor:pointer;}
 .photo-frame-card.visual-collapsed .photo-frame-title{margin-bottom:0;}
 .photo-input-badge{display:inline-flex;align-items:center;border:1px solid #bfdbfe;background:#fff;border-radius:999px;padding:2px 7px;font-size:11px;color:#1e40af;white-space:nowrap;}
@@ -1116,27 +1122,246 @@ input[list]::-webkit-calendar-picker-indicator{
 .photo-box.camera-linked.has-image > span,.photo-box.camera-linked.has-image > b{position:relative;z-index:1;}
 .photo-upload-input{display:none;}
 .ms-login-ok{color:#15803d}.ms-login-warn{color:#c2410c}
+
+/* v0.13.2 UI review: compact header / project side panel / photo cards */
+.app-header-compact{height:48px;gap:7px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 10px;scrollbar-width:none}
+.app-header-compact::-webkit-scrollbar{display:none}
+.app-header-compact h1{font-size:14px;min-width:0;max-width:none;overflow:visible;text-overflow:clip}
+.header-case-btn{flex:0 0 auto;font-weight:700}
+.header-version,.header-device,.header-account,.header-auth-btn,.header-sync-state{flex:0 0 auto}
+.connection-dot{width:11px;height:11px;border-radius:50%;display:inline-block;box-shadow:0 0 0 2px #fff,0 0 0 3px #cbd5e1;flex:0 0 auto}
+.connection-dot.online{background:#22c55e}.connection-dot.wait{background:#eab308}.connection-dot.offline{background:#94a3b8}.connection-dot.error{background:#ef4444}
+.header-sync-state{font-size:12px;color:#15803d}.header-sync-state.warn{color:#c2410c}.header-sync-state.error{color:#b91c1c}
+.project-side-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.22);z-index:180}
+.project-side-backdrop.open{display:block}
+.project-side-panel{position:fixed;left:-360px;top:0;width:340px;max-width:88vw;height:100vh;background:#fff;z-index:190;box-shadow:10px 0 32px rgba(15,23,42,.22);transition:left .18s ease;display:flex;flex-direction:column;border-right:1px solid var(--line)}
+.project-side-panel.open{left:0}.project-side-head{height:54px;padding:0 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.project-side-tools{padding:12px;display:grid;gap:8px;border-bottom:1px solid var(--line)}.project-side-tools input{width:100%;border:1px solid var(--line);border-radius:9px;padding:8px 10px}.project-side-list{padding:4px 12px 18px;overflow:auto}.project-side-panel .project-card{margin-top:8px}
+.app>.main{width:100%}
+
+/* visual photo compact rows */
+.photo-frame-card.visual-compact{display:block;padding:8px 10px}
+.visual-compact-head{display:grid;grid-template-columns:minmax(180px,1fr) auto;gap:10px;align-items:center}
+.visual-compact-left{min-width:0}.visual-compact-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;white-space:nowrap}.visual-photo-count{font-weight:500;color:#475569}.visual-material-line{font-size:12px;color:#334155;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.visual-compact-actions{display:flex;align-items:center;gap:7px;min-width:0}.visual-rep-thumb,.visual-empty-thumb{width:96px;height:64px;border-radius:9px;border:1px solid #cbd5e1;background:#f8fafc center/cover no-repeat;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:#64748b;position:relative;overflow:hidden}.visual-rep-thumb{cursor:pointer}.visual-empty-thumb b{display:block;color:#334155}.visual-add-btn{width:36px;height:36px;border-radius:9px;font-size:22px;line-height:1;padding:0}.visual-expanded-row{display:flex;align-items:flex-end;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0}.visual-extra-photos{display:flex;gap:7px;flex-wrap:wrap;flex:1}.visual-extra-thumb{width:78px;height:58px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc center/cover no-repeat;position:relative;cursor:pointer}.visual-extra-thumb.selected-delete{outline:3px solid #ef4444}.visual-extra-thumb .photo-check{position:absolute;top:3px;left:3px}.visual-row-buttons{display:flex;gap:6px;margin-left:auto}
+
+/* sampling photo grid: representatives across, extra photos down each column */
+.sample-point-block.sample-compact{padding:10px}.sample-compact-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.sample-compact-info{font-size:13px;color:#1e293b;font-weight:700}.sample-compact-info .label{color:#475569;font-weight:600}.sample-next{font-size:12px;color:#64748b;white-space:nowrap}.sample-stage-grid{display:grid;grid-template-columns:repeat(4,minmax(96px,1fr)) auto;gap:8px;align-items:start}.sample-stage-column{min-width:0}.sample-stage-column .photo-stage-tile{width:100%;min-width:0}.sample-extra-stack{display:flex;flex-direction:column;gap:6px;margin-top:6px}.sample-extra-thumb{height:58px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc center/cover no-repeat;position:relative;cursor:pointer}.sample-extra-thumb.selected-delete{outline:3px solid #ef4444}.sample-block-camera{display:flex;align-items:center;height:100%}.sample-expand-row{display:flex;align-items:center;gap:8px;margin-top:7px}.sample-expand-toggle{font-weight:800;color:#2563eb;cursor:pointer}.sample-select-actions{display:flex;gap:6px;margin-left:auto}.photo-count-badge{display:none!important}
+@media(max-width:900px){.visual-compact-head{grid-template-columns:1fr}.visual-compact-actions{justify-content:flex-start}.sample-stage-grid{grid-template-columns:repeat(4,minmax(82px,1fr)) auto}.header-account{display:none}}
+
+
+/* v0.13.2 UI review fixes: isolated project panel / compact photo alignment / unified thumbnail ratio */
+.project-side-backdrop{z-index:10000!important;background:rgba(15,23,42,.32)!important}
+.project-side-panel{
+  left:0!important;top:0!important;bottom:0!important;right:auto!important;
+  width:340px!important;max-width:88vw!important;height:100dvh!important;
+  background:#fff!important;z-index:10001!important;isolation:isolate!important;
+  overflow:hidden!important;transform:translateX(-105%)!important;transition:transform .18s ease!important;
+  box-shadow:12px 0 36px rgba(15,23,42,.28)!important;
+}
+.project-side-panel.open{transform:translateX(0)!important}
+.project-side-panel::before{content:"";position:absolute;inset:0;background:#fff;z-index:-1;pointer-events:none}
+.project-side-list{flex:1;min-height:0;background:#fff;overflow-y:auto}
+
+.visual-compact-head{grid-template-columns:minmax(280px,420px) auto!important;justify-content:start!important}
+.visual-compact-actions{justify-content:flex-start!important}
+.visual-rep-thumb,.visual-empty-thumb{width:140px!important;height:92px!important;flex:0 0 140px!important}
+.visual-add-btn{flex:0 0 36px}
+
+.sample-stage-grid{grid-template-columns:repeat(4,140px) auto!important;justify-content:start!important}
+.sample-stage-column{width:140px!important}
+.sample-stage-column .photo-stage-tile{width:140px!important;height:92px!important;min-height:92px!important;aspect-ratio:35/23}
+.sample-extra-thumb{width:140px!important;height:92px!important}
+.sample-block-camera{align-items:center!important}
+
+@media(max-width:980px){
+  .visual-compact-head{grid-template-columns:minmax(220px,330px) auto!important}
+  .visual-rep-thumb,.visual-empty-thumb{width:120px!important;height:80px!important;flex-basis:120px!important}
+  .sample-stage-grid{grid-template-columns:repeat(4,120px) auto!important;overflow-x:auto}
+  .sample-stage-column{width:120px!important}
+  .sample-stage-column .photo-stage-tile,.sample-extra-thumb{width:120px!important;height:80px!important;min-height:80px!important}
+}
+
+
+/* v0.13.2 toggle / thumbnail review */
+.visual-compact-left{
+  cursor:pointer!important;
+  border-radius:9px;
+  padding:5px 7px;
+  transition:background .15s ease,color .15s ease,box-shadow .15s ease;
+}
+.visual-compact-left:hover{background:#f1f5f9}
+.photo-frame-card.visual-compact.is-open .visual-compact-left{
+  background:#eaf2ff;
+  box-shadow:inset 0 0 0 1px #93c5fd;
+}
+.photo-frame-card.visual-compact.is-open .photo-frame-toggle,
+.photo-frame-card.visual-compact.is-open .visual-photo-count{color:#1d4ed8}
+.visual-rep-thumb,.visual-empty-thumb{
+  width:190px!important;
+  height:126px!important;
+  flex:0 0 190px!important;
+  aspect-ratio:3/2!important;
+}
+.visual-extra-thumb{
+  width:90px!important;
+  height:58px!important;
+  flex:0 0 90px!important;
+}
+.sample-stage-grid{
+  grid-template-columns:repeat(4,minmax(120px,1fr)) auto!important;
+  justify-content:stretch!important;
+}
+.sample-stage-column{width:auto!important;min-width:0!important}
+.sample-stage-column .photo-stage-tile,
+.sample-extra-thumb{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:3/2!important;
+}
+.sample-expand-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  min-height:30px;
+  padding:5px 10px;
+  border:1px solid #cbd5e1;
+  border-radius:999px;
+  background:#f8fafc;
+  color:#475569;
+  font-size:12px;
+  font-weight:600!important;
+  line-height:1.2;
+  cursor:pointer;
+  user-select:none;
+  transition:background .15s ease,border-color .15s ease,color .15s ease;
+}
+.sample-expand-toggle:hover{background:#f1f5f9;border-color:#94a3b8}
+.sample-expand-toggle.is-open{
+  background:#eaf2ff;
+  border-color:#60a5fa;
+  color:#1d4ed8;
+}
+.sample-expand-row{min-height:34px}
+@media(max-width:980px){
+  .visual-rep-thumb,.visual-empty-thumb{width:170px!important;height:113px!important;flex-basis:170px!important}
+  .sample-stage-grid{grid-template-columns:repeat(4,minmax(105px,1fr)) auto!important;overflow-x:auto}
+}
+
+
+/* v0.13.2 visual structure review: align visual cards with sampling layout */
+.photo-frame-card.visual-compact{padding:10px!important}
+.visual-compact-head{display:block!important}
+.visual-info-line{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:13px;color:#1e293b;font-weight:700;margin-bottom:8px}
+.visual-info-line .label{color:#475569;font-weight:600}
+.visual-compact-actions{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:8px!important;margin:0!important}
+.visual-rep-thumb,.visual-empty-thumb{width:190px!important;height:126px!important;flex:0 0 190px!important;aspect-ratio:3/2!important}
+.visual-extra-thumb{width:90px!important;height:58px!important;flex:0 0 90px!important}
+.visual-expand-row{display:flex;align-items:center;gap:8px;margin-top:8px;min-height:34px}
+.visual-expand-toggle{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:5px 10px;border:1px solid #cbd5e1;border-radius:999px;background:#f8fafc;color:#475569;font-size:12px;font-weight:600;line-height:1.2;cursor:pointer;user-select:none;transition:background .15s ease,border-color .15s ease,color .15s ease}
+.visual-expand-toggle:hover{background:#f1f5f9;border-color:#94a3b8}
+.visual-expand-toggle.is-open{background:#eaf2ff;border-color:#60a5fa;color:#1d4ed8}
+.visual-expanded-row{margin-top:6px!important;padding-top:8px!important}
+@media(max-width:980px){.visual-rep-thumb,.visual-empty-thumb{width:170px!important;height:113px!important;flex-basis:170px!important}}
+
+
+/* v0.13.2-fix10: photo tab independent left/right scrolling */
+#photos .photo-body{
+  overflow:hidden;
+  padding-bottom:10px;
+}
+#photos .photo-target-layout{
+  grid-template-columns:300px minmax(0,1fr);
+  align-items:stretch;
+  height:calc(100dvh - 300px);
+  min-height:430px;
+  max-height:calc(100dvh - 300px);
+  overflow:hidden;
+  gap:0;
+}
+#photos .photo-target-list{
+  height:100%;
+  max-height:none;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  border:0;
+  border-right:1px solid var(--line);
+  border-radius:0;
+  background:#fff;
+  scrollbar-gutter:stable;
+}
+#photos .photo-target-list-head{
+  top:0;
+  z-index:5;
+  border-top:1px solid var(--line);
+}
+#photos .photo-review-panel{
+  height:100%;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  border-radius:0 12px 12px 0;
+  border-left:0;
+  scrollbar-gutter:stable;
+}
+#photos .photo-review-panel-head{
+  position:sticky;
+  top:0;
+  z-index:4;
+}
+@media(max-width:850px){
+  #photos .photo-body{overflow:visible}
+  #photos .photo-target-layout{
+    grid-template-columns:1fr;
+    height:auto;
+    min-height:0;
+    max-height:none;
+    overflow:visible;
+    gap:12px;
+  }
+  #photos .photo-target-list{
+    height:220px;
+    border:1px solid var(--line);
+    border-radius:12px;
+  }
+  #photos .photo-review-panel{
+    height:auto;
+    max-height:none;
+    overflow:visible;
+    border:1px solid var(--line);
+    border-radius:12px;
+  }
+  #photos .photo-review-panel-head{position:static}
+}
+
+
+/* v0.13.2 integrated camera v61 */
+.integrated-camera-overlay{display:none;position:fixed;inset:0;z-index:20000;background:#0f172a;}
+.integrated-camera-overlay.open{display:block;}
+.integrated-camera-frame{width:100%;height:100%;border:0;background:#000;display:block;}
+.integrated-camera-close{position:absolute;left:10px;top:10px;z-index:2;border:1px solid rgba(255,255,255,.7);background:rgba(15,23,42,.78);color:#fff;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;}
 </style>
 </head>
 <body>
-<header>
-  <button class="btn icon" onclick="toggleSide()" title="案件一覧">案件</button>
+<header class="app-header-compact">
+  <button class="btn header-case-btn" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill">v0.13.1 写真代表表示・Microsoftログイン切替</span>
-  <span class="pill ok" id="onlinePill">オンライン</span>
-  <span class="pill warn" id="unsyncedPill">同期待ち 0件</span>
-  <span class="pill" id="firebasePill">Firebase 未接続</span>
-  <span class="pill" id="devicePill">端末未設定</span>
-  <span class="pill" id="msPill">MS未ログイン</span>
-  
+  <span class="pill header-version">v0.13.2-fix10</span>
+  <span class="connection-dot online" id="onlinePill" title="オンライン"></span>
+  <span class="header-sync-state" id="firebasePill">同期中…</span>
+  <span class="pill header-device" id="devicePill">端末未設定</span>
+  <span class="pill header-account" id="msPill">未ログイン</span>
+  <button class="btn small header-auth-btn" id="msAuthBtn" onclick="toggleMicrosoftAuth()">Microsoftログイン</button>
+  <span id="unsyncedPill" hidden>0</span>
 </header>
+<div class="project-side-backdrop" id="projectSideBackdrop" onclick="closeProjectSide()"></div>
+<aside class="project-side-panel" id="projectSidePanel" aria-hidden="true">
+  <div class="project-side-head"><b>案件選択</b><button class="btn icon" onclick="closeProjectSide()">×</button></div>
+  <div class="project-side-tools"><input id="projectSearchInput" placeholder="案件番号・案件名で検索" oninput="renderProjectList()"><button class="btn primary" onclick="switchProject('blank')">＋ 新規案件</button></div>
+  <div class="project-side-list" id="projectList"></div>
+</aside>
 <div class="app">
-  <aside class="side closed" id="side">
-    <div class="side-body">
-      <button class="btn primary" onclick="switchProject('blank')">＋ 新規案件</button>
-      <div id="projectList"></div>
-    </div>
-  </aside>
   <main class="main">
     <div class="toolbar">
       <div class="case-title compact-actions">
@@ -1203,7 +1428,7 @@ input[list]::-webkit-calendar-picker-indicator{
               <span class="pill">カメラ仮組み込み</span>
             </div>
             <div class="right">
-              <button class="btn small" id="msAuthBtn" onclick="toggleMicrosoftAuth()">Microsoftログイン</button>
+              
               <button class="btn small primary" id="photoCameraBtn" onclick="launchActivePhotoCamera()">カメラ起動</button>
               <button class="btn small primary" id="photoUploadBtn" onclick="choosePhotoForActiveTarget()">写真選択/共有</button>
               <button class="btn small" onclick="addPhoto(false)">仮写真追加</button>
@@ -1643,7 +1868,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.13.1';
+const APP_VERSION='0.13.2-fix6';
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
@@ -1696,7 +1921,14 @@ function currentFirestoreProjectId(){
 }
 function setFirebasePill(text,cls){
   const el=document.getElementById('firebasePill');
-  if(el){el.textContent=text; el.className='pill '+(cls==='ok'?'ok':cls==='warn'?'warn':'');}
+  if(el){
+    const raw=String(text||'');
+    const isError=/エラー|失敗/.test(raw), isConnecting=/接続中|同期中|保存中|反映中/.test(raw);
+    el.textContent=isError?'同期エラー':isConnecting?'同期中…':'同期完了';
+    el.className='header-sync-state '+(isError?'error':isConnecting?'warn':'');
+  }
+  const dot=document.getElementById('onlinePill');
+  if(dot){dot.className='connection-dot '+(cls==='warn'?'wait':cls==='error'?'error':online?'online':'offline');}
   const dev=document.getElementById('devicePill');
   if(dev)dev.textContent='端末: '+(appState.deviceName||'未設定');
 }
@@ -2230,11 +2462,96 @@ function openNoteForCell(roomId,area,part,line){const c=getCell(roomId,area,part
 function usageOf(m){const arr=[]; for(const r of allRooms()){for(const area of ['外部','内部']){for(let line=0;line<roomLineCount(r);line++){for(const p of [...externalParts,...internalParts]){const c=getCell(r.id,area,p,'name',line); if(c.materialId===m.id)arr.push(`${r.no}${r.name} ${p}`)} for(const o of otherSlots){const c=getCell(r.id,area,o,'name',line); const part=getCell(r.id,area,o,'part',line); if(c.materialId===m.id)arr.push(`${r.no}${r.name} ${part.text||o}`)}}}} return arr.join('、')||'-'}
 function renderMaterials(){let rows='<tr><th>入力ID</th><th>建材ID</th><th>建材名</th><th>使用箇所</th><th>調査備考</th><th>採取数</th><th>採取場所</th><th>採取部位</th><th>分析</th><th>操作</th></tr>'; for(const m of state.materials){rows+=`<tr><td>${m.inputId}</td><td>${m.id}</td><td>${m.name}</td><td>${usageOf(m)}</td><td><input style="width:170px" value="${esc(m.note||'')}" onblur="mNote('${m.id}',this.value)"></td><td><input style="width:52px" value="1"></td><td><input style="width:110px" placeholder="候補表示"></td><td><input style="width:90px" placeholder="部位"></td><td><select><option>未</option><option>要</option><option>不要</option><option>含有</option><option>不検出</option></select></td><td><button class="btn small" onclick="createSample('${m.id}')">試料</button></td></tr>`} document.getElementById('materialsTable').innerHTML=rows}
 function mNote(id,value){const m=state.materials.find(x=>x.id===id); if(m){remember();m.note=value; addQueue('調査備考',m.name); renderAll()}}
-function renderPhotos(){document.getElementById('photoRooms').innerHTML=allRooms().map(r=>`<div class="room-item ${r.id===activePhotoRoom?'active':''}" onclick="activePhotoRoom='${r.id}';renderPhotos()"><b>${esc(r.no)} ${esc(r.name||r.floor)}</b><br><span class="hint">写真 ${state.photos.filter(p=>p.roomId===r.id).length}枚</span></div>`).join(''); const r=findRoom(activePhotoRoom); document.getElementById('photoTitle').textContent=r?`${r.no} ${r.name||r.floor}`:'部屋'; const photos=state.photos.filter(p=>p.roomId===activePhotoRoom); document.getElementById('photoGrid').innerHTML=photos.map((p,i)=>`<div class="photo-box">${p.type}<br>写真 ${i+1}<br><span>未同期</span></div>`).join('')||'<div class="hint">まだ写真がありません</div>'}
+function renderPhotos(options){
+  options=options||{};
+  const body=document.getElementById('photoModeBody');
+  if(!body)return;
+
+  const oldList=document.querySelector('.photo-target-list');
+  const oldBody=document.querySelector('.photo-review-panel');
+  const listScroll=options.preserveScroll&&oldList?oldList.scrollTop:0;
+  const bodyScroll=options.preserveScroll&&oldBody?oldBody.scrollTop:0;
+
+  const visualBtn=document.getElementById('photoModeVisualBtn');
+  const sampleBtn=document.getElementById('photoModeSampleBtn');
+  const hint=document.getElementById('photoModeHint');
+  if(visualBtn)visualBtn.classList.toggle('active',activePhotoMode!=='sample');
+  if(sampleBtn)sampleBtn.classList.toggle('active',activePhotoMode==='sample');
+  if(hint)hint.textContent=activePhotoMode==='sample'
+    ?'建材ごとの採取写真。採取前・採取中・採取後・断面を管理します。'
+    :'部屋ごとの目視写真。仕上表未入力の部位も含めて表示します。';
+
+  if(activePhotoMode==='sample'){
+    const materials=sampleMaterialList();
+    const active=materials.find(x=>x.materialId===activeSamplePhotoMaterialId)||materials[0];
+    const listHtml=materials.length?materials.map(x=>`
+      <div class="photo-target-item ${active&&x.materialId===active.materialId?'active':''}" onclick="selectSampleMaterial('${escapeAttr(x.materialId)}')">
+        <b>No.${esc(x.no)} ${esc(x.name||'-')}</b>
+        <div class="meta">入力ID：${esc(x.inputId||'-')}　採取箇所：${x.points.length}</div>
+      </div>`).join(''):'<div class="photo-empty">採取対象の建材がありません</div>';
+    const detailHtml=active
+      ?`<div class="photo-review-panel-head"><h4>No.${esc(active.no)} ${esc(active.name||'-')}</h4><span class="hint">採取箇所 ${active.points.length}</span></div>
+        <div class="photo-detail-body">${active.points.map(renderSamplePointBlock).join('')||'<div class="photo-empty">採取箇所がありません</div>'}</div>`
+      :'<div class="photo-empty">左から建材を選択してください</div>';
+    body.innerHTML=`<div class="photo-target-layout">
+      <div class="photo-target-list"><div class="photo-target-list-head">採取対象建材</div>${listHtml}</div>
+      <div class="photo-review-panel">${detailHtml}</div>
+    </div>`;
+  }else{
+    const external=roomsForArea('外部');
+    const internal=roomsForArea('内部');
+    const floors=[...new Set(internal.map(r=>r.floor||'未設定'))];
+    const roomItem=r=>`<div class="photo-target-item grouped ${r.id===activePhotoRoom?'active':''}" onclick="selectVisualPhotoRoom('${escapeAttr(r.id)}')">
+      <b>${esc(r.no||'-')} ${esc(r.name||'')}</b>
+      <div class="meta">${esc(r.floor||'')}　写真 ${getRoomPhotoCount(r.id)}枚</div>
+    </div>`;
+    let listHtml=`<div class="photo-group-head photo-group-toggle" onclick="togglePhotoGroup('external')"><span>外部</span><span class="mark">${photoGroupMark(photoGroupOpen.external)}</span></div>`;
+    if(photoGroupOpen.external)listHtml+=external.map(roomItem).join('');
+    listHtml+=`<div class="photo-group-head photo-group-toggle" onclick="togglePhotoGroup('internal')"><span>内部</span><span class="mark">${photoGroupMark(photoGroupOpen.internal)}</span></div>`;
+    if(photoGroupOpen.internal){
+      for(const floor of floors){
+        const open=photoGroupOpen.floors[floor]!==false;
+        listHtml+=`<div class="photo-subgroup-head photo-group-toggle" onclick="togglePhotoGroup('${escapeAttr(floor)}')"><span>${esc(floor)}</span><span class="mark">${photoGroupMark(open)}</span></div>`;
+        if(open)listHtml+=internal.filter(r=>(r.floor||'未設定')===floor).map(roomItem).join('');
+      }
+    }
+    const room=findRoom(activePhotoRoom)||external[0]||internal[0];
+    if(room&&room.id!==activePhotoRoom)activePhotoRoom=room.id;
+    const targets=room?getRoomVisualTargets(room.id):[];
+    const cards=targets.map(renderVisualFrameCard).join('');
+    const detailHtml=room
+      ?`<div class="photo-review-panel-head"><h4>${esc(room.no||'-')} ${esc(room.name||room.floor||'')}</h4><span class="hint">${esc(roomArea(room.id))}</span></div>
+        <div class="photo-detail-body">${cards||'<div class="photo-empty">表示できる調査部位がありません</div>'}</div>`
+      :'<div class="photo-empty">部屋がありません</div>';
+    body.innerHTML=`<div class="photo-target-layout">
+      <div class="photo-target-list"><div class="photo-target-list-head">調査場所</div>${listHtml}</div>
+      <div class="photo-review-panel">${detailHtml}</div>
+    </div>`;
+  }
+
+  const newList=document.querySelector('.photo-target-list');
+  const newBody=document.querySelector('.photo-review-panel');
+  if(newList)newList.scrollTop=listScroll;
+  if(newBody)newBody.scrollTop=bodyScroll;
+}
 function renderSamples(){let rows='<tr><th>試料ID</th><th>建材</th><th>採取場所</th><th>採取部位</th><th>結果</th></tr>'; for(const s of state.samples){const m=state.materials.find(x=>x.id===s.materialId); rows+=`<tr><td>${s.id}</td><td>${m?m.name:'-'}</td><td>${s.place}</td><td>${s.part}</td><td>未</td></tr>`} document.getElementById('samplesTable').innerHTML=rows}
-function renderSync(){const photoWait=state.photos.length; document.getElementById('unsyncedPill').textContent=`同期待ち ${state.queue.length+photoWait}件`; const mini=document.getElementById('miniUnsynced'); if(mini)mini.textContent=state.queue.length+photoWait; document.getElementById('syncFinish').textContent=state.queue.filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')).length; document.getElementById('syncMaterials').textContent=state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length; document.getElementById('syncPhotos').textContent=photoWait; document.getElementById('syncList').innerHTML=state.queue.length?state.queue.map(q=>`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`).join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>'}
+function renderSync(){const photoWait=state.photos.length; const pending=state.queue.length+photoWait; const mini=document.getElementById('miniUnsynced'); if(mini)mini.textContent=pending; const syncState=document.getElementById('firebasePill'); if(syncState&&!String(syncState.textContent).includes('エラー')){syncState.textContent=pending?'同期中…':'同期完了';syncState.className='header-sync-state '+(pending?'warn':'');} document.getElementById('syncFinish').textContent=state.queue.filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')).length; document.getElementById('syncMaterials').textContent=state.queue.filter(q=>q.type.includes('建材')||q.type.includes('登録')).length; document.getElementById('syncPhotos').textContent=photoWait; document.getElementById('syncList').innerHTML=state.queue.length?state.queue.map(q=>`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`).join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>'}
 function renderAll(){renderFinish();renderMaterials();renderRecords();renderPhotos();renderSamples();renderSync();renderSettings();updateHistoryButtons();scheduleStateSave()}
-function showTab(id){document.querySelectorAll('.content').forEach(x=>x.style.display='none'); const target=document.getElementById(id)||document.getElementById('finish'); target.style.display='block'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===target.id));}
+function showTab(id){
+  document.querySelectorAll('.content').forEach(x=>x.style.display='none');
+  const target=document.getElementById(id)||document.getElementById('finish');
+  target.style.display='block';
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===target.id));
+  if(target.id==='photos'){
+    const body=document.getElementById('photoModeBody');
+    try{
+      renderPhotos({preserveScroll:true});
+    }catch(err){
+      console.error('写真タブ描画エラー',err);
+      if(body) body.innerHTML='<div class="photo-empty" style="color:#b91c1c"><b>写真タブの描画に失敗しました。</b><br>'+esc((err&&err.message)||String(err))+'</div>';
+    }
+  }
+}
 function toggleSection(name){collapsed[name]=!collapsed[name]; renderFinish()}
 function updateRoom(id,field,value){const r=findRoom(id); if(!r)return; remember(); r[field]=normalizeInput(value); addQueue('部屋情報変更',`${r.no} ${r.name}`); renderAll()}
 function nextRoomNo(floor,area='内部'){if(area==='外部')return ''; if(floor==='階段'){const nums=roomsForArea(area).filter(r=>r.floor==='階段').map(r=>String(r.no||'').match(/^S-(\d+)$/)).filter(Boolean).map(m=>Number(m[1])); return `S-${(nums.length?Math.max(...nums)+1:1)}`;} if(floor==='屋上'){const nums=roomsForArea(area).filter(r=>r.floor==='屋上').map(r=>String(r.no||'').match(/^R-(\d+)$/)).filter(Boolean).map(m=>Number(m[1])); return `R-${(nums.length?Math.max(...nums)+1:1)}`;} const nums=roomsForArea(area).filter(r=>r.floor===floor).map(r=>String(r.no||'').match(/^(\d+)-(\d+)$/)).filter(Boolean).map(m=>Number(m[2])); const floorNum=(String(floor).match(/\d+/)||['1'])[0]; const next=(nums.length?Math.max(...nums)+1:1); return `${floorNum}-${next}`}
@@ -2281,9 +2598,18 @@ function launchCamera(mode){
 
 function addPhoto(board){remember();state.photos.push({roomId:activePhotoRoom,type:board?'看板':'写真'}); addQueue('写真追加',board?'看板':'写真'); renderAll()}
 function createSample(materialId){remember();const mId=materialId||(state.materials[0]&&state.materials[0].id); if(!mId)return alert('登録済建材がありません'); const id='26070101-'+String(state.samples.length+1).padStart(2,'0'); state.samples.push({id,materialId:mId,place:'101 玄関',part:'壁'}); addQueue('試料作成',id); renderAll(); showTab('samples')}
-function toggleOnline(){online=!online; const p=document.getElementById('onlinePill'); p.textContent=online?'オンライン':'オフライン'; p.className='pill '+(online?'ok':'warn')}
+function toggleOnline(){online=!online; const p=document.getElementById('onlinePill'); if(p){p.className='connection-dot '+(online?'online':'offline');p.title=online?'オンライン':'オフライン';} const f=document.getElementById('firebasePill');if(f&&!online){f.textContent='再接続待ち';f.className='header-sync-state warn';}}
 function syncNow(){if(!online)return alert('オフラインです。通信復帰後に同期します。'); state.queue=[]; alert('同期しました（プロトタイプ表示）'); renderAll()}
-function toggleSide(){document.getElementById('side').classList.toggle('closed')}
+function toggleSide(){
+  const side=document.getElementById('projectSidePanel');
+  const back=document.getElementById('projectSideBackdrop');
+  const open=!side.classList.contains('open');
+  side.classList.toggle('open',open); side.setAttribute('aria-hidden',open?'false':'true');
+  if(back)back.classList.toggle('open',open);
+  if(open){const input=document.getElementById('projectSearchInput'); if(input)setTimeout(()=>input.focus(),120);}
+}
+function closeProjectSide(){const side=document.getElementById('projectSidePanel');const back=document.getElementById('projectSideBackdrop');if(side){side.classList.remove('open');side.setAttribute('aria-hidden','true')}if(back)back.classList.remove('open')}
+
 function openDrawer(){document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('open')}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerBackdrop').classList.remove('open')}
 function appUrlWithStamp(path){
@@ -2840,10 +3166,12 @@ function renderProjectList(){
   if(header&&meta)header.textContent=`${meta.no}　${meta.name}`;
   const list=document.getElementById('projectList');
   if(!list)return;
-  list.innerHTML=Object.keys(projectMeta).map(id=>{
+  const q=String(document.getElementById('projectSearchInput')?.value||'').trim().toLowerCase();
+  const ids=Object.keys(projectMeta).filter(id=>{const m=projectMeta[id];return !q || `${m.no} ${m.name} ${m.sub||''}`.toLowerCase().includes(q)});
+  list.innerHTML=ids.map(id=>{
     const m=projectMeta[id];
-    return `<div class="project-card ${id===activeProjectId?'active':''}" onclick="switchProject('${id}')"><strong>${esc(m.no+' '+m.name)}</strong><span>${esc(m.sub)}</span></div>`;
-  }).join('');
+    return `<div class="project-card ${id===activeProjectId?'active':''}" onclick="switchProject('${id}');closeProjectSide()"><strong>${esc(m.no+' '+m.name)}</strong><span>${esc(m.sub||m.address||'')}</span></div>`;
+  }).join('')||'<div class="hint" style="padding:16px 4px">該当する案件がありません</div>';
 }
 function switchProject(id){
   if(!projectMeta[id]||id===activeProjectId){renderProjectList();return;}
@@ -3748,6 +4076,9 @@ let selectedPhotoKey = '';
 let photoDeleteMode = {};
 let photoDeleteSelection = {};
 let visualFrameOpen = {};
+let samplePointExpanded = {};
+let sampleBlockSelectionMode = {};
+let sampleBlockSelected = {};
 const photoGroupOpen = {external:true, internal:true, floors:{}};
 const circleNums=['①','②','③'];
 const sampleStageOrder=['採取前','採取中','採取後','断面'];
@@ -3818,7 +4149,7 @@ function getRoomVisualTargets(roomId){
   };
   for(const label of visualDefaultPartsForArea(area)){
     if(label==='その他'){
-      const materials=[];
+      const grouped=new Map();
       for(let line=0;line<roomLineCount(room);line++){
         for(const slot of otherSlots){
           const c=getCell(roomId,area,slot,'name',line);
@@ -3826,7 +4157,8 @@ function getRoomVisualTargets(roomId){
           if(!has)continue;
           const pc=getCell(roomId,area,slot,'part',line);
           const partName=(pc&&pc.text&&pc.text.trim())?pc.text.trim():'その他';
-          materials.push({
+          if(!grouped.has(partName))grouped.set(partName,[]);
+          grouped.get(partName).push({
             partLabel:partName,
             materialId:c.materialId||'',
             materialName:photoMaterialLabel(c.materialId,c.text),
@@ -3835,14 +4167,24 @@ function getRoomVisualTargets(roomId){
           });
         }
       }
-      targets.push({
-        key:`${roomId}|${area}|その他`,
-        roomId,area,part:'その他',partLabel:'その他',slot:'その他',
-        materialId:materials[0]?.materialId||'',
-        materialName:materials[0]?.materialName||'',
-        materials,
-        hasInput:materials.length>0
-      });
+      if(grouped.size){
+        for(const [partName,materials] of grouped.entries()){
+          targets.push({
+            key:`${roomId}|${area}|その他|${partName}`,
+            roomId,area,part:'その他',partLabel:partName,slot:'その他',
+            materialId:materials[0]?.materialId||'',
+            materialName:materials[0]?.materialName||'',
+            materials,
+            hasInput:true
+          });
+        }
+      }else{
+        targets.push({
+          key:`${roomId}|${area}|その他`,
+          roomId,area,part:'その他',partLabel:'その他',slot:'その他',
+          materialId:'',materialName:'',materials:[],hasInput:false
+        });
+      }
     }else{
       pushDefaultPart(label);
     }
@@ -4061,6 +4403,18 @@ function renderStageTile(label,count,isNext,opts){
   const preview=url?` ondblclick="event.stopPropagation();openPhotoPreview('${escapeAttr(label)}','<img src=&quot;${escapeAttr(url)}&quot; style=&quot;max-width:100%;max-height:100%;object-fit:contain&quot;>')"`:'';
   return `<div class="photo-stage-tile ${n>0?'done':'missing'} ${imageClass} ${isNext?'next':''} ${selected?'selected':''}"${bg} onclick="event.stopPropagation();${opts.selectAction||''}"${preview}>${add}<b>${esc(label)}</b>${n===0?'<span>未撮影</span>':''}${n>0?`<span class="photo-count-badge">${n}</span>`:''}</div>`;
 }
+
+function photoThumbStyle(p){
+  const url=photoDisplayUrl(p);
+  return url ? `style="background-image:url('${escapeAttr(url)}')"` : '';
+}
+function photoPreviewAttr(label,p){
+  const url=photoDisplayUrl(p);
+  if(!url)return '';
+  const title=escapeAttr(String(label||'写真'));
+  const safeUrl=escapeAttr(url);
+  return `ondblclick="event.stopPropagation();openPhotoPreview('${title}','<img src=&quot;${safeUrl}&quot; style=&quot;max-width:100%;max-height:100%;object-fit:contain&quot;>')"`;
+}
 function visualMaterialLines(t){
   const items=(t.materials&&t.materials.length)?t.materials:[];
   if(!items.length)return '仕上表未入力';
@@ -4070,201 +4424,139 @@ function visualMaterialLines(t){
   }).join('<br>');
 }
 function renderVisualFrameCard(t){
-  const photos=visualPhotoList(t);
-  const count=photos.length;
-  const selected=t.key===activeVisualPhotoTargetKey;
-  const hasInput=!!t.hasInput;
-  const open=isVisualFrameOpen(t);
-  const materialLabel=visualMaterialLines(t);
-  const badge=hasInput ? '<span class="photo-input-badge">入力あり</span>' : '<span class="photo-input-badge empty">未入力</span>';
-  const mark=open?'▼':'▶';
-  const title=`<div class="photo-frame-title visual-title" onclick="event.stopPropagation();toggleVisualFrame('${escapeAttr(t.key)}')" style="cursor:pointer"><b><span class="photo-frame-toggle">${mark}</span> ${esc(t.partLabel)}</b><span>${badge}</span><span class="hint visual-count">写真 ${count}枚</span></div>`;
-  if(!open){
-    return `<div class="photo-frame-card visual-empty visual-collapsed ${selected?'active':''}" onclick="toggleVisualFrame('${escapeAttr(t.key)}')">${title}</div>`;
-  }
-  return `<div class="photo-frame-card ${hasInput?'visual-has-input':'visual-empty'} ${selected?'active':''}">
-    <div>
-      ${title}
-      <div class="photo-material-lines">${materialLabel}</div>
-    </div>
-    <div onclick="selectVisualTarget('${escapeAttr(t.key)}')">${renderStageTile(t.partLabel,count,false,{selected,photos,repPrefix:'visual',repKey:t.key,repStage:t.partLabel,selectAction:`selectVisualTarget('${escapeAttr(t.key)}')`,addAction:`launchVisualPartCamera('${escapeAttr(t.key)}')`})}${selected?renderPhotoPickList('visual',t.key,t.partLabel,photos):''}</div>
-    ${renderPhotoBlockActions('visual',t.key,t.partLabel,photos,`launchVisualPartCamera('${escapeAttr(t.key)}')`)}
+  const photos=visualPhotoList(t), count=photos.length, open=isVisualFrameOpen(t), selected=t.key===activeVisualPhotoTargetKey;
+  const repIndex=count ? selectedRepIndex('visual',t.key,t.partLabel,photos) : -1;
+  const safeRepIndex=(repIndex>=0 && repIndex<photos.length)?repIndex:(count?0:-1);
+  const rep={p:safeRepIndex>=0?photos[safeRepIndex]:null,index:safeRepIndex};
+  const deleteMode=isPhotoDeleteMode('visual',t.key,t.partLabel), selectedCount=selectedPhotoIdsInBlock('visual',t.key,t.partLabel).length;
+  const materialLabel=visualMaterialLines(t)||'入力無';
+  const repHtml=rep.p?`<div class="visual-rep-thumb" ${photoThumbStyle(rep.p)} onclick="event.stopPropagation();selectVisualTarget('${escapeAttr(t.key)}')" ${photoPreviewAttr(t.partLabel,rep.p)}></div>`:`<div class="visual-empty-thumb"><div><b>${esc(t.partLabel)}</b><span>未撮影</span></div></div>`;
+  const others=deleteMode?photos.map((p,i)=>({p,i})):photos.map((p,i)=>({p,i})).filter(x=>x.i!==rep.index);
+  const showToggle=count>1;
+  return `<div class="photo-frame-card visual-compact ${open?'is-open':'is-closed'} ${t.hasInput?'visual-has-input':'visual-empty'} ${selected?'active':''}">
+    <div class="visual-info-line"><span><span class="label">調査部位：</span>${esc(t.partLabel)}</span><span><span class="label">入力建材：</span>${materialLabel}</span></div>
+    <div class="visual-compact-actions">${repHtml}<button class="btn visual-add-btn" onclick="event.stopPropagation();launchVisualPartCamera('${escapeAttr(t.key)}')">＋</button><button class="btn small primary" onclick="event.stopPropagation();launchVisualPartCamera('${escapeAttr(t.key)}')">カメラ起動</button></div>
+    ${showToggle?`<div class="visual-expand-row"><span class="visual-expand-toggle ${open?'is-open':'is-closed'}" role="button" tabindex="0" onclick="event.stopPropagation();toggleVisualFrame('${escapeAttr(t.key)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleVisualFrame('${escapeAttr(t.key)}')}">${open?'▼ 他の写真':'▶ 他の写真'}</span>${open?`<div class="visual-row-buttons"><button class="btn small ${deleteMode?'selecting':''}" onclick="event.stopPropagation();togglePhotoDeleteMode('visual','${escapeAttr(t.key)}','${escapeAttr(t.partLabel)}')">${deleteMode?'選択終了':'選択'}</button>${deleteMode?`<button class="btn small danger" ${selectedCount?'':'disabled'} onclick="event.stopPropagation();deleteSelectedPhotos('visual','${escapeAttr(t.key)}','${escapeAttr(t.partLabel)}')">削除${selectedCount?`（${selectedCount}）`:''}</button>`:''}</div>`:''}</div>`:''}
+    ${open&&count>1?`<div class="visual-expanded-row"><div class="visual-extra-photos">${others.map(x=>renderVisualExtraThumb(x.p,x.i,t,deleteMode)).join('')}</div></div>`:''}
   </div>`;
 }
-function renderSamplePointBlock(point){
-  const counts=sampleStageCounts(point);
-  const next=nextSampleStage(point);
-  if(point.key===activeSamplePointKey && !activeSampleStage) activeSampleStage=next;
-  const selectedStage=(point.key===activeSamplePointKey ? (activeSampleStage||next) : '');
-  const visualTile=counts['目視'] ? renderStageTile('目視',counts['目視'],false,{selected:selectedStage==='目視',photos:samplePhotoList(point,'目視'),repPrefix:'sample',repKey:point.key,repStage:'目視',selectAction:`selectSampleStage('${escapeAttr(point.key)}','目視')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','目視')`}) : '';
-  const stageTiles=sampleStageOrder.map(stage=>renderStageTile(stage,counts[stage]||0,stage===next,{selected:selectedStage===stage,photos:samplePhotoList(point,stage),repPrefix:'sample',repKey:point.key,repStage:stage,selectAction:`selectSampleStage('${escapeAttr(point.key)}','${escapeAttr(stage)}')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(stage)}')`})).join('');
-  const selectedPhotos=selectedStage ? samplePhotoList(point,selectedStage) : [];
-  return `<div class="sample-point-block ${point.key===activeSamplePointKey?'active':''}" onclick="selectSamplePoint('${escapeAttr(point.key)}')">
-    <div class="sample-point-title"><b>${esc(point.blockLabel)}</b><span class="hint">次回：${esc(next)}</span></div>
-    <div class="sample-point-meta">採取場所：${esc(point.place||'-')} / 採取部位：${esc(point.part||'-')} / 試料No.${esc(point.sampleNo||'-')}</div>
-    <div class="sample-stage-summary"><div class="photo-stage-strip">${visualTile}${stageTiles}</div>${point.key===activeSamplePointKey && selectedStage?renderPhotoPickList('sample',point.key,selectedStage,selectedPhotos):''}${renderPhotoBlockActions('sample',point.key,selectedStage||next,selectedPhotos,`launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(selectedStage||next)}')`)}</div>
-  </div>`;
-}
-function renderVisualRoomList(rooms){
-  const external=rooms.filter(r=>roomArea(r.id)==='外部');
-  const internal=rooms.filter(r=>roomArea(r.id)!=='外部');
-  const floorMap={};
-  internal.forEach(r=>{const f=r.floor||'内部'; (floorMap[f]||(floorMap[f]=[])).push(r);});
-  const roomRow=room=>`<div class="photo-target-item grouped ${room.id===activePhotoRoom?'active':''}" data-room-id="${esc(room.id)}" onclick="selectVisualPhotoRoom(this.dataset.roomId)"><b>${esc(room.no)}${room.name?`　${esc(room.name)}`:''}</b><div class="meta">目視写真 ${getRoomPhotoCount(room.id)}枚</div></div>`;
-  const extOpen=photoGroupOpen.external!==false;
-  const extHtml=external.length?`<div class="photo-group-head photo-group-toggle" onclick="togglePhotoGroup('external')"><span>外部</span><span class="mark">${photoGroupMark(extOpen)}</span></div>${extOpen?external.map(roomRow).join(''):''}`:'';
-  const floors=Object.keys(floorMap).sort((a,b)=>String(a).localeCompare(String(b),'ja'));
-  const internalHtml=floors.map(f=>{const open=photoGroupOpen.floors[f]!==false; return `<div class="photo-subgroup-head photo-group-toggle" onclick="togglePhotoGroup('${escapeAttr(f)}')"><span>${esc(f)}</span><span class="mark">${photoGroupMark(open)}</span></div>${open?floorMap[f].map(roomRow).join(''):''}`;}).join('');
-  return `<div class="photo-target-list-head">目視調査 部屋</div>${extHtml}${internalHtml}`;
-}
-function renderPhotos(opts){
-  opts=opts||{};
-  const oldList=document.querySelector('#photoModeBody .photo-target-list');
-  const oldTop=opts.preserveScroll && oldList ? oldList.scrollTop : 0;
-  const visualBtn=document.getElementById('photoModeVisualBtn');
-  const sampleBtn=document.getElementById('photoModeSampleBtn');
-  if(visualBtn)visualBtn.classList.toggle('active',activePhotoMode==='visual');
-  if(sampleBtn)sampleBtn.classList.toggle('active',activePhotoMode==='sample');
-  const hint=document.getElementById('photoModeHint');
-  if(hint)hint.textContent=activePhotoMode==='visual' ? '入力ありは展開、未入力は折りたたみ。開閉は ▶ / ▼、追加は ＋ で統一します。' : '左は建材単位、右は採取数ぶんの箇所ブロック。各ブロックからカメラを起動します。';
-  const body=document.getElementById('photoModeBody');
-  if(!body)return;
-  if(activePhotoMode==='sample'){
-    const targets=sampleMaterialList();
-    const active=targets.find(t=>t.materialId===activeSamplePhotoMaterialId)||targets[0];
-    if(active && active.materialId!==activeSamplePhotoMaterialId) activeSamplePhotoMaterialId=active.materialId;
-    body.innerHTML=`<div class="photo-target-layout"><div class="photo-target-list"><div class="photo-target-list-head">建材採取 建材</div>${targets.map(t=>`<div class="photo-target-item ${t.materialId===activeSamplePhotoMaterialId?'active':''}" data-material-id="${esc(t.materialId)}" onclick="selectSampleMaterial(this.dataset.materialId)"><b>No.${esc(t.no)} ${esc(t.name)}</b><div class="meta">採取数：${esc(t.count)} / ID:${esc(t.inputId||'-')} / 写真 ${materialPhotoCount(t.materialId)}枚</div></div>`).join('') || '<div class="photo-empty">採取対象がありません。建材リストで「採取・分析」と採取数を設定してください。</div>'}</div><div class="photo-review-panel"><div class="photo-review-panel-head"><h4>${active?`No.${esc(active.no)} ${esc(active.name)}`:'建材採取'}</h4><span class="hint">箇所ごとに撮影</span></div><div class="photo-detail-body">${active?`<div class="sample-points">${active.points.map(renderSamplePointBlock).join('')}</div>`:'<div class="photo-empty">採取対象を選択してください。</div>'}</div></div></div>`;
-  }else{
-    const rooms=allRooms();
-    if(!findRoom(activePhotoRoom) && rooms[0]) activePhotoRoom=rooms[0].id;
-    const r=findRoom(activePhotoRoom)||rooms[0]||{};
-    const targets=getRoomVisualTargets(r.id);
-    const activeTarget=targets.find(t=>t.key===activeVisualPhotoTargetKey)||targets[0];
-    if(activeTarget && activeTarget.key!==activeVisualPhotoTargetKey) activeVisualPhotoTargetKey=activeTarget.key;
-    body.innerHTML=`<div class="photo-target-layout"><div class="photo-target-list">${renderVisualRoomList(rooms)}</div><div class="photo-review-panel"><div class="photo-review-panel-head"><h4>${r.id?`${esc(r.no)} ${esc(r.name||r.floor)}`:'部屋'}</h4><span class="hint">入力ありだけ初期展開</span></div><div class="photo-detail-body">${targets.length?targets.map(renderVisualFrameCard).join(''):'<div class="photo-empty">写真枠がありません。</div>'}</div></div></div>`;
-  }
-  if(opts.preserveScroll){
-    const newList=document.querySelector('#photoModeBody .photo-target-list');
-    if(newList)newList.scrollTop=oldTop;
-  }
-}
-function renderPhotoBoxes(mode,id){const photos=(state.photos||[]).filter(p=>{if(mode==='sample')return p.materialId===id && (p.photoMode==='sample'||p.kind==='sample'||p.type==='採取'); return p.roomId===id && (p.photoMode==='visual'||p.kind==='visual'||p.type==='目視'||!p.photoMode);}); return photos.map((p,i)=>{const url=photoDisplayUrl(p); const bg=url?` style="background-image:url('${escapeAttr(url)}')"`:''; return `<div class="photo-box camera-linked ${url?'has-image':''}"${bg} ondblclick="openPhotoPreview('${escapeAttr(p.type||photoModeLabel(mode))} 写真${i+1}','${url?`<img src=&quot;${escapeAttr(url)}&quot; style=&quot;max-width:100%;max-height:100%;object-fit:contain&quot;>`:`写真 ${i+1}`}')"><span>${esc(p.type||photoModeLabel(mode))}<br>写真 ${i+1}<br>${esc(p.uploadStatus||'uploaded')}</span></div>`;}).join('') || '<div class="photo-empty">まだ写真がありません</div>';}
-function launchActivePhotoCamera(){
-  if(activePhotoMode==='sample'){
-    const active=sampleMaterialList().find(t=>t.materialId===activeSamplePhotoMaterialId);
-    const point=active && (active.points.find(p=>p.key===activeSamplePointKey)||active.points[0]);
-    if(!point)return alert('採取対象を選択してください');
-    return launchSamplePointCamera(point.key);
-  }
-  const targets=getRoomVisualTargets(activePhotoRoom);
-  const target=targets.find(t=>t.key===activeVisualPhotoTargetKey)||targets[0];
-  if(!target)return alert('写真枠を選択してください');
-  return launchVisualPartCamera(target.key);
-}
-function launchVisualPartCamera(key){const targets=getRoomVisualTargets(activePhotoRoom); const target=targets.find(t=>t.key===key)||targets[0]; if(!target)return alert('写真枠を選択してください'); activeVisualPhotoTargetKey=target.key; launchCameraWithTarget('survey',target);}
-function launchSamplePointCamera(key,stage){const active=sampleMaterialList().find(t=>t.materialId===activeSamplePhotoMaterialId); const point=active && active.points.find(p=>p.key===key); if(!point)return alert('採取箇所を選択してください'); activeSamplePointKey=point.key; if(stage)activeSampleStage=stage; launchCameraWithTarget('sample',point);}
-function launchCameraWithTarget(mode,target){
-  const params=getCameraLaunchParams(mode);
-  if(mode==='sample' && target){
-    const m=target.material;
-    const next=activeSampleStage || nextSampleStage(target);
-    params.set('mode','sample'); params.set('photoMode','sample'); params.set('materialId',m.materialId||m.id||''); params.set('materialName',m.name||''); params.set('materialNo',String(target.no||'')); params.set('inputId',m.inputId||''); params.set('sampleNo',target.sampleNo||''); params.set('samplePointKey',target.key||''); params.set('sampleIndex',String(target.index||0)); params.set('sampleBlock',target.blockLabel||''); params.set('roomNo',target.place||params.get('roomNo')||''); params.set('samplePlace',target.place||''); params.set('samplePart',target.part||''); params.set('defaultStatus',sampleStageCodeMap[next]||'before');
-  }else if(mode==='survey' && target){
-    const room=findRoom(target.roomId)||findRoom(activePhotoRoom)||{};
-    params.set('mode','survey'); params.set('photoMode','visual'); params.set('roomId',target.roomId||room.id||''); params.set('roomNo',room.no||''); params.set('roomName',room.name||''); params.set('targetKey',target.key||''); params.set('targetPart',target.partLabel||target.part||''); params.set('materialId',target.materialId||''); params.set('materialName',target.materialName||''); params.delete('sampleNo'); params.set('defaultStatus','visual');
-  }else{params.set('mode','survey'); params.set('photoMode','visual'); params.delete('sampleNo'); params.set('defaultStatus','visual');}
-  saveStateToStorage();
-  window.location.href='camera.html?'+params.toString();
-}
-function addPhoto(board){
-  remember();
-  if(activePhotoMode==='sample'){
-    const active=sampleMaterialList().find(t=>t.materialId===activeSamplePhotoMaterialId);
-    const point=active && (active.points.find(p=>p.key===activeSamplePointKey)||active.points[0]);
-    const stage=point?(activeSampleStage || nextSampleStage(point)):'採取前';
-    state.photos.push({photoMode:'sample',kind:'sample',type:'採取',sampleStage:stage,roomId:point&&point.place,materialId:point&&point.materialId,sampleNo:point&&point.sampleNo,samplePointKey:point&&point.key,sampleIndex:point&&point.index});
-    addQueue('写真追加',`採取 ${stage}`);
-  }else{
-    const targets=getRoomVisualTargets(activePhotoRoom);
-    const target=targets.find(t=>t.key===activeVisualPhotoTargetKey)||targets[0];
-    state.photos.push({photoMode:'visual',kind:'visual',roomId:activePhotoRoom,type:'目視',targetKey:target&&target.key,targetPart:target&&target.partLabel,materialId:target&&target.materialId,materialName:target&&target.materialName});
-    addQueue('写真追加',target?`目視 ${target.partLabel}`:'目視');
-  }
-  renderAll();
-}
-
-
-/* v0.12.0 Firebase保存入口ラップ：既存UIの関数名は維持 */
-(function(){
-  const originalOnNameBlur=onNameBlur;
-  onNameBlur=function(roomId,area,part,line,value){
-    originalOnNameBlur(roomId,area,part,line,value);
-    syncCurrentRecordAfterCell(roomId,area,part,line);
-  };
-  const originalOnIdBlur=onIdBlur;
-  onIdBlur=function(roomId,area,part,line,value){
-    originalOnIdBlur(roomId,area,part,line,value);
-    syncCurrentRecordAfterCell(roomId,area,part,line);
-  };
-  const originalOnPartBlur=onPartBlur;
-  onPartBlur=function(roomId,area,slot,line,value){
-    originalOnPartBlur(roomId,area,slot,line,value);
-    syncCurrentRecordAfterCell(roomId,area,slot,line);
-  };
-  const originalRegisterName=registerName;
-  registerName=function(roomId,area,part,line=0,shouldRender=true){
-    originalRegisterName(roomId,area,part,line,shouldRender);
-    syncCurrentRecordAfterCell(roomId,area,part,line);
-  };
-  const originalUpdateMaterialRecord=updateMaterialRecord;
-  updateMaterialRecord=function(id,field,value){
-    originalUpdateMaterialRecord(id,field,value);
-    saveMaterialRecordToFirebase(id,'建材リスト');
-  };
-  const originalUpdateMaterialSamplePlace=updateMaterialSamplePlace;
-  updateMaterialSamplePlace=function(id,index,value){
-    originalUpdateMaterialSamplePlace(id,index,value);
-    saveMaterialRecordToFirebase(id,'採取場所');
-  };
-  const originalToggleSampleChecked=toggleSampleChecked;
-  toggleSampleChecked=function(id,checked){
-    originalToggleSampleChecked(id,checked);
-    saveMaterialRecordToFirebase(id,'採取チェック');
-  };
-  const originalUpdateMaterialName=updateMaterialName;
-  updateMaterialName=function(id,value){
-    originalUpdateMaterialName(id,value);
-    saveMaterialRecordToFirebase(id,'建材名');
-  };
-  const originalMNote=mNote;
-  mNote=function(id,value){
-    originalMNote(id,value);
-    saveMaterialRecordToFirebase(id,'調査備考');
-  };
-  const originalEditMaterialNote=editMaterialNote;
-  editMaterialNote=function(id){
-    originalEditMaterialNote(id);
-    saveMaterialRecordToFirebase(id,'調査備考');
-  };
-  const originalSwitchProject=switchProject;
-  switchProject=function(id){
-    originalSwitchProject(id);
-    connectFirebaseForActiveProject();
-  };
-  const originalSyncNow=syncNow;
-  syncNow=function(){
-    originalSyncNow();
-    saveAllMaterialRecordsToFirebase('手動同期');
-  };
-})();
+function toggleSamplePointExpanded(key){samplePointExpanded[key]=!samplePointExpanded[key];renderPhotos({preserveScroll:true})}
+function sampleBlockPhotos(point){return sampleStageOrder.flatMap(stage=>samplePhotoList(point,stage).map(p=>({p,stage})));}
+function toggleSampleBlockSelection(key){sampleBlockSelectionMode[key]=!sampleBlockSelectionMode[key];sampleBlockSelected[key]={};renderPhotos({preserveScroll:true})}
+function toggleSampleBlockPhoto(key,pid){const map=sampleBlockSelected[key]||(sampleBlockSelected[key]={});map[pid]=!map[pid];renderPhotos({preserveScroll:true})}
+async function deleteSampleBlockSelected(pointKey){const map=sampleBlockSelected[pointKey]||{};const ids=Object.keys(map).filter(id=>map[id]);if(!ids.length)return alert('削除する写真を選択してください。');if(!confirm(`選択した写真 ${ids.length}枚を削除しますか？`))return;for(const id of ids){try{await deleteOnePhotoRecord(id,{forceAppOnly:false})}catch(e){console.error(e);await deleteOnePhotoRecord(id,{forceAppOnly:true}).catch(()=>{})}}sampleBlockSelected[pointKey]={};sampleBlockSelectionMode[pointKey]=false;renderPhotos({preserveScroll:true});renderSync()}
+function sampleStageColumn(point,stage,next){const photos=samplePhotoList(point,stage),count=photos.length,rep=count?selectedRepIndex('sample',point.key,stage,photos):0,open=!!samplePointExpanded[point.key],selecting=!!sampleBlockSelectionMode[point.key];const tile=renderStageTile(stage,count,stage===next,{selected:point.key===activeSamplePointKey&&activeSampleStage===stage,photos,repPrefix:'sample',repKey:point.key,repStage:stage,selectAction:`selectSampleStage('${escapeAttr(point.key)}','${escapeAttr(stage)}')`,addAction:`launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(stage)}')`});const extras=open?(selecting?photos.map((p,i)=>({p,i})):photos.map((p,i)=>({p,i})).filter(x=>x.i!==rep)):[];return `<div class="sample-stage-column">${tile}${extras.length?`<div class="sample-extra-stack">${extras.map(x=>{const pid=photoIdOf(x.p),sel=!!(sampleBlockSelected[point.key]||{})[pid],click=selecting?`toggleSampleBlockPhoto('${escapeAttr(point.key)}','${escapeAttr(pid)}')`:`setRepPhoto('sample','${escapeAttr(point.key)}','${escapeAttr(stage)}',${x.i})`;return `<div class="sample-extra-thumb ${sel?'selected-delete':''}" ${photoThumbStyle(x.p)} onclick="event.stopPropagation();${click}" ${photoPreviewAttr(stage,x.p)}>${selecting?`<span class="photo-check">${sel?'✓':''}</span>`:''}</div>`}).join('')}</div>`:''}</div>`}
+function renderSamplePointBlock(point){const counts=sampleStageCounts(point),next=nextSampleStage(point);if(point.key===activeSamplePointKey&&!activeSampleStage)activeSampleStage=next;const open=!!samplePointExpanded[point.key],selecting=!!sampleBlockSelectionMode[point.key],selectedCount=Object.values(sampleBlockSelected[point.key]||{}).filter(Boolean).length;return `<div class="sample-point-block sample-compact ${point.key===activeSamplePointKey?'active':''}" onclick="selectSamplePoint('${escapeAttr(point.key)}')"><div class="sample-compact-head"><div class="sample-compact-info"><b>${esc(point.blockLabel)}</b>　<span class="label">採取場所：</span>${esc(point.place||'-')}　<span class="label">採取部位：</span>${esc(point.part||'-')}</div><span class="sample-next">試料No.${esc(point.sampleNo||'-')}　次回：${esc(next)}</span></div><div class="sample-stage-grid">${sampleStageOrder.map(st=>sampleStageColumn(point,st,next)).join('')}<div class="sample-block-camera"><button class="btn small primary" onclick="event.stopPropagation();launchSamplePointCamera('${escapeAttr(point.key)}','${escapeAttr(activeSampleStage||next)}')">カメラ起動</button></div></div><div class="sample-expand-row"><span class="sample-expand-toggle ${open?'is-open':'is-closed'}" role="button" tabindex="0" onclick="event.stopPropagation();toggleSamplePointExpanded('${escapeAttr(point.key)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleSamplePointExpanded('${escapeAttr(point.key)}')}">${open?'▼ 他の写真':'▶ 他の写真'}</span>${open?`<div class="sample-select-actions"><button class="btn small ${selecting?'selecting':''}" onclick="event.stopPropagation();toggleSampleBlockSelection('${escapeAttr(point.key)}')">${selecting?'選択終了':'選択'}</button>${selecting?`<button class="btn small danger" ${selectedCount?'':'disabled'} onclick="event.stopPropagation();deleteSampleBlockSelected('${escapeAttr(point.key)}')">削除${selectedCount?`（${selectedCount}）`:''}</button>`:''}</div>`:''}</div></div>`}
 
 initProjects(); persistenceEnabled=true; renderAll(); connectFirebaseForActiveProject();
 
 window.addEventListener('load',()=>{
+  const requestedTab=new URLSearchParams(location.search).get('tab');
+  if(requestedTab) setTimeout(()=>showTab(requestedTab),0);
   const tab=new URLSearchParams(location.search).get('tab');
   if(tab) showTab(tab);
 });
 window.addEventListener('beforeunload',saveStateToStorage);
+</script>
+
+<div id="integratedCameraOverlay" class="integrated-camera-overlay" aria-hidden="true">
+  <button class="integrated-camera-close" type="button" onclick="closeIntegratedCamera()">写真タブへ戻る</button>
+  <iframe id="integratedCameraFrame" class="integrated-camera-frame" title="電子看板カメラ v61" allow="camera; fullscreen"></iframe>
+</div>
+
+<script>
+/* v0.13.2 camera v61 bridge */
+let integratedCameraContext=null;
+function visualTargetByKey(key){
+  const room=findRoom(activePhotoRoom)||allRooms()[0]||{};
+  const targets=buildVisualTargetsForRoom ? buildVisualTargetsForRoom(room.id) : [];
+  return targets.find(t=>t.key===key)||null;
+}
+function currentSamplePointByKey(key){
+  for(const group of sampleMaterialList()){
+    const point=(group.points||[]).find(p=>p.key===key);
+    if(point)return point;
+  }
+  return null;
+}
+function openIntegratedCamera(context){
+  integratedCameraContext=context||{};
+  const meta=getActiveProjectMeta();
+  const p=new URLSearchParams();
+  p.set('embedded','1');
+  p.set('from','chousa');
+  p.set('projectId',activeProjectId||'');
+  p.set('projectName',meta.name||'');
+  p.set('subject',meta.name||'');
+  p.set('address',meta.address||'');
+  p.set('cameraMode',integratedCameraContext.photoMode==='sample'?'sampling':'survey');
+  if(integratedCameraContext.roomNo)p.set('roomNo',integratedCameraContext.roomNo);
+  if(integratedCameraContext.sampleNo)p.set('sampleNo',integratedCameraContext.sampleNo);
+  if(integratedCameraContext.stage)p.set('stage',integratedCameraContext.stage);
+  p.set('context',encodeURIComponent(JSON.stringify(integratedCameraContext)));
+  const frame=document.getElementById('integratedCameraFrame');
+  const overlay=document.getElementById('integratedCameraOverlay');
+  frame.src='camera.html?'+p.toString();
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden','false');
+  document.documentElement.style.overflow='hidden';
+  document.body.style.overflow='hidden';
+}
+function closeIntegratedCamera(){
+  const overlay=document.getElementById('integratedCameraOverlay');
+  const frame=document.getElementById('integratedCameraFrame');
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden','true');
+  frame.src='about:blank';
+  document.documentElement.style.overflow='';
+  document.body.style.overflow='';
+  renderPhotos({preserveScroll:true});
+}
+function launchVisualPartCamera(key){
+  activeVisualPhotoTargetKey=key||activeVisualPhotoTargetKey;
+  const t=visualTargetByKey(activeVisualPhotoTargetKey);
+  const room=findRoom((t&&t.roomId)||activePhotoRoom)||{};
+  const first=(t&&t.materials&&t.materials[0])||{};
+  openIntegratedCamera({photoMode:'visual',targetKey:t&&t.key||key,roomId:room.id||'',roomNo:room.no||'',roomName:room.name||'',targetPart:t&&t.partLabel||'',materialId:first.materialId||'',materialName:first.materialName||'',inputId:first.inputId||''});
+}
+function launchSamplePointCamera(pointKey,stage){
+  activeSamplePointKey=pointKey||activeSamplePointKey;
+  activeSampleStage=stage||activeSampleStage||'採取前';
+  const point=currentSamplePointByKey(activeSamplePointKey);
+  if(!point)return alert('採取箇所が見つかりません。');
+  openIntegratedCamera({photoMode:'sample',samplePointKey:point.key,materialId:point.materialId||'',sampleIndex:Number(point.index||0),materialName:(point.material&&point.material.name)||'',sampleNo:point.sampleNo||'',roomNo:point.place||'',targetPart:point.part||'',stage:activeSampleStage});
+}
+function launchActivePhotoCamera(){
+  if(activePhotoMode==='sample') return launchSamplePointCamera(activeSamplePointKey,activeSampleStage||'採取前');
+  const room=findRoom(activePhotoRoom)||allRooms()[0]||{};
+  const targets=buildVisualTargetsForRoom ? buildVisualTargetsForRoom(room.id) : [];
+  const key=activeVisualPhotoTargetKey||(targets[0]&&targets[0].key)||'';
+  if(!key)return alert('撮影対象を選択してください。');
+  launchVisualPartCamera(key);
+}
+window.addEventListener('message',(event)=>{
+  const data=event.data||{};
+  if(data.type==='chousa-camera-close'){closeIntegratedCamera();return;}
+  if(data.type!=='chousa-camera-photo')return;
+  const c=data.context||integratedCameraContext||{};
+  const photo=data.photo||{};
+  const record={
+    id:photo.id||('photo_'+Date.now()), photoId:photo.id||('photo_'+Date.now()),
+    dataUrl:photo.dataUrl||'', thumbnailUrl:photo.dataUrl||'', fileName:photo.fileName||'',
+    createdAt:photo.createdAt||new Date().toISOString(), capturedAt:photo.createdAt||new Date().toISOString(),
+    photoMode:c.photoMode||'visual', kind:c.photoMode||'visual', uploadStatus:'端末内',
+    roomId:c.roomId||'', targetKey:c.targetKey||'', targetPart:c.targetPart||'',
+    materialId:c.materialId||'', materialName:c.materialName||'', inputId:c.inputId||'',
+    samplePointKey:c.samplePointKey||'', sampleIndex:Number(c.sampleIndex||0),
+    sampleStage:c.stage||photo.statusLabel||'', stage:c.stage||photo.statusLabel||'', statusLabel:photo.statusLabel||'',
+    boardData:photo.boardData||null, deleted:false
+  };
+  state.photos=state.photos||[];
+  if(!state.photos.some(p=>photoIdOf(p)===record.photoId))state.photos.push(record);
+  addQueue('写真撮影',record.fileName||record.targetPart||record.sampleStage||'写真');
+  saveStateToStorage();
+  renderPhotos({preserveScroll:true});
+});
 </script>
 </body>
 </html>
