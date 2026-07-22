@@ -1458,9 +1458,9 @@ input[list]::-webkit-calendar-picker-indicator{
         <div class="panel-head"><h3>設定 <span class="mock-badge">構成確認モック</span></h3><span class="hint">案件情報・保存先・端末・入力候補・システム設定を整理</span></div>
         <div class="settings-wrap mock-settings">
           <div class="settings-box"><h4>案件情報</h4><div class="settings-section-note">看板・写真保存・Excel出力の共通情報</div><div class="settings-grid"><label>案件番号</label><input id="settingsProjectNo" value="26070101" onblur="updateProjectMetaField('no',this.value)"><label>案件名</label><input id="settingsProjectName" value="ODKワールドアスベスト調査" onblur="updateProjectMetaField('name',this.value)"><label>住所</label><input id="settingsProjectAddress" value="神奈川県小田原市" onblur="updateProjectMetaField('address',this.value)"><label>調査日</label><input type="date" id="settingsSurveyDate" value="2026-07-22"></div></div>
-          <div class="settings-box"><h4>OneDrive・バックアップ</h4><div class="settings-section-note">写真本体と復旧用の調査情報を案件フォルダへ保存</div><div class="settings-grid"><label>案件フォルダ</label><div class="settings-value" id="settingsProjectFolderValue">26070101　ODKワールドアスベスト調査</div><label>目視フォルダ</label><div class="settings-value">目視</div><label>採取フォルダ</label><div class="settings-value">採取</div><label>最終バックアップ</label><div class="settings-value backup-time" id="settingsLastBackup">-</div></div></div>
+          <div class="settings-box"><h4>OneDrive・バックアップ</h4><div class="settings-section-note">写真本体と復旧用の調査情報を案件フォルダへ保存</div><div class="settings-grid"><label>案件フォルダ</label><div class="settings-value" id="settingsProjectFolderValue">26070101　ODKワールドアスベスト調査</div><label>目視フォルダ</label><div class="settings-value">目視</div><label>採取フォルダ</label><div class="settings-value">採取</div><label>最終バックアップ</label><div class="settings-value backup-time" id="settingsLastBackup">-</div></div><button class="btn small primary" id="manualBackupButton" style="margin-top:9px" onclick="runManualSurveyBackup()">今すぐバックアップ</button></div>
           <div class="settings-box"><h4>端末・アカウント</h4><div class="settings-section-note">写真IDは「区分-端末-連番」で採番</div><div class="settings-grid"><label>端末コード</label><input id="settingsDeviceCode" value="IP01" onblur="setDeviceCode(this.value)"><label>端末名</label><div class="settings-value"><b id="settingsDeviceName"></b></div><label>Microsoft</label><div class="settings-value">ログイン済み（確認用）</div></div><button class="btn small" style="margin-top:9px" onclick="changeDeviceName()">端末名を変更</button></div>
-          <div class="settings-box"><h4>システム設定</h4><div class="settings-section-note">同期・表示・バックアップの動作設定</div><div class="settings-grid"><label>カラー表示</label><select><option>ON</option><option>OFF</option></select><label>自動同期</label><select><option>ON</option><option>OFF</option></select><label>バックアップ</label><select><option>10分ごと</option><option>30分ごと</option><option>手動のみ</option></select><label>バージョン</label><div class="settings-value">0.14.4</div></div></div>
+          <div class="settings-box"><h4>システム設定</h4><div class="settings-section-note">同期・表示・バックアップの動作設定</div><div class="settings-grid"><label>カラー表示</label><select><option>ON</option><option>OFF</option></select><label>自動同期</label><select><option>ON</option><option>OFF</option></select><label>バックアップ</label><select><option>10分ごと</option><option>30分ごと</option><option>手動のみ</option></select><label>バージョン</label><div class="settings-value">0.14.6</div></div></div>
           <div class="settings-box wide"><h4>建材名候補</h4><div class="settings-section-note">初期候補＋その案件で新しく登録された建材名。仕上表のプルダウンに使用</div><div class="settings-add"><input id="addMatPart" placeholder="部位"><input id="addMatType" placeholder="区分" value="案件追加"><input id="addMatName" placeholder="建材名"><button class="btn small primary" onclick="addMaterialCandidate()">追加</button></div><table class="data-table compact" id="materialCandidatesTable"></table></div>
           <div class="settings-box wide"><h4>部位・入力候補</h4><div class="settings-section-note">固定部位と案件内で追加された部位を一元管理</div><div class="settings-add"><input id="addPartName" placeholder="部位"><button class="btn small primary" onclick="addPartCandidate()">追加</button></div><div class="part-candidate-list" id="partCandidatesList"></div></div>
         </div>
@@ -2012,7 +2012,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.5';
+const APP_VERSION='0.14.6';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -2327,17 +2327,30 @@ function saveRoomRecordToFirebase(roomId,reason){if(appState.applyingRemote||!wi
 function saveRoomSlotToFirebase(roomId,area,part,line,reason){if(appState.applyingRemote||!window.FirebaseSync)return;const projectId=appState.currentProjectId||currentFirestoreProjectId();const sk=roomSlotKey(part,line);const payload=roomSlotPayload(roomId,area,part,line);const has=payload.id||payload.name||payload.partCell;const patch={updatedBy:getDeviceName(),updatedAtClient:new Date().toISOString(),appVersion:APP_VERSION};patch['slots.'+sk]=has?payload:window.FirebaseSync.deleteFieldValue();return window.FirebaseSync.patchRoomRecord(projectId,roomId,patch).then(()=>{setFirebasePill('仕上表差分保存済: '+(reason||part),'ok');scheduleSyncedQueueClear();}).catch(err=>{console.error(err);setFirebasePill('仕上表保存エラー','warn');});}
 function saveAllRoomRecordsToFirebase(reason){const tasks=[];for(const area of ['外部','内部'])for(const room of roomsForArea(area))tasks.push(saveRoomRecordToFirebase(room.id,reason));return Promise.allSettled(tasks);}
 
+let firebaseConnectionGeneration=0;
+function resetFirebaseProjectSession(projectId){
+  appState.currentProjectId=String(projectId||'');
+  appState.materialRecords={};
+  appState.photoRecords={};
+  appState.roomRecordsBootstrapped=false;
+  appState.applyingRemote=false;
+  clearTimeout(projectStateSaveTimer);
+  clearTimeout(syncQueueClearTimer);
+}
 function connectFirebaseForActiveProject(){
   getDeviceName();
   const projectId=currentFirestoreProjectId();
-  appState.currentProjectId=projectId;
+  const generation=++firebaseConnectionGeneration;
+  resetFirebaseProjectSession(projectId);
   setFirebasePill('Firebase 接続準備: '+projectId,'warn');
+  const isCurrent=()=>generation===firebaseConnectionGeneration && projectId===currentFirestoreProjectId() && projectId===appState.currentProjectId;
   const run=()=>{
+    if(!isCurrent())return;
     if(window.FirebaseSync){
-      window.FirebaseSync.connectMaterialRecords(projectId,applyFirebaseMaterialRecords);
-      if(window.FirebaseSync.connectRoomRecords) window.FirebaseSync.connectRoomRecords(projectId,applyFirebaseRoomRecords);
-      if(window.FirebaseSync.connectPhotos) window.FirebaseSync.connectPhotos(projectId,applyFirebasePhotoRecords);
-      if(window.FirebaseSync.connectProjectState) window.FirebaseSync.connectProjectState(projectId,applyFirebaseProjectState);
+      window.FirebaseSync.connectMaterialRecords(projectId,(changes,isEmpty)=>{if(isCurrent())applyFirebaseMaterialRecords(changes,isEmpty);});
+      if(window.FirebaseSync.connectRoomRecords) window.FirebaseSync.connectRoomRecords(projectId,(changes,isEmpty)=>{if(isCurrent())applyFirebaseRoomRecords(changes,isEmpty);});
+      if(window.FirebaseSync.connectPhotos) window.FirebaseSync.connectPhotos(projectId,(changes,isEmpty)=>{if(isCurrent())applyFirebasePhotoRecords(changes,isEmpty);});
+      if(window.FirebaseSync.connectProjectState) window.FirebaseSync.connectProjectState(projectId,(remote)=>{if(isCurrent())applyFirebaseProjectState(remote);});
     }else{
       setTimeout(run,200);
     }
@@ -5272,6 +5285,8 @@ async function createMockProject(){
   undoStack=[];redoStack=[];selectedMaterialId=null;
   renderProjectList();renderAll();closeProjectSide();
   persistenceEnabled=true; saveStateToStorage();
+  // 新規案件へ即時にFirebase接続を切り替え、旧案件の監視結果が混入しないようにする
+  connectFirebaseForActiveProject();
   try{
     const account=window.MicrosoftPhotoUpload?await window.MicrosoftPhotoUpload.getAccount():null;
     if(!account){
@@ -5288,23 +5303,46 @@ async function createMockProject(){
 </script>
 
 <script>
-/* v0.14.4 OneDrive survey backup: latest successful time only */
+/* v0.14.6 OneDrive survey backup: automatic + manual */
 const SURVEY_BACKUP_INTERVAL_MS = 10 * 60 * 1000;
 let surveyBackupRunning = false;
-async function runSurveyBackup(){
-  if(surveyBackupRunning || !window.MicrosoftPhotoUpload || !persistenceEnabled) return;
+function setSurveyBackupUi(text,running=false){
+  const el=document.getElementById('settingsLastBackup');
+  const btn=document.getElementById('manualBackupButton');
+  if(el && text)el.textContent=text;
+  if(btn){btn.disabled=running;btn.textContent=running?'バックアップ中…':'今すぐバックアップ';}
+}
+async function runSurveyBackup(options={}){
+  const manual=options.manual===true;
+  if(surveyBackupRunning){if(manual)alert('バックアップ中です。');return false;}
+  if(!window.MicrosoftPhotoUpload || !persistenceEnabled){
+    if(manual)alert('バックアップを開始できません。アプリの保存準備を確認してください。');
+    return false;
+  }
+  const meta=getActiveProjectMeta();
+  const previous=meta.lastBackup||'-';
   try{
     const account=await window.MicrosoftPhotoUpload.getAccount();
-    if(!account)return;
+    if(!account){if(manual)alert('Microsoftへログインしてください。');return false;}
     surveyBackupRunning=true;
-    await window.MicrosoftPhotoUpload.uploadSurveyBackup(activeProjectId);
+    setSurveyBackupUi('バックアップ中…',true);
+    const completed=await window.MicrosoftPhotoUpload.uploadSurveyBackup(activeProjectId);
+    setSurveyBackupUi(completed||previous,false);
+    if(manual)alert('バックアップが完了しました。');
+    return true;
   }catch(err){
     console.warn('調査情報バックアップ失敗',err);
+    setSurveyBackupUi(previous,false);
+    if(manual)alert('バックアップに失敗しました。\n'+(err&&err.message?err.message:err));
+    return false;
   }finally{
     surveyBackupRunning=false;
+    const btn=document.getElementById('manualBackupButton');
+    if(btn){btn.disabled=false;btn.textContent='今すぐバックアップ';}
   }
 }
-setInterval(runSurveyBackup, SURVEY_BACKUP_INTERVAL_MS);
+function runManualSurveyBackup(){return runSurveyBackup({manual:true});}
+setInterval(()=>runSurveyBackup(), SURVEY_BACKUP_INTERVAL_MS);
 </script>
 
 </body>
