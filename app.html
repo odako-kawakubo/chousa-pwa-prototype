@@ -1749,13 +1749,24 @@ window.MicrosoftPhotoUpload = {
     const projectFolderName = sanitizeSharePointFileName(no + '　' + name);
     const cached = projectFolderCache.get(projectFolderName);
     if (cached) return cached;
-    const root = await this.getUploadFolder();
-    setMicrosoftPill('案件フォルダ確認中', 'warn');
-    const projectFolder = await this.getOrCreateChildFolder(root.driveId, root.itemId, projectFolderName);
-    const visualFolder = await this.getOrCreateChildFolder(root.driveId, projectFolder.id, '目視');
-    const sampleFolder = await this.getOrCreateChildFolder(root.driveId, projectFolder.id, '採取');
-    const infoFolder = await this.getOrCreateChildFolder(root.driveId, projectFolder.id, '調査情報');
-    const result = {
+    let debugStage = '親フォルダ取得';
+    try {
+      window.__lastFolderDebug = {stage: debugStage, projectFolderName, startedAt: new Date().toISOString()};
+      const root = await this.getUploadFolder();
+      debugStage = '案件フォルダ作成';
+      window.__lastFolderDebug = {...window.__lastFolderDebug, stage: debugStage, root};
+      setMicrosoftPill('案件フォルダ確認中', 'warn');
+      const projectFolder = await this.getOrCreateChildFolder(root.driveId, root.itemId, projectFolderName);
+      debugStage = '目視フォルダ作成';
+      window.__lastFolderDebug = {...window.__lastFolderDebug, stage: debugStage, projectFolder};
+      const visualFolder = await this.getOrCreateChildFolder(root.driveId, projectFolder.id, '目視');
+      debugStage = '採取フォルダ作成';
+      window.__lastFolderDebug = {...window.__lastFolderDebug, stage: debugStage, visualFolder};
+      const sampleFolder = await this.getOrCreateChildFolder(root.driveId, projectFolder.id, '採取');
+      debugStage = '調査情報フォルダ作成';
+      window.__lastFolderDebug = {...window.__lastFolderDebug, stage: debugStage, sampleFolder};
+      const infoFolder = await this.getOrCreateChildFolder(root.driveId, projectFolder.id, '調査情報');
+      const result = {
       driveId: root.driveId,
       projectFolderId: projectFolder.id,
       projectFolderName,
@@ -1767,8 +1778,15 @@ window.MicrosoftPhotoUpload = {
     projectFolderCache.set(projectFolderName, result);
     meta.oneDrive = { ...(meta.oneDrive || {}), ...result };
     if (typeof scheduleStateSave === 'function') scheduleStateSave();
-    setMicrosoftPill('案件保存先OK', 'ok');
-    return result;
+      setMicrosoftPill('案件保存先OK', 'ok');
+      window.__lastFolderDebug = {...window.__lastFolderDebug, stage: '完了', result, finishedAt: new Date().toISOString()};
+      return result;
+    } catch (err) {
+      const detail = String(err && err.message ? err.message : err);
+      window.__lastFolderDebug = {...(window.__lastFolderDebug || {}), stage: debugStage, error: detail, failedAt: new Date().toISOString()};
+      setMicrosoftPill('フォルダ作成失敗: ' + debugStage, 'warn');
+      throw new Error(debugStage + 'で失敗しました。\n' + detail);
+    }
   },
   async uploadSurveyBackup(projectId){
     await this.login();
@@ -5130,8 +5148,16 @@ async function createMockProject(){
   persistenceEnabled=true; saveStateToStorage();
   try{
     const account=window.MicrosoftPhotoUpload?await window.MicrosoftPhotoUpload.getAccount():null;
-    if(account) await window.MicrosoftPhotoUpload.ensureProjectFolders(projectNo);
-  }catch(err){console.warn('案件フォルダ作成保留',err);}
+    if(!account){
+      alert('案件は作成しました。\nMicrosoftログインが確認できないため、OneDriveフォルダは未作成です。');
+      return;
+    }
+    const folders = await window.MicrosoftPhotoUpload.ensureProjectFolders(projectNo);
+    alert('OneDriveフォルダ作成成功\n' + folders.projectFolderName + '\n目視・採取・調査情報を確認しました。');
+  }catch(err){
+    console.error('案件フォルダ作成失敗',err,window.__lastFolderDebug);
+    alert('OneDriveフォルダ作成失敗\n\n' + (err && err.message ? err.message : err));
+  }
 }
 </script>
 
