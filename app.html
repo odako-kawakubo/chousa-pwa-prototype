@@ -1995,7 +1995,7 @@ window.FirebaseSync = {
     if (unsubscribeProjectState) unsubscribeProjectState();
     const ref = doc(db, 'projects', projectId, 'appState', 'main');
     unsubscribeProjectState = onSnapshot(ref, snap => {
-      if (snap.exists()) onState({ id: snap.id, ...snap.data() });
+      onState(snap.exists() ? { id: snap.id, ...snap.data() } : null, !snap.exists());
     }, err => {
       console.error(err);
       status('仕上表同期エラー: ' + err.message, 'warn');
@@ -2011,7 +2011,7 @@ window.FirebaseSync = {
   },
   async connectProjectRegistry(onProjects){
     if (unsubscribeProjectRegistry) unsubscribeProjectRegistry();
-    const colRef = collection(db, 'projectRegistry');
+    const colRef = collection(db, 'projects');
     unsubscribeProjectRegistry = onSnapshot(colRef, snap => {
       const rows = snap.docs.map(d => ({id:d.id, ...d.data()}));
       onProjects(rows);
@@ -2022,7 +2022,7 @@ window.FirebaseSync = {
   },
   async saveProjectRegistryRecord(projectNo, data){
     if (!projectNo) return;
-    const ref = doc(db, 'projectRegistry', String(projectNo));
+    const ref = doc(db, 'projects', String(projectNo));
     await setDoc(ref, {
       ...data,
       projectNo:String(projectNo),
@@ -2032,7 +2032,7 @@ window.FirebaseSync = {
   },
   async deleteProjectRegistryRecord(projectNo, data){
     if (!projectNo) return;
-    const ref = doc(db, 'projectRegistry', String(projectNo));
+    const ref = doc(db, 'projects', String(projectNo));
     await setDoc(ref, {
       ...(data||{}),
       projectNo:String(projectNo),
@@ -2045,7 +2045,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.7';
+const APP_VERSION='0.14.8';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -2088,7 +2088,8 @@ const appState={
   photoRecords:{},
   firebaseReady:false,
   applyingRemote:false,
-  bootstrappedProjects:{}
+  bootstrappedProjects:{},
+  initialSync:{projectId:'',materials:false,rooms:false,photos:false,projectState:false}
 };
 function getDeviceName(){
   while(!String(appState.deviceName||'').trim()){
@@ -2366,6 +2367,8 @@ function resetFirebaseProjectSession(projectId){
   appState.materialRecords={};
   appState.photoRecords={};
   appState.roomRecordsBootstrapped=false;
+  appState.initialSync={projectId:String(projectId||''),materials:false,rooms:false,photos:false,projectState:false};
+  appState.firebaseReady=false;
   appState.applyingRemote=false;
   clearTimeout(projectStateSaveTimer);
   clearTimeout(syncQueueClearTimer);
@@ -2380,10 +2383,16 @@ function connectFirebaseForActiveProject(){
   const run=()=>{
     if(!isCurrent())return;
     if(window.FirebaseSync){
-      window.FirebaseSync.connectMaterialRecords(projectId,(changes,isEmpty)=>{if(isCurrent())applyFirebaseMaterialRecords(changes,isEmpty);});
-      if(window.FirebaseSync.connectRoomRecords) window.FirebaseSync.connectRoomRecords(projectId,(changes,isEmpty)=>{if(isCurrent())applyFirebaseRoomRecords(changes,isEmpty);});
-      if(window.FirebaseSync.connectPhotos) window.FirebaseSync.connectPhotos(projectId,(changes,isEmpty)=>{if(isCurrent())applyFirebasePhotoRecords(changes,isEmpty);});
-      if(window.FirebaseSync.connectProjectState) window.FirebaseSync.connectProjectState(projectId,(remote)=>{if(isCurrent())applyFirebaseProjectState(remote);});
+      const markInitialSync=(key)=>{
+        if(!isCurrent())return;
+        appState.initialSync[key]=true;
+        appState.firebaseReady=['materials','rooms','photos','projectState'].every(k=>appState.initialSync[k]);
+        if(appState.firebaseReady)setFirebasePill('Firebase 初回同期完了','ok');
+      };
+      window.FirebaseSync.connectMaterialRecords(projectId,(changes,isEmpty)=>{if(isCurrent()){markInitialSync('materials');applyFirebaseMaterialRecords(changes,isEmpty);}});
+      if(window.FirebaseSync.connectRoomRecords) window.FirebaseSync.connectRoomRecords(projectId,(changes,isEmpty)=>{if(isCurrent()){markInitialSync('rooms');applyFirebaseRoomRecords(changes,isEmpty);}});
+      if(window.FirebaseSync.connectPhotos) window.FirebaseSync.connectPhotos(projectId,(changes,isEmpty)=>{if(isCurrent()){markInitialSync('photos');applyFirebasePhotoRecords(changes,isEmpty);}});
+      if(window.FirebaseSync.connectProjectState) window.FirebaseSync.connectProjectState(projectId,(remote)=>{if(isCurrent()){markInitialSync('projectState');if(remote)applyFirebaseProjectState(remote);}});
     }else{
       setTimeout(run,200);
     }
@@ -5416,7 +5425,7 @@ async function createMockProject(){
 </script>
 
 <script>
-/* v0.14.6 OneDrive survey backup: automatic + manual */
+/* v0.14.8 OneDrive survey backup: automatic + manual + sync safety */
 const SURVEY_BACKUP_INTERVAL_MS = 10 * 60 * 1000;
 let surveyBackupRunning = false;
 function setSurveyBackupUi(text,running=false){
@@ -5424,6 +5433,28 @@ function setSurveyBackupUi(text,running=false){
   const btn=document.getElementById('manualBackupButton');
   if(el && text)el.textContent=text;
   if(btn){btn.disabled=running;btn.textContent=running?'バックアップ中…':'今すぐバックアップ';}
+}
+function currentBackupCounts(){
+  const snapshot=projectStore[activeProjectId]||snapshotState();
+  return {
+    materials:(snapshot.materials||[]).filter(x=>x&&!x.deleted&&x.active!==false).length,
+    cells:Object.keys(snapshot.cells||{}).filter(k=>{const c=snapshot.cells[k];return c&&(c.text||c.materialId||c.id||c.name);}).length,
+    photos:(snapshot.photos||[]).filter(x=>x&&!x.deleted).length,
+    samples:(snapshot.samples||[]).filter(Boolean).length
+  };
+}
+function backupCountsTotal(c){return Number(c?.materials||0)+Number(c?.cells||0)+Number(c?.photos||0)+Number(c?.samples||0);}
+function backupSafetyCheck(){
+  const meta=getActiveProjectMeta();
+  const current=currentBackupCounts();
+  const previous=meta.lastBackupCounts||null;
+  if(!appState.firebaseReady || appState.initialSync?.projectId!==currentFirestoreProjectId()){
+    return {ok:false,reason:'Firestoreの初回同期が完了していません。',current,previous};
+  }
+  if(previous && backupCountsTotal(previous)>0 && backupCountsTotal(current)===0){
+    return {ok:false,reason:'前回はデータがありましたが、現在の取得件数が0件です。',current,previous};
+  }
+  return {ok:true,current,previous};
 }
 async function runSurveyBackup(options={}){
   const manual=options.manual===true;
@@ -5434,12 +5465,26 @@ async function runSurveyBackup(options={}){
   }
   const meta=getActiveProjectMeta();
   const previous=meta.lastBackup||'-';
+  const safety=backupSafetyCheck();
+  if(!safety.ok){
+    setSurveyBackupUi(previous,false);
+    if(manual){
+      const allow=confirm('安全確認でバックアップを停止しました。\n\n'+safety.reason+'\n\n同期完了を待つのが安全です。現在の状態で強制バックアップしますか？');
+      if(!allow)return false;
+    }else{
+      console.warn('自動バックアップ停止:',safety.reason,safety);
+      return false;
+    }
+  }
   try{
     const account=await window.MicrosoftPhotoUpload.getAccount();
     if(!account){if(manual)alert('Microsoftへログインしてください。');return false;}
     surveyBackupRunning=true;
     setSurveyBackupUi('バックアップ中…',true);
+    saveActiveProject();
     const completed=await window.MicrosoftPhotoUpload.uploadSurveyBackup(activeProjectId);
+    meta.lastBackupCounts=currentBackupCounts();
+    scheduleStateSave();
     setSurveyBackupUi(completed||previous,false);
     if(manual)alert('バックアップが完了しました。');
     return true;
