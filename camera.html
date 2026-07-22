@@ -6328,21 +6328,32 @@
   if(params.get('from')!=='chousa')return;
   window.addEventListener('load',()=>setTimeout(()=>{
     try{
+      let context={};
+      const raw=params.get('context')||'';
+      if(raw){try{context=JSON.parse(decodeURIComponent(raw));}catch(_){context={};}}
       const mode=params.get('cameraMode')==='sampling'?'sampling':'survey';
-      if(typeof setBoardMode==='function') setBoardMode(mode);
-      if(subjectText && params.get('subject')) subjectText.value=params.get('subject');
-      if(addressText && params.get('address')) addressText.value=params.get('address');
-      if(roomNoInput && params.get('roomNo')) roomNoInput.value=params.get('roomNo');
-      if(sampleNoInput && params.get('sampleNo')) sampleNoInput.value=params.get('sampleNo');
-      const stage=params.get('stage');
-      if(stage){
+      // 調査システム起動時は、前回撮影の場所・試料・区分を引き継がない。
+      // 件名と住所だけは現在の案件情報を毎回使用する。
+      if(typeof setBoardMode==='function')setBoardMode(mode); else boardMode=mode;
+      if(subjectText)subjectText.value=params.get('subject')||'';
+      if(addressText)addressText.value=params.get('address')||'';
+      if(mode==='sampling'){
+        if(roomNoInput)roomNoInput.value=params.get('roomNo')||context.roomNo||'';
+        if(sampleNoInput)sampleNoInput.value=params.get('sampleNo')||context.sampleNo||POINT_DISPLAY_DEFAULT;
+        const stage=params.get('stage')||context.stage||'採取前';
         const button=[...document.querySelectorAll('[data-photo-type]')].find(b=>b.textContent.trim()===stage);
         if(button)button.click();
+      }else{
+        if(roomNoInput)roomNoInput.value=params.get('roomNo')||context.roomNo||'';
+        if(sampleNoInput)sampleNoInput.value='';
+        if(typeof setStatus==='function')setStatus('visual');
       }
-      if(typeof saveBoardForm==='function')saveBoardForm();
+      if(typeof applyBoardMode==='function')applyBoardMode();
+      if(typeof syncBoardTextareas==='function')syncBoardTextareas();
       if(typeof renderBoardPreview==='function')renderBoardPreview();
+      // 案件情報を次回の単体起動へ持ち越さないため、統合起動時は保存しない。
     }catch(e){console.warn('調査システム初期値の反映に失敗',e)}
-  },200));
+  },220));
 })();
 </script>
 <script>
