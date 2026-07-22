@@ -1537,6 +1537,7 @@ let unsubscribeMaterialRecords = null;
 let unsubscribePhotos = null;
 let unsubscribeProjectState = null;
 let unsubscribeRoomRecords = null;
+let unsubscribeProjectRegistry = null;
 
 function status(message, cls){
   if (window.onFirebaseStatus) window.onFirebaseStatus(message, cls || '');
@@ -2007,12 +2008,44 @@ window.FirebaseSync = {
       ...data,
       updatedAt: serverTimestamp()
     }, { merge: true });
+  },
+  async connectProjectRegistry(onProjects){
+    if (unsubscribeProjectRegistry) unsubscribeProjectRegistry();
+    const colRef = collection(db, 'projectRegistry');
+    unsubscribeProjectRegistry = onSnapshot(colRef, snap => {
+      const rows = snap.docs.map(d => ({id:d.id, ...d.data()}));
+      onProjects(rows);
+    }, err => {
+      console.error(err);
+      status('案件一覧同期エラー: ' + err.message, 'warn');
+    });
+  },
+  async saveProjectRegistryRecord(projectNo, data){
+    if (!projectNo) return;
+    const ref = doc(db, 'projectRegistry', String(projectNo));
+    await setDoc(ref, {
+      ...data,
+      projectNo:String(projectNo),
+      deleted:false,
+      updatedAt:serverTimestamp()
+    }, {merge:true});
+  },
+  async deleteProjectRegistryRecord(projectNo, data){
+    if (!projectNo) return;
+    const ref = doc(db, 'projectRegistry', String(projectNo));
+    await setDoc(ref, {
+      ...(data||{}),
+      projectNo:String(projectNo),
+      deleted:true,
+      deletedAt:serverTimestamp(),
+      updatedAt:serverTimestamp()
+    }, {merge:true});
   }
 };
 </script>
 
 <script>
-const APP_VERSION='0.14.6';
+const APP_VERSION='0.14.7';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -3572,6 +3605,53 @@ function resetStateForBlankProject(){
 }
 function saveActiveProject(){projectStore[activeProjectId]=snapshotState()}
 function loadProject(id){if(projectStore[id])restoreState(projectStore[id])}
+function localProjectIdByNo(projectNo){
+  return Object.keys(projectMeta).find(id=>String(projectMeta[id]?.no||'')===String(projectNo||''))||'';
+}
+function registryProjectPayload(id){
+  const m=projectMeta[id]||{};
+  return {projectNo:String(m.no||''),name:String(m.name||''),address:String(m.address||''),sub:String(m.sub||''),updatedBy:getDeviceName(),appVersion:APP_VERSION};
+}
+async function registerProjectInFirebase(id){
+  if(!window.FirebaseSync?.saveProjectRegistryRecord || !projectMeta[id]?.no)return;
+  await window.FirebaseSync.saveProjectRegistryRecord(projectMeta[id].no,registryProjectPayload(id));
+}
+async function syncLocalProjectsToRegistry(){
+  if(!window.FirebaseSync?.saveProjectRegistryRecord)return;
+  const ids=Object.keys(projectMeta).filter(id=>!['odk','blank'].includes(id) && projectMeta[id]?.no);
+  for(const id of ids){
+    try{await registerProjectInFirebase(id);}catch(err){console.warn('案件一覧登録失敗',id,err);}
+  }
+}
+function blankProjectSnapshot(){
+  if(projectStore.blank)return cloneData(projectStore.blank);
+  const current=snapshotState();
+  return {...current,cells:{},materials:[],photos:[],samples:[],queue:[]};
+}
+function applyProjectRegistry(rows){
+  let changed=false;
+  for(const row of (rows||[])){
+    const no=String(row.projectNo||row.id||'').trim();
+    if(!no)continue;
+    const existingId=localProjectIdByNo(no);
+    if(row.deleted){
+      if(existingId && existingId!==activeProjectId){delete projectMeta[existingId];delete projectStore[existingId];changed=true;}
+      continue;
+    }
+    const id=existingId||('remote_'+no.replace(/[^A-Za-z0-9_-]/g,'_'));
+    if(!projectMeta[id]){projectStore[id]=blankProjectSnapshot();changed=true;}
+    const next={no,name:String(row.name||'無題案件'),address:String(row.address||''),sub:String(row.sub||row.address||'')};
+    const before=JSON.stringify(projectMeta[id]||{});
+    projectMeta[id]={...(projectMeta[id]||{}),...next};
+    if(before!==JSON.stringify(projectMeta[id]))changed=true;
+  }
+  if(changed){persistenceEnabled=true;saveStateToStorage();renderProjectList();}
+}
+function connectProjectRegistry(){
+  if(!window.FirebaseSync?.connectProjectRegistry)return;
+  window.FirebaseSync.connectProjectRegistry(applyProjectRegistry);
+  setTimeout(syncLocalProjectsToRegistry,0);
+}
 function renderProjectList(){
   const header=document.getElementById('caseHeaderTitle');
   const meta=projectMeta[activeProjectId];
@@ -3595,6 +3675,9 @@ function deleteProject(id){
 端末内の案件データは削除されます。OneDriveの案件フォルダとFirebase上のデータは削除しません。`))return;
 
   const wasActive=id===activeProjectId;
+  if(window.FirebaseSync?.deleteProjectRegistryRecord){
+    window.FirebaseSync.deleteProjectRegistryRecord(meta.no,{name:meta.name||'',address:meta.address||'',updatedBy:getDeviceName(),appVersion:APP_VERSION}).catch(err=>console.warn('案件一覧削除同期失敗',err));
+  }
   delete projectStore[id];
   delete projectMeta[id];
 
@@ -4979,7 +5062,7 @@ function renderSamplePointBlock(point){const counts=sampleStageCounts(point),nex
   wrap('switchProject',function(){connectFirebaseForActiveProject();});
   window.syncNow=function(){if(!online)return alert('オフラインです。通信復帰後に同期します。');saveAllMaterialRecordsToFirebase('手動同期');saveAllRoomRecordsToFirebase('手動同期');retryPendingIntegratedPhotos();state.queue=[];renderAll();alert('差分同期処理を開始しました。');};
 })();
-initProjects(); persistenceEnabled=true; applyAppVersionDisplay(); renderAll(); connectFirebaseForActiveProject(); setTimeout(loadIntegratedPhotoRecords,0);
+initProjects(); persistenceEnabled=true; applyAppVersionDisplay(); renderAll(); connectProjectRegistry(); connectFirebaseForActiveProject(); setTimeout(loadIntegratedPhotoRecords,0);
 
 window.addEventListener('load',()=>{
   const requestedTab=new URLSearchParams(location.search).get('tab');
@@ -5314,6 +5397,7 @@ async function createMockProject(){
   undoStack=[];redoStack=[];selectedMaterialId=null;
   renderProjectList();renderAll();closeProjectSide();
   persistenceEnabled=true; saveStateToStorage();
+  try{await registerProjectInFirebase(id);}catch(err){console.warn('案件一覧登録失敗',err);}
   // 新規案件へ即時にFirebase接続を切り替え、旧案件の監視結果が混入しないようにする
   connectFirebaseForActiveProject();
   try{
