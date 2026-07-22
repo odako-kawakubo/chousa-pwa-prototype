@@ -2234,6 +2234,64 @@
     #boardEditHost .inner-table tr:nth-child(2) { height: 34.6939%; }
     #boardEditHost .inner-table tr:nth-child(3) { height: 30.6122%; }
 
+  
+
+    /* v62 mock: 目視の部位操作は看板外、看板内は文字表示のみ */
+    .visual-part-row { display: none; }
+    body:not(.sampling-mode) .visual-part-row { display: table-row; }
+    body:not(.sampling-mode) .sampling-sample-row { display: none; }
+    body.sampling-mode .visual-part-row { display: none; }
+    body.sampling-mode .sampling-sample-row { display: table-row; }
+
+    .visual-area-display,
+    .visual-part-display {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      background: #fff;
+      font-family: inherit;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .visual-area-display { display: none !important; }
+    .visual-part-display { font-size: clamp(20px, 3.4vw, 36px); }
+    .visual-part-full-cell {
+      padding: 0 !important;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .visual-part-full-cell .visual-part-display {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .visual-control-stack {
+      width: 48px;
+      display: grid;
+      grid-template-rows: 34px 30px 38px 30px;
+      gap: 4px;
+      justify-items: center;
+      align-items: center;
+    }
+    .visual-control-stack .panel-center-button,
+    .visual-control-stack .panel-mini-button { width: 48px; }
+    .visual-control-stack .visual-area-button { height: 34px; font-size: 13px; }
+    .visual-control-stack .visual-part-button { height: 38px; font-size: 15px; }
+
   </style>
 </head>
 
@@ -2248,7 +2306,7 @@
       <div class="board-control-panel" aria-label="撮影補助操作">
         <div id="panelMainList" class="panel-main-list">
           <button id="panelRoomButton" class="panel-main-button" type="button" onclick="openSidePanel('room')">部屋</button>
-          <button id="panelSampleButton" class="panel-main-button" type="button" onclick="openSidePanel('sample')">検体</button>
+          <button id="panelSampleButton" class="panel-main-button" type="button" onclick="openSidePanel('sample')">部位</button>
           <button id="panelBoardButton" class="panel-main-button" type="button" onclick="openSidePanel('board')">看板</button>
         </div>
 
@@ -2276,7 +2334,13 @@
         </div>
 
         <div id="samplePanel" class="panel-expanded">
-          <div class="panel-pair">
+          <div class="visual-control-stack survey-only" aria-label="目視部位操作">
+            <button id="visualAreaToggle" class="panel-center-button visual-area-button" type="button">内部</button>
+            <button id="visualPartUp" class="panel-mini-button" type="button" aria-label="前の部位">▲</button>
+            <button id="visualPartValue" class="panel-center-button visual-part-button" type="button">壁</button>
+            <button id="visualPartDown" class="panel-mini-button" type="button" aria-label="次の部位">▼</button>
+          </div>
+          <div class="panel-pair sampling-only">
             <div class="panel-vertical" aria-label="検体操作">
               <button class="panel-mini-button" type="button" onclick="changeSampleNo(1)">▲</button>
               <button class="panel-center-button" type="button" onclick="promptSampleNo()">検体</button>
@@ -2345,11 +2409,15 @@
                     </td>
                   </tr>
 
-                  <tr>
+                  <tr class="sampling-sample-row">
                     <td class="inner-label">　試料No.</td>
                     <td class="inner-value">
                       <input id="sampleNoInput" class="board-input" type="text" inputmode="text" />
                     </td>
+                  </tr>
+
+                  <tr class="visual-part-row">
+                    <td colspan="2" class="inner-value visual-part-full-cell"><div id="visualPartDisplay" class="visual-part-display">壁</div></td>
                   </tr>
 
                   <tr>
@@ -2370,6 +2438,7 @@
                         <button class="status-btn" type="button" data-value="after">
                           <span class="status-box">□</span><span>施工後</span>
                         </button>
+
                       </div>
                     </td>
                   </tr>
@@ -2503,7 +2572,7 @@
 
       <div class="settings-section-title">🔄 アプリ更新</div>
       <div class="settings-version-box">
-        現在：<strong id="settingsVersionText">v61</strong>
+        現在：<strong id="settingsVersionText">v62</strong>
       </div>
       <button class="settings-update-button" type="button" onclick="forceAppUpdate()">最新版を読み込み直す</button>
 
@@ -2598,7 +2667,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "v61";
+    const APP_VERSION = "v62";
 
     const APP_DATA = {
       subject: "テストビル解体に伴うアスベスト調査",
@@ -2667,6 +2736,12 @@
     const addressText = document.getElementById("addressText");
     const roomNoInput = document.getElementById("roomNoInput");
     const sampleNoInput = document.getElementById("sampleNoInput");
+    const visualAreaToggle = document.getElementById("visualAreaToggle");
+    const visualPartUp = document.getElementById("visualPartUp");
+    const visualPartDown = document.getElementById("visualPartDown");
+    const visualPartValue = document.getElementById("visualPartValue");
+    const visualAreaDisplay = document.getElementById("visualAreaDisplay");
+    const visualPartDisplay = document.getElementById("visualPartDisplay");
     const dateText = document.getElementById("dateText");
 
     const startButton = document.getElementById("startButton");
@@ -2737,6 +2812,23 @@
     let boardMode = "survey";
     let activeSidePanel = null;
     let isDateManuallyEdited = false;
+    const VISUAL_PART_CANDIDATES = {
+      "内部": ["床", "巾木", "壁", "天井", "その他"],
+      "外部": ["外壁", "屋根", "軒裏", "床（大走）", "その他"]
+    };
+    let visualAreaType = "内部";
+    const visualPartIndexByArea = { "内部": 2, "外部": 0 };
+
+    function getVisualPartCandidates(area = visualAreaType) {
+      return VISUAL_PART_CANDIDATES[area] || VISUAL_PART_CANDIDATES["内部"];
+    }
+
+    function getCurrentVisualPart() {
+      const candidates = getVisualPartCandidates();
+      const index = Math.max(0, Math.min(candidates.length - 1, visualPartIndexByArea[visualAreaType] || 0));
+      visualPartIndexByArea[visualAreaType] = index;
+      return candidates[index] || "その他";
+    }
 
     const BOARD_POSITIONS = ["bottom-left", "bottom-right", "top-right", "top-left"];
     const BOARD_POSITION_LABELS = {
@@ -2909,6 +3001,52 @@
       showToast(boardMode === "sampling" ? "サンプリング看板" : "調査看板");
     }
 
+    function updateVisualPartControl() {
+      const part = getCurrentVisualPart();
+      if (visualAreaToggle) visualAreaToggle.textContent = visualAreaType;
+      if (visualPartValue) visualPartValue.textContent = part;
+      if (visualPartDisplay) visualPartDisplay.textContent = part;
+      if (boardEditDraft && boardEditDraft.boardMode === "survey") {
+        boardEditDraft.visualArea = visualAreaType;
+        boardEditDraft.visualPart = part;
+        scheduleBoardEditCanvasRender();
+      }
+    }
+
+    function changeVisualPart(delta) {
+      const candidates = getVisualPartCandidates();
+      const count = candidates.length;
+      const currentIndex = visualPartIndexByArea[visualAreaType] || 0;
+      visualPartIndexByArea[visualAreaType] = (currentIndex + delta + count) % count;
+      updateVisualPartControl();
+      scheduleBoardPreviewRender();
+      showToast(`部位：${getCurrentVisualPart()}`);
+    }
+
+    function toggleVisualAreaType() {
+      visualAreaType = visualAreaType === "内部" ? "外部" : "内部";
+      updateVisualPartControl();
+      scheduleBoardPreviewRender();
+      showToast(`${visualAreaType}：${getCurrentVisualPart()}`);
+    }
+
+    function promptVisualPart() {
+      const candidates = getVisualPartCandidates();
+      const current = getCurrentVisualPart();
+      const next = window.prompt("部位を入力してください", current);
+      if (next == null) return;
+      const value = next.trim();
+      if (!value) return;
+      let found = candidates.indexOf(value);
+      if (found < 0) {
+        candidates.push(value);
+        found = candidates.length - 1;
+      }
+      visualPartIndexByArea[visualAreaType] = found;
+      updateVisualPartControl();
+      scheduleBoardPreviewRender();
+    }
+
     function applyBoardMode() {
       const isSampling = boardMode === "sampling";
       document.body.classList.toggle("sampling-mode", isSampling);
@@ -2925,13 +3063,14 @@
         boardEditModeBadge.classList.toggle("mode-sampling", isSampling);
       }
       updateCategoryToggleButton();
+      updateVisualPartControl();
 
       if (roomLabelCell) {
-        roomLabelCell.textContent = isSampling ? "" : "　部屋No.";
+        roomLabelCell.textContent = isSampling ? "　採取箇所" : "　部屋No.";
       }
 
       if (roomValueCell) {
-        roomValueCell.colSpan = isSampling ? 2 : 1;
+        roomValueCell.colSpan = 1;
       }
 
       if (roomNoInput) {
@@ -2947,7 +3086,8 @@
       saveBoardForm();
 
       if (visualStatusButton) {
-        visualStatusButton.style.display = isSampling ? "none" : "inline-flex";
+        // 区分欄は目視・採取を問わず4項目を常時表示する。
+        visualStatusButton.style.display = "inline-flex";
       }
 
       if (isSampling && selectedStatus === "visual") {
@@ -3260,9 +3400,8 @@
     }
 
     function getActiveStatusList() {
-      return boardMode === "sampling"
-        ? STATUS_LIST.filter((item) => item.value !== "visual")
-        : STATUS_LIST;
+      // 看板内の区分欄は、目視・採取どちらでも常に4項目を表示する。
+      return STATUS_LIST;
     }
 
     function setupStatusButtons() {
@@ -3275,8 +3414,23 @@
       });
     }
 
+    if (visualAreaToggle) visualAreaToggle.addEventListener("click", toggleVisualAreaType);
+    if (visualPartUp) visualPartUp.addEventListener("click", () => changeVisualPart(-1));
+    if (visualPartDown) visualPartDown.addEventListener("click", () => changeVisualPart(1));
+    if (visualPartValue) visualPartValue.addEventListener("click", promptVisualPart);
+
     function setStatus(value) {
       selectedStatus = value;
+
+      // 区分の選択に合わせて、看板の内容行も目視用／採取用へ切り替える。
+      // 目視：部屋No.＋部位、施工前・中・後：採取箇所＋試料No.。
+      const nextBoardMode = value === "visual" ? "survey" : "sampling";
+      if (boardMode !== nextBoardMode) {
+        boardMode = nextBoardMode;
+        applyBoardMode();
+      }
+
+      // 断面は看板のチェック欄には出さず、外側の「断面」ボタンで切り替える。
       setSectionMode(false);
 
       statusButtons.forEach((button) => {
@@ -3437,6 +3591,8 @@
         address: addressText ? addressText.value || "" : "",
         roomNo: roomNoInput ? roomNoInput.value || "" : "",
         sampleNo: sampleNoInput ? sampleNoInput.value || "" : "",
+        visualPart: getCurrentVisualPart(),
+        visualArea: visualAreaType,
         date: dateText ? dateText.textContent || "" : "",
         status: selectedStatus,
         boardMode,
@@ -3452,6 +3608,9 @@
       boardEditSample.value = data.sampleNo || "";
       boardEditDate.value = data.date || "";
       boardEditModeSelect.value = data.boardMode === "sampling" ? "sampling" : "survey";
+      if (!boardEditDraft) boardEditDraft = { ...data };
+      boardEditDraft.visualArea = data.visualArea || visualAreaType;
+      boardEditDraft.visualPart = data.visualPart || getCurrentVisualPart();
       renderBoardEditStatusOptions(data.status);
       updateBoardEditModeLabels();
     }
@@ -3465,6 +3624,13 @@
       boardEditDraft.date = boardEditDate.value || "";
       boardEditDraft.status = boardEditStatus.value || "visual";
       boardEditDraft.boardMode = boardEditModeSelect.value === "sampling" ? "sampling" : "survey";
+      if (boardEditDraft.boardMode === "survey") {
+        boardEditDraft.status = "visual";
+        boardEditDraft.visualArea = visualAreaType;
+        boardEditDraft.visualPart = getCurrentVisualPart();
+      } else if (boardEditDraft.status === "visual") {
+        boardEditDraft.status = "before";
+      }
       return boardEditDraft;
     }
 
@@ -3476,8 +3642,18 @@
       sampleNoInput.value = data.sampleNo;
       dateText.textContent = data.date;
       Object.assign(boardFieldTextSize, data.fieldTextSize || {});
+      if (data.visualArea) visualAreaType = data.visualArea;
+      if (data.visualPart) {
+        const candidates = getVisualPartCandidates(visualAreaType);
+        let index = candidates.indexOf(data.visualPart);
+        if (index < 0) {
+          candidates.push(data.visualPart);
+          index = candidates.length - 1;
+        }
+        visualPartIndexByArea[visualAreaType] = index;
+      }
       boardMode = data.boardMode;
-      selectedStatus = data.status;
+      selectedStatus = boardMode === "survey" ? "visual" : (data.status === "visual" ? "before" : data.status);
       saveBoardFieldTextSizes();
       applyBoardMode();
       setStatus(selectedStatus);
@@ -3487,7 +3663,7 @@
 
     function renderBoardEditStatusOptions(value) {
       const mode = boardEditModeSelect && boardEditModeSelect.value === "sampling" ? "sampling" : "survey";
-      const list = mode === "sampling" ? [STATUS_LIST[1], STATUS_LIST[2], STATUS_LIST[3]] : STATUS_LIST;
+      const list = mode === "sampling" ? [STATUS_LIST[1], STATUS_LIST[2], STATUS_LIST[3]] : [STATUS_LIST[0]];
       boardEditStatus.innerHTML = list.map(item => `<option value="${item.value}">${item.label}</option>`).join("");
       const next = list.some(item => item.value === value) ? value : list[0].value;
       boardEditStatus.value = next;
@@ -3549,6 +3725,11 @@
         const syncDraftFromControl = () => {
           readBoardEditForm();
           if (control === boardEditModeSelect) {
+            const sampling = boardEditModeSelect.value === "sampling";
+            boardEditDraft.boardMode = sampling ? "sampling" : "survey";
+            boardEditDraft.status = sampling
+              ? (boardEditDraft.status === "visual" ? "before" : boardEditDraft.status)
+              : "visual";
             renderBoardEditStatusOptions(boardEditDraft.status);
             updateBoardEditModeLabels();
             selectBoardEditField(boardEditSelectedField);
@@ -5790,6 +5971,8 @@
         address: source.address || "",
         roomNo: String(source.roomNo || "").trim(),
         sampleNo: String(source.sampleNo || "").trim(),
+        visualPart: String(source.visualPart || getCurrentVisualPart() || "").trim(),
+        visualArea: String(source.visualArea || visualAreaType || "内部").trim(),
         date: source.date || "",
         status: source.status || selectedStatus,
         roomLabel: activeBoardMode === "sampling" ? "" : "　部屋No."
@@ -5879,15 +6062,18 @@
       drawWrappedCenterText(ctx, data.subject, x + leftColW + 6, y, rightW - 12, row1H, titleFont, 1.25, 2);
       drawWrappedCenterText(ctx, data.address, x + leftColW + 6, y + row1H, rightW - 12, row2H, addressFont, 1.2, 2);
 
-      if (activeBoardMode === "sampling") {
-        drawCenteredText(ctx, data.roomNo, x + leftColW + 10, contentY, rightW - 20, roomRowH, innerValueFont);
-      } else {
-        drawLeftMiddleText(ctx, data.roomLabel, x + leftColW + 8, contentY, innerLabelW - 8, roomRowH, innerLabelFont);
-        drawLeftMiddleText(ctx, data.roomNo, x + leftColW + innerLabelW, contentY, rightW - innerLabelW, roomRowH, innerValueFont);
-      }
+      // 目視は「部屋No.」、採取は「採取箇所」。どちらも同じ2セル構造で描画する。
+      const firstRowLabel = activeBoardMode === "sampling" ? "　採取箇所" : data.roomLabel;
+      drawLeftMiddleText(ctx, firstRowLabel, x + leftColW + 8, contentY, innerLabelW - 8, roomRowH, innerLabelFont);
+      drawLeftMiddleText(ctx, data.roomNo, x + leftColW + innerLabelW, contentY, rightW - innerLabelW, roomRowH, innerValueFont);
 
-      drawLeftMiddleText(ctx, "　試料No.", x + leftColW + 8, contentY + roomRowH, innerLabelW - 8, sampleRowH, innerLabelFont);
-      drawLeftMiddleText(ctx, data.sampleNo, x + leftColW + innerLabelW, contentY + roomRowH, rightW - innerLabelW, sampleRowH, sampleValueFont);
+      if (activeBoardMode === "sampling") {
+        drawLeftMiddleText(ctx, "　試料No.", x + leftColW + 8, contentY + roomRowH, innerLabelW - 8, sampleRowH, innerLabelFont);
+        drawLeftMiddleText(ctx, data.sampleNo, x + leftColW + innerLabelW, contentY + roomRowH, rightW - innerLabelW, sampleRowH, sampleValueFont);
+      } else {
+        // 目視時は試料No.を表示せず、同じ1セル全体に部位だけを中央表示する。
+        drawCenteredText(ctx, data.visualPart, x + leftColW + 8, contentY + roomRowH, rightW - 16, sampleRowH, sampleValueFont);
+      }
 
       const statusStartX = x + leftColW + 3;
       const statusWidth = rightW - 6;
@@ -6328,32 +6514,31 @@
   if(params.get('from')!=='chousa')return;
   window.addEventListener('load',()=>setTimeout(()=>{
     try{
-      let context={};
-      const raw=params.get('context')||'';
-      if(raw){try{context=JSON.parse(decodeURIComponent(raw));}catch(_){context={};}}
       const mode=params.get('cameraMode')==='sampling'?'sampling':'survey';
-      // 調査システム起動時は、前回撮影の場所・試料・区分を引き継がない。
-      // 件名と住所だけは現在の案件情報を毎回使用する。
-      if(typeof setBoardMode==='function')setBoardMode(mode); else boardMode=mode;
-      if(subjectText)subjectText.value=params.get('subject')||'';
-      if(addressText)addressText.value=params.get('address')||'';
-      if(mode==='sampling'){
-        if(roomNoInput)roomNoInput.value=params.get('roomNo')||context.roomNo||'';
-        if(sampleNoInput)sampleNoInput.value=params.get('sampleNo')||context.sampleNo||POINT_DISPLAY_DEFAULT;
-        const stage=params.get('stage')||context.stage||'採取前';
+      if(typeof setBoardMode==='function') setBoardMode(mode);
+      if(subjectText && params.get('subject')) subjectText.value=params.get('subject');
+      if(addressText && params.get('address')) addressText.value=params.get('address');
+      if(roomNoInput && params.get('roomNo')) roomNoInput.value=params.get('roomNo');
+      if(sampleNoInput && params.get('sampleNo')) sampleNoInput.value=params.get('sampleNo');
+      const incomingArea=params.get('areaType') || params.get('area');
+      if(incomingArea) visualAreaType = /外/.test(incomingArea) ? '外部' : '内部';
+      const incomingPart=params.get('part');
+      if(incomingPart){
+        const candidates=getVisualPartCandidates(visualAreaType);
+        let idx=candidates.indexOf(incomingPart);
+        if(idx<0){ candidates.push(incomingPart); idx=candidates.length-1; }
+        visualPartIndexByArea[visualAreaType]=idx;
+      }
+      if(typeof updateVisualPartControl==='function') updateVisualPartControl();
+      const stage=params.get('stage');
+      if(stage){
         const button=[...document.querySelectorAll('[data-photo-type]')].find(b=>b.textContent.trim()===stage);
         if(button)button.click();
-      }else{
-        if(roomNoInput)roomNoInput.value=params.get('roomNo')||context.roomNo||'';
-        if(sampleNoInput)sampleNoInput.value='';
-        if(typeof setStatus==='function')setStatus('visual');
       }
-      if(typeof applyBoardMode==='function')applyBoardMode();
-      if(typeof syncBoardTextareas==='function')syncBoardTextareas();
+      if(typeof saveBoardForm==='function')saveBoardForm();
       if(typeof renderBoardPreview==='function')renderBoardPreview();
-      // 案件情報を次回の単体起動へ持ち越さないため、統合起動時は保存しない。
     }catch(e){console.warn('調査システム初期値の反映に失敗',e)}
-  },220));
+  },200));
 })();
 </script>
 <script>
