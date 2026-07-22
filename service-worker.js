@@ -1,4 +1,4 @@
-const CACHE_NAME = "chousa-system-v0.14.4";
+const CACHE_NAME = "chousa-system-v0.14.5";
 const APP_FILES = [
   "./index.html",
   "./app.html",

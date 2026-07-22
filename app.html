@@ -2012,7 +2012,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.4';
+const APP_VERSION='0.14.5';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -5011,6 +5011,8 @@ function openIntegratedCamera(context){
   if(integratedCameraContext.roomNo)p.set('roomNo',integratedCameraContext.roomNo);
   if(integratedCameraContext.sampleNo)p.set('sampleNo',integratedCameraContext.sampleNo);
   if(integratedCameraContext.stage)p.set('stage',integratedCameraContext.stage);
+  if(integratedCameraContext.areaType||integratedCameraContext.area)p.set('areaType',integratedCameraContext.areaType||integratedCameraContext.area);
+  if(integratedCameraContext.targetPart)p.set('part',integratedCameraContext.targetPart);
   p.set('context',encodeURIComponent(JSON.stringify(integratedCameraContext)));
   const frame=document.getElementById('integratedCameraFrame');
   const overlay=document.getElementById('integratedCameraOverlay');
@@ -5035,7 +5037,7 @@ function launchVisualPartCamera(key){
   const t=visualTargetByKey(activeVisualPhotoTargetKey);
   const room=findRoom((t&&t.roomId)||activePhotoRoom)||{};
   const first=(t&&t.materials&&t.materials[0])||{};
-  openIntegratedCamera({photoMode:'visual',targetKey:t&&t.key||key,roomId:room.id||'',roomNo:room.no||'',roomName:room.name||'',targetPart:t&&t.partLabel||'',materialId:first.materialId||'',materialName:first.materialName||'',inputId:first.inputId||''});
+  openIntegratedCamera({photoMode:'visual',targetKey:t&&t.key||key,roomId:room.id||'',roomNo:room.no||'',roomName:room.name||'',areaType:(t&&t.area)||roomArea(room.id||''),targetPart:t&&t.partLabel||'',materialId:first.materialId||'',materialName:first.materialName||'',inputId:first.inputId||''});
 }
 function launchSamplePointCamera(pointKey,stage){
   activeSamplePointKey=pointKey||activeSamplePointKey;
@@ -5083,18 +5085,69 @@ async function retryPendingIntegratedPhotos(){
   renderPhotos({preserveScroll:true}); renderSync();
 }
 
+function normalizeCameraSampleStage(stage){
+  const value=String(stage||'').trim();
+  const map={'施工前':'採取前','施工中':'採取中','施工後':'採取後','採取前':'採取前','採取中':'採取中','採取後':'採取後','断面':'断面'};
+  return map[value]||value;
+}
+function findRoomFromBoard(board,baseContext){
+  const raw=String((board&&board.roomNo)||(baseContext&&baseContext.roomNo)||'').trim();
+  if(!raw)return findRoom((baseContext&&baseContext.roomId)||'')||null;
+  return allRooms().find(r=>String(r.no||'').trim()===raw || String(r.name||'').trim()===raw || `${String(r.no||'').trim()} ${String(r.name||'').trim()}`.trim()===raw)
+    || findRoom((baseContext&&baseContext.roomId)||'') || null;
+}
+function resolveVisualBoardTarget(board,baseContext){
+  const room=findRoomFromBoard(board,baseContext);
+  const part=String((board&&board.visualPart)||(baseContext&&baseContext.targetPart)||'').trim();
+  if(!room)return {...(baseContext||{}),roomNo:String((board&&board.roomNo)||(baseContext&&baseContext.roomNo)||'').trim(),targetPart:part};
+  const targets=getRoomVisualTargets(room.id);
+  const target=targets.find(t=>String(t.partLabel||'').trim()===part) || targets.find(t=>String(t.part||'').trim()===part) || null;
+  const first=(target&&target.materials&&target.materials[0])||{};
+  return {
+    ...(baseContext||{}),
+    roomId:room.id||'',roomNo:room.no||'',roomName:room.name||'',
+    areaType:(board&&board.visualArea)||roomArea(room.id),
+    targetKey:(target&&target.key)||'',targetPart:part||((target&&target.partLabel)||''),
+    materialId:first.materialId||((target&&target.materialId)||''),
+    materialName:first.materialName||((target&&target.materialName)||''),
+    inputId:first.inputId||''
+  };
+}
+function resolveSampleBoardPoint(board,baseContext){
+  const sampleNo=String((board&&board.sampleNo)||(baseContext&&baseContext.sampleNo)||'').trim();
+  const place=String((board&&board.roomNo)||(baseContext&&baseContext.roomNo)||'').trim();
+  let found=null;
+  for(const group of sampleMaterialList()){
+    found=(group.points||[]).find(point=>String(point.sampleNo||'').trim()===sampleNo && (!place || String(point.place||'').trim()===place));
+    if(found)break;
+  }
+  if(!found){
+    for(const group of sampleMaterialList()){
+      found=(group.points||[]).find(point=>String(point.sampleNo||'').trim()===sampleNo);
+      if(found)break;
+    }
+  }
+  if(!found)return {...(baseContext||{}),sampleNo,roomNo:place};
+  return {
+    ...(baseContext||{}),samplePointKey:found.key||'',materialId:found.materialId||'',sampleIndex:Number(found.index||0),
+    materialName:(found.material&&found.material.name)||'',sampleNo:found.sampleNo||sampleNo,roomNo:found.place||place,targetPart:found.part||''
+  };
+}
 function integratedBoardContext(baseContext,photo){
   const board=(photo&&photo.boardData)||{};
   const isSample=(baseContext&&baseContext.photoMode)==='sample' || board.boardMode==='sampling';
-  const merged={...(baseContext||{})};
+  let merged=isSample ? resolveSampleBoardPoint(board,baseContext||{}) : resolveVisualBoardTarget(board,baseContext||{});
   merged.photoMode=isSample?'sample':'visual';
   merged.kind=merged.photoMode;
-  merged.roomNo=String(board.roomNo||merged.roomNo||'').trim();
   if(isSample){
     merged.sampleNo=String(board.sampleNo||merged.sampleNo||'').trim();
-    merged.stage=photo.statusLabel||merged.stage||'';
+    merged.roomNo=String(board.roomNo||merged.roomNo||'').trim();
+    merged.stage=normalizeCameraSampleStage((photo&&photo.statusLabel)||merged.stage||'');
     merged.sampleStage=merged.stage;
   }else{
+    merged.roomNo=String(board.roomNo||merged.roomNo||'').trim();
+    merged.targetPart=String(board.visualPart||merged.targetPart||'').trim();
+    merged.areaType=String(board.visualArea||merged.areaType||'').trim();
     merged.sampleNo='';
     merged.stage='目視';
     merged.sampleStage='';
