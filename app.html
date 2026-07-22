@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA v0.14.4</title>
+<title>調査システムPWA v0.14.10</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer;position:relative;padding-right:46px}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.project-delete-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fff;color:#b91c1c;font-size:16px;line-height:1;cursor:pointer}.project-delete-btn:hover{background:#fef2f2}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1354,7 +1354,7 @@ input[list]::-webkit-calendar-picker-indicator{
 <header class="app-header-compact">
   <button class="btn header-case-btn" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill header-version" id="headerVersion">v0.14.4</span>
+  <span class="pill header-version" id="headerVersion">v0.14.10</span>
   <span class="connection-dot online" id="onlinePill" title="オンライン"></span>
   <span class="header-sync-state" id="firebasePill">同期中…</span>
   <span class="pill header-device" id="devicePill">端末未設定</span>
@@ -1365,7 +1365,7 @@ input[list]::-webkit-calendar-picker-indicator{
 <div class="project-side-backdrop" id="projectSideBackdrop" onclick="closeProjectSide()"></div>
 <aside class="project-side-panel" id="projectSidePanel" aria-hidden="true">
   <div class="project-side-head"><b>案件選択</b><button class="btn icon" onclick="closeProjectSide()">×</button></div>
-  <div class="project-side-tools"><input id="projectSearchInput" placeholder="案件番号・案件名で検索" oninput="renderProjectList()"><button class="btn primary" onclick="createMockProject()">＋ 新規案件</button></div>
+  <div class="project-side-tools"><input id="projectSearchInput" placeholder="案件番号・案件名で検索" oninput="renderProjectList()"><button class="btn primary" onclick="createMockProject()">＋ 新規案件</button><button class="btn" id="restoreProjectButton" onclick="restoreProjectByNumber()">案件番号から復元</button></div>
   <div class="project-side-list" id="projectList"></div>
 </aside>
 <div class="app">
@@ -1460,7 +1460,7 @@ input[list]::-webkit-calendar-picker-indicator{
           <div class="settings-box"><h4>案件情報</h4><div class="settings-section-note">看板・写真保存・Excel出力の共通情報</div><div class="settings-grid"><label>案件番号</label><input id="settingsProjectNo" value="26070101" onblur="updateProjectMetaField('no',this.value)"><label>案件名</label><input id="settingsProjectName" value="ODKワールドアスベスト調査" onblur="updateProjectMetaField('name',this.value)"><label>住所</label><input id="settingsProjectAddress" value="神奈川県小田原市" onblur="updateProjectMetaField('address',this.value)"><label>調査日</label><input type="date" id="settingsSurveyDate" value="2026-07-22"></div></div>
           <div class="settings-box"><h4>OneDrive・バックアップ</h4><div class="settings-section-note">写真本体と復旧用の調査情報を案件フォルダへ保存</div><div class="settings-grid"><label>案件フォルダ</label><div class="settings-value" id="settingsProjectFolderValue">26070101　ODKワールドアスベスト調査</div><label>目視フォルダ</label><div class="settings-value">目視</div><label>採取フォルダ</label><div class="settings-value">採取</div><label>最終バックアップ</label><div class="settings-value backup-time" id="settingsLastBackup">-</div></div><button class="btn small primary" id="manualBackupButton" style="margin-top:9px" onclick="runManualSurveyBackup()">今すぐバックアップ</button></div>
           <div class="settings-box"><h4>端末・アカウント</h4><div class="settings-section-note">写真IDは「区分-端末-連番」で採番</div><div class="settings-grid"><label>端末コード</label><input id="settingsDeviceCode" value="IP01" onblur="setDeviceCode(this.value)"><label>端末名</label><div class="settings-value"><b id="settingsDeviceName"></b></div><label>Microsoft</label><div class="settings-value">ログイン済み（確認用）</div></div><button class="btn small" style="margin-top:9px" onclick="changeDeviceName()">端末名を変更</button></div>
-          <div class="settings-box"><h4>システム設定</h4><div class="settings-section-note">同期・表示・バックアップの動作設定</div><div class="settings-grid"><label>カラー表示</label><select><option>ON</option><option>OFF</option></select><label>自動同期</label><select><option>ON</option><option>OFF</option></select><label>バックアップ</label><select><option>10分ごと</option><option>30分ごと</option><option>手動のみ</option></select><label>バージョン</label><div class="settings-value">0.14.6</div></div></div>
+          <div class="settings-box"><h4>システム設定</h4><div class="settings-section-note">同期・表示・バックアップの動作設定</div><div class="settings-grid"><label>カラー表示</label><select><option>ON</option><option>OFF</option></select><label>自動同期</label><select><option>ON</option><option>OFF</option></select><label>バックアップ</label><select><option>10分ごと</option><option>30分ごと</option><option>手動のみ</option></select><label>バージョン</label><div class="settings-value">0.14.10</div></div></div>
           <div class="settings-box wide"><h4>建材名候補</h4><div class="settings-section-note">初期候補＋その案件で新しく登録された建材名。仕上表のプルダウンに使用</div><div class="settings-add"><input id="addMatPart" placeholder="部位"><input id="addMatType" placeholder="区分" value="案件追加"><input id="addMatName" placeholder="建材名"><button class="btn small primary" onclick="addMaterialCandidate()">追加</button></div><table class="data-table compact" id="materialCandidatesTable"></table></div>
           <div class="settings-box wide"><h4>部位・入力候補</h4><div class="settings-section-note">固定部位と案件内で追加された部位を一元管理</div><div class="settings-add"><input id="addPartName" placeholder="部位"><button class="btn small primary" onclick="addPartCandidate()">追加</button></div><div class="part-candidate-list" id="partCandidatesList"></div></div>
         </div>
@@ -1790,6 +1790,63 @@ window.MicrosoftPhotoUpload = {
       throw new Error(debugStage + 'で失敗しました。\n' + detail);
     }
   },
+  async listChildItems(driveId, parentItemId){
+    let url = 'https://graph.microsoft.com/v1.0/drives/' + encodeURIComponent(driveId) + '/items/' + encodeURIComponent(parentItemId) + '/children?$select=id,name,folder,file,webUrl,parentReference';
+    const all = [];
+    while (url) {
+      const page = await graphFetch(url);
+      all.push(...((page && page.value) || []));
+      url = page && page['@odata.nextLink'] || '';
+    }
+    return all;
+  },
+  async findProjectFolderByNumber(projectNo){
+    const no = String(projectNo || '').trim();
+    if (!no) throw new Error('案件番号が空です');
+    const root = await this.getUploadFolder();
+    const children = await this.listChildItems(root.driveId, root.itemId);
+    const escaped = no.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const prefix = new RegExp('^' + escaped + '(?:[\\s　]|$)');
+    const matches = children.filter(x => x && x.folder && prefix.test(String(x.name || '')));
+    if (!matches.length) throw new Error('案件番号「' + no + '」で始まる案件フォルダが見つかりません。');
+    const exactWide = matches.filter(x => String(x.name || '').startsWith(no + '　'));
+    const exactHalf = matches.filter(x => String(x.name || '').startsWith(no + ' '));
+    const preferred = exactWide.length ? exactWide : (exactHalf.length ? exactHalf : matches);
+    if (preferred.length > 1) {
+      throw new Error('同じ案件番号のフォルダが複数あります。\n' + preferred.map(x => x.name).join('\n'));
+    }
+    return {root, folder: preferred[0]};
+  },
+  async readProjectBackupByNumber(projectNo){
+    await this.init();
+    const account = await this.getAccount(false);
+    if (!account) throw new Error('Microsoftへログインしてから復元してください。');
+    const found = await this.findProjectFolderByNumber(projectNo);
+    const root = found.root;
+    const projectFolder = found.folder;
+    const children = await this.listChildItems(root.driveId, projectFolder.id);
+    const infoFolder = children.find(x => x && x.folder && x.name === '調査情報');
+    let payload = null;
+    let backupFile = null;
+    if (infoFolder) {
+      const infoChildren = await this.listChildItems(root.driveId, infoFolder.id);
+      backupFile = infoChildren.find(x => x && x.file && x.name === 'survey-data.json') || null;
+      if (backupFile) {
+        const url = 'https://graph.microsoft.com/v1.0/drives/' + encodeURIComponent(root.driveId) + '/items/' + encodeURIComponent(backupFile.id) + '/content';
+        const raw = await graphFetch(url);
+        payload = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      }
+    }
+    return {
+      driveId: root.driveId,
+      projectFolderId: projectFolder.id,
+      projectFolderName: projectFolder.name || '',
+      projectFolderUrl: projectFolder.webUrl || '',
+      infoFolderId: infoFolder && infoFolder.id || '',
+      backupFileId: backupFile && backupFile.id || '',
+      payload
+    };
+  },
   async uploadSurveyBackup(projectId){
     await this.login();
     const folders = await this.ensureProjectFolders(projectId);
@@ -2045,7 +2102,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.9';
+const APP_VERSION='0.14.10';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -5386,6 +5443,63 @@ window.renderPhotoRecords = function(){
 #recordsTable th:nth-child(n+13),#recordsTable td:nth-child(n+13){width:110px}
 </style>
 <script>
+window.projectRestoreInProgress=false;
+async function restoreProjectByNumber(){
+  if(window.projectRestoreInProgress)return;
+  const no=prompt('復元する案件番号を入力してください','');
+  if(no===null)return;
+  const projectNo=String(no||'').trim();
+  if(!projectNo)return alert('案件番号を入力してください。');
+  const btn=document.getElementById('restoreProjectButton');
+  try{
+    window.projectRestoreInProgress=true;
+    if(btn){btn.disabled=true;btn.textContent='検索中…';}
+    setMicrosoftPill('案件検索中','warn');
+    const result=await window.MicrosoftPhotoUpload.readProjectBackupByNumber(projectNo);
+    const payload=result.payload;
+    const folderName=String(result.projectFolderName||'');
+    const nameFromFolder=folderName.replace(new RegExp('^'+projectNo.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[\\s　]*'),'').trim()||'名称未設定';
+    const remoteMeta=(payload&&payload.project&&typeof payload.project==='object')?payload.project:{};
+    const remoteSurvey=(payload&&payload.survey&&typeof payload.survey==='object')?payload.survey:null;
+    const existingId=localProjectIdByNo(projectNo);
+    if(existingId){
+      const ok=confirm('この案件番号は端末内にあります。\nOneDriveの情報で再読み込みしますか？');
+      if(!ok)return;
+    }
+    saveActiveProject();
+    const id=existingId||('restore_'+projectNo.replace(/[^A-Za-z0-9_-]/g,'_'));
+    const restoredMeta={
+      ...(projectMeta[id]||{}),
+      ...remoteMeta,
+      no:String(remoteMeta.no||remoteMeta.projectNo||projectNo),
+      name:String(remoteMeta.name||nameFromFolder),
+      address:String(remoteMeta.address||''),
+      sub:String(remoteMeta.sub||remoteMeta.address||(payload?'OneDriveバックアップから復元':'OneDriveフォルダから復元')),
+      oneDrive:{...((projectMeta[id]&&projectMeta[id].oneDrive)||{}),...((remoteMeta&&remoteMeta.oneDrive)||{}),driveId:result.driveId,projectFolderId:result.projectFolderId,projectFolderName:result.projectFolderName,projectFolderUrl:result.projectFolderUrl,infoFolderId:result.infoFolderId}
+    };
+    projectMeta[id]=restoredMeta;
+    projectStore[id]=remoteSurvey?cloneData(remoteSurvey):blankProjectSnapshot();
+    activeProjectId=id;window.activeProjectId=id;
+    restoreState(projectStore[id]);sanitizePhotoRecords();
+    undoStack=[];redoStack=[];selectedMaterialId=null;
+    persistenceEnabled=true;saveStateToStorage();
+    renderProjectList();renderAll();closeProjectSide();
+    setMicrosoftPill(payload?'案件復元済':'案件フォルダ確認済','ok');
+    connectFirebaseForActiveProject();
+    setTimeout(loadIntegratedPhotoRecords,0);
+    alert(payload
+      ? '案件を復元しました。\nFirestoreの初回同期が完了するまでバックアップは実行されません。'
+      : '案件フォルダを一覧へ追加しました。\nsurvey-data.jsonがないため、中身はFirestoreから取得します。初回同期完了までバックアップは実行されません。');
+  }catch(err){
+    console.error('案件番号からの復元失敗',err);
+    setMicrosoftPill('案件復元失敗','warn');
+    alert('案件を復元できませんでした。\n\n'+(err&&err.message?err.message:err));
+  }finally{
+    window.projectRestoreInProgress=false;
+    if(btn){btn.disabled=false;btn.textContent='案件番号から復元';}
+  }
+}
+
 async function createMockProject(){
   const no=prompt('案件番号を入力してください','');
   if(no===null)return;
@@ -5446,6 +5560,7 @@ function currentBackupCounts(){
 function backupCountsTotal(c){return Number(c?.materials||0)+Number(c?.cells||0)+Number(c?.photos||0)+Number(c?.samples||0);}
 function backupSafetyCheck(){
   const meta=getActiveProjectMeta();
+  if(window.projectRestoreInProgress){return {ok:false,reason:'案件の復元処理中です。',current:currentBackupCounts(),previous:meta.lastBackupCounts||null};}
   const current=currentBackupCounts();
   const previous=meta.lastBackupCounts||null;
   if(!appState.firebaseReady || appState.initialSync?.projectId!==currentFirestoreProjectId()){
