@@ -2011,7 +2011,7 @@ window.FirebaseSync = {
   },
   async connectProjectRegistry(onProjects){
     if (unsubscribeProjectRegistry) unsubscribeProjectRegistry();
-    const colRef = collection(db, 'projects');
+    const colRef = collection(db, 'projects', '_registry', 'projectList');
     unsubscribeProjectRegistry = onSnapshot(colRef, snap => {
       const rows = snap.docs.map(d => ({id:d.id, ...d.data()}));
       onProjects(rows);
@@ -2022,7 +2022,7 @@ window.FirebaseSync = {
   },
   async saveProjectRegistryRecord(projectNo, data){
     if (!projectNo) return;
-    const ref = doc(db, 'projects', String(projectNo));
+    const ref = doc(db, 'projects', '_registry', 'projectList', String(projectNo));
     await setDoc(ref, {
       ...data,
       projectNo:String(projectNo),
@@ -2032,7 +2032,7 @@ window.FirebaseSync = {
   },
   async deleteProjectRegistryRecord(projectNo, data){
     if (!projectNo) return;
-    const ref = doc(db, 'projects', String(projectNo));
+    const ref = doc(db, 'projects', '_registry', 'projectList', String(projectNo));
     await setDoc(ref, {
       ...(data||{}),
       projectNo:String(projectNo),
@@ -2045,7 +2045,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.8';
+const APP_VERSION='0.14.9';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
