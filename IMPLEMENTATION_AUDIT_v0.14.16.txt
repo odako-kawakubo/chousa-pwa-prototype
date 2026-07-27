@@ -1,0 +1,28 @@
+v0.14.16 実装確認記録
+
+確認済み（コード経路）
+- 建材単体削除: active=false / deleted=true / deletedAtを設定し、描画前に未送信キューへ保存
+- 操作パネル複数削除: 現行UIの delete-target-check を読み取り、各削除レコードを未送信キューへ保存
+- オンライン削除: 同じtombstone payloadをFirestore saveMaterialRecordへ送信
+- オフライン削除: Firebase未初期化・オフラインでもmaterial pending opを保持
+- 再接続: flushPendingOps -> executePendingOp(material)で再送
+- 復活防止: ローカルtombstoneより古いactiveリモート値を適用せず、削除状態を再送
+- 同期タブ: panel-headのstickyを解除し、表示関数と手動同期を最終1系統へ統一
+- 仕上表: roomId単位で対象部屋行のみ選択クラスを付与
+- 仕上表: 2段ヘッダー、境界1px、ヘッダー高さ22px/21px
+- レコード: 固定ヘッダー、先頭固定列、スクロールコンテナを整理
+- 調査図: iframeファイル同梱・参照あり
+- 設定: 建材名候補・部位候補の2列表示と追加/編集/削除処理あり
+- 写真: IndexedDB保存処理・削除時キャッシュ削除処理あり
+- 案件: 共有フォルダ基準の読込処理、検索/クリア処理あり
+- UI: 「新規案件（空）」の表示文言なし、操作ボタンはタブ列側
+
+機械確認
+- app.html内の全インラインJavaScriptをnode --checkで構文確認
+- version.json / service-worker cache名 / index.html / app.htmlを0.14.16へ統一
+- ZIP整合性テスト実施
+
+実環境でのみ確認可能
+- Firebase権限・実際の2端末間反映
+- OneDrive認証下の写真取得/アップロード
+- iPad Safariのsticky・iframe・Fullscreen挙動

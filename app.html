@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA v0.14.15</title>
+<title>調査システムPWA v0.14.16</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer;position:relative;padding-right:46px}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.project-delete-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fff;color:#b91c1c;font-size:16px;line-height:1;cursor:pointer}.project-delete-btn:hover{background:#fef2f2}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1362,7 +1362,7 @@ input[list]::-webkit-calendar-picker-indicator{
 <header class="app-header-compact">
   <button class="btn header-case-btn" onclick="toggleSide()" title="案件一覧">案件</button>
   <h1 id="caseHeaderTitle">26070101　ODKワールドアスベスト調査</h1>
-  <span class="pill header-version" id="headerVersion">v0.14.15</span>
+  <span class="pill header-version" id="headerVersion">v0.14.16</span>
   <span class="connection-dot online" id="onlinePill" title="オンライン"></span>
   <span class="header-sync-state" id="firebasePill">同期中…</span>
   <span class="pill header-device" id="devicePill">端末未設定</span>
@@ -1500,7 +1500,7 @@ input[list]::-webkit-calendar-picker-indicator{
 </div>
 
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-version">v0.14.15</div></div></aside>
+<aside class="drawer" id="drawer"><div class="drawer-head"><b>操作パネル</b><button class="btn small" onclick="closeDrawer()">閉じる</button></div><div class="drawer-body"><div class="drawer-box"><h4>状態</h4><div class="hint">PWAでは通常の反映・候補更新は自動処理。ここは確認と例外対応だけ残す想定。</div><button class="btn" onclick="showTab('sync');closeDrawer()">同期状態を確認</button><button class="btn" onclick="alert('未登録セル確認は今後実装')">未登録セル確認</button></div><div class="drawer-box"><h4>保守</h4><button class="btn" onclick="alert('整合性チェックは今後実装')">データ整合性チェック</button><button class="btn" onclick="alert('候補データ再構築は今後実装')">候補データ再構築</button><button class="btn" onclick="showUpdatePrompt()">最新版に更新</button></div><div class="drawer-version">v0.14.16</div></div></aside>
 
 <div class="update-modal" id="updateModal"><div class="update-card"><h3>最新版に更新</h3><div class="hint" id="updateMessage">アプリ本体のキャッシュだけ削除して最新版を読み込みます。<br>案件データや未同期データは削除しません。</div><div class="update-actions"><button class="btn" onclick="hideUpdatePrompt()">キャンセル</button><a class="btn primary" id="hardReloadLink" href="./app.html" onclick="confirmAppUpdate(event)">更新する</a></div></div></div>
 <datalist id="materialSuggest"></datalist>
@@ -2162,7 +2162,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.15';
+const APP_VERSION='0.14.16';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -3689,7 +3689,7 @@ function renderFinish(){
 /* v0.10.8 simple project switch */
 const projectMeta={
   odk:{no:'26070101',name:'ODKワールドアスベスト調査',address:'神奈川県小田原市小八幡2-3-6',sub:'調査日：2026/07/01 / サンプル入力済み'},
-  blank:{no:'26070102',name:'新規案件（空）',address:'',sub:'空の仕上表 / 入力用'}
+  blank:{no:'',name:'',address:'',sub:''}
 };
 
 window.projectMeta=projectMeta;
@@ -4189,7 +4189,7 @@ function renderMaterials(){
   if(!records.length)rows+='<tr><td colspan="16" class="muted-cell">対象建材はまだありません</td></tr>';
   const table=document.getElementById('materialsTable'); if(table){table.innerHTML=rows; table.classList.toggle('color-mode',colorMode);}
 }
-/* v0.14.15: review-only five material seeds removed. */
+/* v0.14.16: review-only five material seeds removed. */
 
 
 /* v0.10.9 review2: grouped checkbox picker for merge/delete */
@@ -5606,8 +5606,8 @@ async function createMockProject(){
 </script>
 
 <script>
-/* v0.14.15 stage 1: safe project opening, local pending queue, ledger/folder integration */
-const PENDING_SYNC_KEY='chousa-pwa-pending-v0.14.15';
+/* v0.14.16 stage 1: safe project opening, local pending queue, ledger/folder integration */
+const PENDING_SYNC_KEY='chousa-pwa-pending-v0.14.16';
 let pendingSyncStore={};
 let reconnectStartedAt=0;
 let reconnectTimer=null;
@@ -5857,7 +5857,7 @@ setInterval(()=>runSurveyBackup(), SURVEY_BACKUP_INTERVAL_MS);
 
 
 <style id="v01414Styles">
-/* v0.14.15 UI refinements */
+/* v0.14.16 UI refinements */
 .tabs{display:flex;align-items:flex-end;gap:4px;min-width:0}.tab-operation-button{margin-left:auto;align-self:center;white-space:nowrap}
 .shared-project-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center}.shared-project-search-row .shared-project-search{width:100%}
 .candidate-settings-pair{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.candidate-settings-pair .settings-box{min-width:0}.candidate-settings-pair .settings-add{grid-template-columns:1fr}.candidate-settings-pair #materialCandidatesTable input,.candidate-settings-pair #partCandidatesTable input{min-width:80px;width:100%}
@@ -5872,7 +5872,7 @@ setInterval(()=>runSurveyBackup(), SURVEY_BACKUP_INTERVAL_MS);
 @media(max-width:900px){.candidate-settings-pair{grid-template-columns:1fr}.tabs{overflow-x:auto}.tab-operation-button{position:sticky;right:0;background:#fff;box-shadow:-8px 0 10px #fff}}
 </style>
 <script id="v01414Logic">
-/* v0.14.15 targeted fixes */
+/* v0.14.16 targeted fixes */
 function clearSharedProjectSearch(){const el=document.getElementById('sharedProjectSearch');if(el)el.value='';renderSharedProjectRows();}
 function updatePartCandidate(index,value){const fixed=['床','巾木','壁','天井'];const v=normalizeInput(value);if(!v)return renderSettings();remember();state.partCandidates[index]=v;state.partCandidates=uniqueList([...fixed,...state.partCandidates]);scheduleStateSave?.();renderSettings();renderAll();}
 function deletePartCandidate(index){const fixed=['床','巾木','壁','天井'];const value=state.partCandidates[index];if(fixed.includes(value))return alert('固定部位は削除できません。');if(!confirm('部位候補「'+value+'」を削除しますか？'))return;remember();state.partCandidates.splice(index,1);scheduleStateSave?.();renderSettings();renderAll();}
@@ -5894,7 +5894,7 @@ setTimeout(()=>{renderSettings();renderSync();},0);
 
 
 <style id="v01415Styles">
-/* v0.14.15 completed fixes */
+/* v0.14.16 completed fixes */
 .survey-map-panel{height:calc(100vh - 145px);min-height:560px;display:flex;flex-direction:column}
 .survey-map-frame{width:100%;flex:1;min-height:0;border:0;background:#fff}
 .sync-panel-v1414{width:min(760px,100%);margin:0 auto;overflow:hidden}
@@ -5957,6 +5957,141 @@ renderRecords=function(){_renderRecordsV1415();ensureRecordsScroll();};
 const _showTabV1415=showTab;
 showTab=function(tab){_showTabV1415(tab);if(tab==='records')setTimeout(()=>{renderRecords();ensureRecordsScroll();},0);if(tab==='survey-map'){const f=document.getElementById('surveyMapFrame');if(f&&!f.src)f.src='chousa_zu_tool_mock_v0_9b_3.html';}};
 setTimeout(()=>{ensureRecordsScroll();renderSync();},0);
+</script>
+
+
+<style id="v01416FinalCss">
+/* v0.14.16 final: synchronization screen, finish table, and records table */
+#sync .panel-head{position:static!important;top:auto!important;z-index:auto!important;min-height:44px;padding:8px 12px!important}
+#sync .sync-panel-v1414{overflow:hidden}
+#sync .sync-row{position:static!important;display:grid!important;grid-template-columns:minmax(150px,1fr) auto!important;align-items:center!important;gap:14px!important;min-height:43px!important;padding:9px 14px!important;border-bottom:1px solid var(--line)!important;background:#fff!important}
+#sync .sync-row>span{min-width:0!important;white-space:normal!important}
+#sync .sync-row>b{text-align:right!important;white-space:nowrap!important}
+#sync #syncList{position:static!important;display:block!important}
+#sync #syncList .sync-row{grid-template-columns:1fr!important;min-height:38px!important}
+
+.finish-table thead tr.finish-group-head th{top:0!important;height:22px!important;min-height:22px!important;padding:2px 3px!important;line-height:1.1!important;background:#dceaf6!important;border-bottom:1px solid #b8cada!important;font-size:11px!important}
+.finish-table thead tr.finish-sub-head th{top:22px!important;height:21px!important;min-height:21px!important;padding:2px 3px!important;line-height:1.1!important;background:#eef5fb!important;font-size:10.5px!important}
+.finish-table thead th.group-start,.finish-table tbody td.group-start{border-left:1px solid #8fa8bf!important}
+.finish-table thead th.group-end,.finish-table tbody td.group-end{border-right:1px solid #8fa8bf!important}
+.finish-table tbody tr.room-focus>td,.finish-table tbody tr.room-focus>td .cell,.finish-table tbody tr.room-focus>td input{background:inherit!important}
+.finish-table tbody tr.room-focus>td:first-child{box-shadow:none!important}
+.finish-table tbody tr.room-selected-v1416>td{background:#eaf4ff!important}
+.finish-table tbody tr.room-selected-v1416>td .cell{background:transparent!important}
+.finish-table tbody tr.room-selected-v1416>td input:not(:focus){background:transparent!important}
+.finish-table tbody tr.room-selected-v1416:first-of-type>td:first-child{box-shadow:inset 3px 0 0 #3b82f6!important}
+.finish-table .cell-focus-v1416{outline:2px solid #2563eb!important;outline-offset:-2px!important;position:relative;z-index:9}
+.finish-table tr.room-start>td{border-top:1px solid #9fb4c7!important}
+.finish-table tr.floor-start>td{border-top:2px solid #64748b!important}
+
+.record-table-wrap,.records-scroll{overflow:auto!important;max-height:calc(100vh - 230px)!important;position:relative!important}
+#recordsTable{border-collapse:separate!important;border-spacing:0!important;min-width:max-content!important}
+#recordsTable thead th{position:sticky!important;top:0!important;z-index:20!important;background:var(--head)!important;vertical-align:middle!important}
+#recordsTable th:first-child,#recordsTable td:first-child{position:sticky!important;left:0!important;background:#f8fafc!important;box-shadow:1px 0 0 var(--line)!important}
+#recordsTable tbody td:first-child{z-index:11!important}
+#recordsTable thead th:first-child{z-index:31!important;background:var(--head)!important}
+#recordsTable tbody tr:first-child td{border-top:0!important}
+@media(max-width:900px){#sync .sync-row{grid-template-columns:minmax(120px,1fr) auto!important}.finish-table thead tr.finish-group-head th{height:21px!important}.finish-table thead tr.finish-sub-head th{top:21px!important;height:20px!important}}
+</style>
+<script id="v01416FinalLogic">
+(function(){
+'use strict';
+const nowIso=()=>new Date().toISOString();
+function projectKeySafe(){try{return pendingProjectKey();}catch(_){return appState.currentProjectId||currentFirestoreProjectId();}}
+function queueMaterialPayload(m){
+  const projectId=projectKeySafe(), payload=serializeMaterialRecord(m), dedupeKey='material:'+m.id;
+  queuePendingOp({type:'material',projectId,recordId:m.id,payload,dedupeKey});
+  return {projectId,payload,dedupeKey};
+}
+// Queue first. A successful online write removes the queued item; offline/uninitialized writes remain durable.
+saveMaterialRecordToFirebase=function(id,reason){
+  if(appState.applyingRemote)return Promise.resolve(false);
+  const m=materialById(id); if(!m)return Promise.resolve(false);
+  const queued=queueMaterialPayload(m);
+  if(!navigator.onLine||!window.FirebaseSync?.saveMaterialRecord){beginReconnect?.();return Promise.resolve(false);}
+  return window.FirebaseSync.saveMaterialRecord(queued.projectId,id,queued.payload).then(()=>{
+    removePendingOp(queued.projectId,queued.dedupeKey);v1414LastSync=Date.now();
+    try{localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));}catch(_){}
+    if(!hasPendingOps())setSimpleSyncState('同期済み');renderSync();return true;
+  }).catch(err=>{beginReconnect?.();renderSync();throw err;});
+};
+saveAllMaterialRecordsToFirebase=function(reason){return Promise.allSettled((state.materials||[]).map(m=>saveMaterialRecordToFirebase(m.id,reason||'全件保存')));};
+
+// Local tombstones always win over an older active remote record.
+const applyRemoteBase=applyFirebaseMaterialRecords;
+applyFirebaseMaterialRecords=function(changes,isEmpty){
+  const filtered=[];
+  for(const change of (Array.isArray(changes)?changes:[])){
+    const r=change.record||{}, id=r.materialId||r.id, local=id?materialById(id):null;
+    if(local?.deleted===true && r.deleted!==true){
+      const localTime=Date.parse(local.deletedAt||local.updatedAtClient||0)||0;
+      const remoteTime=Date.parse(r.deletedAt||r.updatedAtClient||0)||0;
+      if(localTime>=remoteTime){saveMaterialRecordToFirebase(id,'削除状態再送').catch(()=>{});continue;}
+    }
+    filtered.push(change);
+  }
+  return applyRemoteBase(filtered,isEmpty);
+};
+
+function markDeletedAndQueue(m,reason){
+  clearMaterialFromFinishSheet(m.id);m.active=false;m.deleted=true;m.deletedAt=nowIso();m.updatedAtClient=m.deletedAt;
+  addSystemMemo(m,`削除：${m.name} をリストから除外`);addQueue('建材削除',m.name);
+  if(selectedMaterialId===m.id)selectedMaterialId=null;
+  const promise=saveMaterialRecordToFirebase(m.id,reason||'建材削除').catch(()=>false);
+  return promise;
+}
+deleteMaterialRecord=function(id){
+  const m=materialById(id);if(!m)return;
+  const places=materialPlacesForWarning(id),msg=places?`${places} にありますが消しますか？`:`${m.name} を建材リストから外しますか？`;
+  if(!confirm(msg))return;remember();markDeletedAndQueue(m,'建材削除');compactMaterialSuffixes();renderAll();saveAllRoomRecordsToFirebase('建材削除').catch(()=>{});
+};
+deleteSelectedMaterialsFromDrawer=function(){
+  const ids=typeof checkedValuesByClass==='function'?checkedValuesByClass('delete-target-check'):Array.from(document.querySelectorAll('.delete-target-check:checked')).map(x=>x.value);
+  if(!ids.length)return alert('削除する建材を選んでください');
+  const valid=ids.map(materialById).filter(Boolean);if(!valid.length)return alert('削除対象を取得できませんでした。操作パネルを開き直してください。');
+  const noMap=materialNoMap(activeMaterials()),used=[];
+  valid.forEach(m=>{const places=materialPlacesForWarning(m.id);if(places)used.push(`No.${noMap[m.id]||'-'} ${m.name} は ${places} にあります。`);});
+  const message=used.length?`${used.join('\n')}\n\n仕上表からも消しますか？`:`${valid.map(m=>`No.${noMap[m.id]||'-'} ${m.name}`).join('、')} を削除しますか？`;
+  if(!confirm(message))return;remember();valid.forEach(m=>markDeletedAndQueue(m,'建材複数削除'));compactMaterialSuffixes();closeDrawer();renderAll();saveAllRoomRecordsToFirebase('建材複数削除').catch(()=>{});
+};
+
+// Current sync state only; no legacy queue DOM or full-data resend.
+renderSync=function(){
+  const pending=typeof pendingOps==='function'?pendingOps(projectKeySafe()).length:0;
+  const photos=typeof v1414PhotoPending==='function'?v1414PhotoPending():(state.photos||[]).filter(isPhotoPendingSync).length;
+  const connected=!!appState.firebaseReady&&navigator.onLine;
+  const set=(id,text,cls)=>{const e=document.getElementById(id);if(e){e.textContent=text;e.className=cls||'';}};
+  set('syncOverallState',!navigator.onLine?'再接続中':(pending||photos?'未送信あり':'同期済み'),(!navigator.onLine||pending||photos)?'sync-state-warn':'sync-state-ok');
+  set('syncFirestoreState',connected?'接続済み':(navigator.onLine?'接続中':'オフライン'),connected?'sync-state-ok':'sync-state-warn');
+  set('syncPendingOps',pending+'件');set('syncPhotos',photos+'件');
+  const rawLast=v1414LastSync||localStorage.getItem('chousa-pwa-last-sync')||'';const last=Number(rawLast)||Date.parse(rawLast)||0;set('syncLastTime',last?new Date(last).toLocaleString('ja-JP'):'-');
+  const list=document.getElementById('syncList');if(list)list.innerHTML=(pending||photos)?'<div class="sync-row"><span class="hint">未送信データは端末内に保持されています。通信復帰後に再送します。</span></div>':'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>';
+  const mini=document.getElementById('miniUnsynced');if(mini)mini.textContent=String(pending+photos);
+};
+syncNow=async function(){
+  if(!navigator.onLine){renderSync();return alert('オフラインです。未送信データは端末内に保持されています。');}
+  setSimpleSyncState('同期中');try{await connectFirebaseForActiveProject?.();await flushPendingOps();await retryPendingIntegratedPhotos?.();v1414LastSync=Date.now();localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));renderSync();}catch(err){console.error(err);beginReconnect?.();renderSync();alert('同期を完了できませんでした。未送信データは端末内に保持されています。');}
+};
+
+// Two-level part grouping with thin boundaries and compact header.
+headerFor=function(area,parts){
+  const cls=area==='内部'?'internal-head':'external-head';
+  const left='<th class="floor" rowspan="2">階</th><th class="room-no" rowspan="2">部屋No.</th><th class="copy-col" rowspan="2">コピー</th><th class="room-name" rowspan="2">部屋名</th>';
+  const groups=parts.map(p=>`<th class="group-start group-end" colspan="2">${esc(p)}</th>`).join('')+otherSlots.map(o=>`<th class="group-start group-end" colspan="3">${esc(o)}</th>`).join('');
+  const subs=parts.map(()=>'<th class="id-col group-start">ID</th><th class="name-col group-end">建材名称</th>').join('')+otherSlots.map(()=>'<th class="id-col group-start">ID</th><th class="other-part">部位</th><th class="other-name group-end">建材名称</th>').join('');
+  return `<tr class="${cls} finish-group-head">${left}${groups}</tr><tr class="${cls} finish-sub-head">${subs}</tr>`;
+};
+renderBodyRows=function(area,parts){let html='',prevFloor=null;for(const r of roomsForArea(area)){const floorStart=prevFloor!==null&&String(prevFloor)!==String(r.floor||'');prevFloor=r.floor||'';for(let line=0;line<roomLineCount(r);line++){html+=`<tr data-room-id="${escapeAttr(r.id)}" class="${line===0?'room-start':''} ${line>0?'room-sub':''} ${line===0&&floorStart?'floor-start':''}">`;if(line===0){const span=roomLineCount(r);html+=`<td class="floor" rowspan="${span}">${renderFloorCell(r,area)}</td><td class="room-no" rowspan="${span}">${renderRoomNoCell(r,area)}</td><td class="copy-col" rowspan="${span}">${renderCopyCell(r,area)}</td><td class="room-name" rowspan="${span}">${renderRoomNameCell(r)}</td>`;}for(const p of parts)html+=`<td class="group-start">${renderIdInput(r.id,area,p,line)}</td><td class="group-end">${renderNameInput(r.id,area,p,line)}</td>`;for(const o of otherSlots)html+=`<td class="group-start">${renderIdInput(r.id,area,o,line)}</td><td>${renderPartInput(r.id,area,o,line)}</td><td class="group-end">${renderNameInput(r.id,area,o,line)}</td>`;html+='</tr>';}}return html;};
+function clearRoomSelection(table){table.querySelectorAll('.room-selected-v1416').forEach(x=>x.classList.remove('room-selected-v1416'));table.querySelectorAll('.cell-focus-v1416').forEach(x=>x.classList.remove('cell-focus-v1416'));}
+document.addEventListener('focusin',e=>{const table=e.target.closest?.('.finish-table');if(!table)return;clearRoomSelection(table);const tr=e.target.closest('tr[data-room-id]');if(!tr)return;const id=tr.getAttribute('data-room-id');table.querySelectorAll('tr[data-room-id]').forEach(row=>{if(row.getAttribute('data-room-id')===id)row.classList.add('room-selected-v1416');});e.target.closest('td')?.classList.add('cell-focus-v1416');},true);
+document.addEventListener('focusout',e=>{const table=e.target.closest?.('.finish-table');if(!table)return;setTimeout(()=>{if(!table.contains(document.activeElement))clearRoomSelection(table);},0);},true);
+
+// Records table gets exactly one scroll container.
+function ensureRecordsScrollV1416(){const t=document.getElementById('recordsTable');if(!t)return;let parent=t.parentElement;if(parent?.classList.contains('records-scroll'))return;if(parent?.classList.contains('record-table-wrap')){parent.classList.add('records-scroll');return;}const w=document.createElement('div');w.className='records-scroll';t.before(w);w.appendChild(t);}
+const renderRecordsBeforeV1416=renderRecords;renderRecords=function(){const r=renderRecordsBeforeV1416.apply(this,arguments);ensureRecordsScrollV1416();return r;};
+const showTabBeforeV1416=showTab;showTab=function(id){const r=showTabBeforeV1416.apply(this,arguments);if(id==='sync')setTimeout(renderSync,0);if(id==='records')setTimeout(ensureRecordsScrollV1416,0);return r;};
+setTimeout(()=>{ensureRecordsScrollV1416();renderSync();applyAppVersionDisplay();},0);
+})();
 </script>
 
 </body>
