@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>調査図ツール mock v0.9b.3</title>
+<style>
+:root{--bg:#f4f6f8;--panel:#fff;--line:#d6dce5;--text:#1f2937;--muted:#64748b;--blue:#2563eb;--blue2:#dbeafe;--yellow:#facc15;--red:#dc2626;--grid:16px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);overflow:hidden}
+header{height:56px;background:#102033;color:white;display:flex;align-items:center;gap:16px;padding:0 16px;box-shadow:0 2px 8px #0002}header h1{font-size:18px;margin:0}.meta{font-size:12px;color:#d7e4f5;display:flex;gap:14px;flex-wrap:wrap}
+.app{height:calc(100vh - 56px);display:grid;grid-template-columns:255px 1fr 320px;gap:10px;padding:10px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px #0f172a14}.panel h2{font-size:14px;margin:0;padding:10px 12px;background:#f8fafc;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.panel-body{padding:10px;overflow:auto;max-height:calc(100vh - 88px)}
+button,select,input{font-family:inherit}button{border:1px solid var(--line);background:white;border-radius:9px;padding:8px 9px;font-size:13px;cursor:pointer;user-select:none}button:hover{background:#f8fafc}button.active{border-color:var(--blue);background:var(--blue2);color:#1d4ed8;font-weight:700}button.primary{background:var(--blue);border-color:var(--blue);color:white;font-weight:700}button.danger{background:#fff1f2;border-color:#fecdd3;color:#be123c}.tools,.shapes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.shape-btn{height:52px;display:flex;align-items:center;justify-content:center}.shape-btn svg{width:42px;height:34px;overflow:visible}.shape-btn path,.shape-btn polygon,.shape-btn circle,.shape-btn ellipse{fill:rgba(219,234,254,.75);stroke:#334155;stroke-width:6;stroke-linejoin:round}.shape-btn .no-fill{fill:none}.hr{height:1px;background:var(--line);margin:12px 0}.hint{font-size:12px;color:var(--muted);line-height:1.55;background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:8px;margin-top:8px}.badge{font-size:11px;color:#475569;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:2px 7px}.mini{font-size:11px;color:var(--muted)}
+.topbar{height:58px;background:white;border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;gap:8px;padding:8px;margin-bottom:10px;box-shadow:0 1px 3px #0f172a14;overflow:auto}.topbar label{display:flex;align-items:center;gap:5px;font-size:13px;white-space:nowrap}.topbar select{border:1px solid var(--line);border-radius:8px;padding:7px;background:white}.stage-shell{position:relative;height:calc(100vh - 144px);overflow:auto;background:#e5e7eb;border:1px solid var(--line);border-radius:12px}.sheet{position:relative;width:1180px;height:820px;margin:28px auto;background:white;box-shadow:0 5px 18px #0f172a2e;overflow:hidden}.grid-on{background-image:linear-gradient(to right,#94a3b855 1px,transparent 1px),linear-gradient(to bottom,#94a3b855 1px,transparent 1px);background-size:var(--grid) var(--grid)}
+.sheet-title{position:absolute;left:30px;top:18px;right:30px;height:72px;border-bottom:2px solid #111827;display:flex;justify-content:space-between;pointer-events:none}.ttl{font-weight:800;font-size:22px;margin-top:6px}.sub{font-size:16px;margin-top:10px}.legend{font-size:12px;line-height:1.7}.workarea{position:absolute;left:30px;top:105px;right:30px;bottom:30px;border:1px dashed #cbd5e1}#svg{position:absolute;inset:0;width:1180px;height:820px;touch-action:none}
+.obj-fill{fill:rgba(219,234,254,.76);stroke:#334155;stroke-width:2;vector-effect:non-scaling-stroke;pointer-events:all}.circle-fill{fill:rgba(219,234,254,.55);stroke:#334155;stroke-width:2;vector-effect:non-scaling-stroke;pointer-events:all}.selected-stroke{stroke:#2563eb!important;stroke-width:3!important}.obj-line{stroke:#111827;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;fill:none;vector-effect:non-scaling-stroke}.hit-line{stroke:rgba(0,0,0,0);stroke-width:26;stroke-linecap:round;stroke-linejoin:round;fill:none;pointer-events:stroke}.obj-text{font-weight:700;font-size:16px;fill:#111827;text-anchor:middle;dominant-baseline:middle;user-select:none}.plain-text{font-weight:600;font-size:17px;fill:#111827;text-anchor:start;dominant-baseline:hanging}.label-box{fill:#fff;stroke:#111827;stroke-width:1.7;vector-effect:non-scaling-stroke}.label-text{fill:#111827;font-size:13px;font-weight:700;text-anchor:start;dominant-baseline:hanging;user-select:none}.room-text{fill:#111827;font-size:18px;font-weight:800;text-anchor:middle;dominant-baseline:middle;user-select:none}.sample-dot{fill:#ef4444;stroke:#ef4444;stroke-width:1;vector-effect:non-scaling-stroke}.sample-text{display:none}.conn-handle{fill:#fff;stroke:#2563eb;stroke-width:2;cursor:crosshair}.conn-line{stroke:#2563eb;stroke-width:1.5;stroke-dasharray:4 3}.handle{fill:white;stroke:#2563eb;stroke-width:2;cursor:nwse-resize}.handle.alt{cursor:nesw-resize}.vertex{fill:#facc15;stroke:#92400e;stroke-width:2;cursor:grab}.line-handle{fill:white;stroke:#2563eb;stroke-width:1.7;cursor:grab}.line-handle.attached{stroke:#8b5cf6;fill:#f5f3ff}.elbow-mid{fill:#facc15;stroke:#92400e;stroke-width:2;cursor:ew-resize}.snap-preview{fill:white;stroke:#8b5cf6;stroke-width:2;pointer-events:none}.pivot{fill:white;stroke:#ef4444;stroke-width:2}.move-handle{fill:#fff;stroke:#0f172a;stroke-width:2;cursor:move}.move-handle text{font-size:18px;font-weight:900;pointer-events:none}.selbox{fill:none;stroke:#2563eb;stroke-width:1.5;stroke-dasharray:6 4;pointer-events:none}.rubber{fill:rgba(37,99,235,.08);stroke:#2563eb;stroke-width:1.5;stroke-dasharray:6 4;pointer-events:none}.draft-line{stroke:#2563eb;stroke-width:3;stroke-dasharray:7 5;fill:none}.draft-point{fill:#2563eb}.draft-poly{fill:rgba(37,99,235,.09);stroke:#2563eb;stroke-width:2;stroke-dasharray:7 5}.underlay{pointer-events:none}.underlay-edit{pointer-events:all;cursor:move}.row{display:flex;gap:8px;align-items:center;margin:8px 0}.row label{font-size:12px;color:var(--muted);width:86px}.row input,.row select{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px;font-size:13px;min-width:0}.smallgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.rotgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rotgrid button{font-size:18px;font-weight:800}.empty{font-size:13px;color:#64748b;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:9px;padding:12px;text-align:center}.checkrow{display:flex;align-items:center;gap:7px;font-size:13px;margin:8px 0}.img-controls input[type="range"]{width:100%}.colorbox{width:44px!important;height:34px;padding:2px!important;flex:0 0 44px!important}.layergrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.style-note{font-size:11px;color:#64748b;margin-top:4px}.palette{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}.swatch{width:24px;height:24px;border:1px solid #94a3b8;border-radius:6px;padding:0;box-shadow:inset 0 0 0 1px #ffffff88}.swatch.active{outline:2px solid #2563eb;outline-offset:1px}.color-status{font-size:12px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:7px;margin-top:8px}.detail-color{display:none;border:1px solid #e2e8f0;border-radius:9px;padding:8px;background:#f8fafc;margin-top:8px}
+@media(max-width:980px){.app{grid-template-columns:205px 1fr}.panel.right{display:none}.tools,.shapes{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>調査図ツール mock v0.9b.3</h1><div class="meta"><span>案件ID：260120024</span><span>案件名：大滝温泉運龍解体工事に伴うアスベスト調査</span><span>図面なし/図面下敷き 両対応案</span></div></header>
+<div class="app">
+<aside class="panel"><h2>ツール <span class="badge">v0.9b.3</span></h2><div class="panel-body">
+<div class="tools">
+<button data-tool="select" class="active">選択/範囲</button><button data-tool="line">直線</button><button data-tool="correct">補正線</button><button data-tool="elbow">カギ線</button><button data-tool="room">部屋No.</button><button data-tool="label">試料ラベル</button><button data-tool="sample">採取位置</button><button data-tool="text">テキスト</button><button data-tool="colorcopy">色コピー</button><button id="deleteBtn" class="danger">削除</button>
+</div>
+<div class="hr"></div><h2 style="margin:-10px -10px 8px;border-radius:0;background:#fff">基本図形</h2>
+<div class="shapes">
+<button data-shape="rect" class="shape-btn" title="四角"><svg viewBox="0 0 100 80"><polygon points="15,12 85,12 85,68 15,68"/></svg></button>
+<button data-shape="circle" class="shape-btn" title="丸"><svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="27"/></svg></button>
+<button data-shape="rtri" class="shape-btn" title="直角三角形"><svg viewBox="0 0 100 80"><polygon points="20,12 20,68 84,68"/></svg></button>
+<button data-shape="l" class="shape-btn" title="L字"><svg viewBox="0 0 100 80"><polygon points="15,12 52,12 52,38 85,38 85,68 15,68"/></svg></button>
+<button data-shape="t" class="shape-btn" title="T字"><svg viewBox="0 0 100 80"><polygon points="15,10 85,10 85,34 62,34 62,70 38,70 38,34 15,34"/></svg></button>
+<button data-shape="cross" class="shape-btn" title="十字"><svg viewBox="0 0 100 80"><polygon points="38,8 62,8 62,28 88,28 88,52 62,52 62,72 38,72 38,52 12,52 12,28 38,28"/></svg></button>
+<button data-shape="concave" class="shape-btn" title="凹字"><svg viewBox="0 0 100 80"><polygon points="14,12 86,12 86,68 62,68 62,42 38,42 38,68 14,68"/></svg></button>
+<button data-shape="poly" class="shape-btn" title="多角形"><svg viewBox="0 0 100 80"><polygon points="30,12 76,20 88,50 58,70 18,58 14,28"/></svg></button>
+</div>
+<div class="hint">図形は形だけ。文字はテキスト/建材ラベルで別配置。多角形はここから点を打って作成。</div>
+<div class="hr"></div>
+<button id="convertBtn" style="width:100%">選択線を図形化</button>
+<button id="sampleRooms" class="primary" style="width:100%;margin-top:8px">部屋サンプル配置</button>
+<div class="hint">v0.9b.3：色パレットを右パネルへ整理。塗り/枠線を分離し、枠線なしを追加。</div>
+<button id="finishPoly" style="width:100%;margin-top:8px;display:none">多角形を完了</button><button id="cancelPoly" style="width:100%;margin-top:6px;display:none">多角形を取消</button>
+
+<div class="hr"></div><h2 style="margin:-10px -10px 8px;border-radius:0;background:#fff">図面下敷き</h2>
+<div class="img-controls"><input id="imgInput" type="file" accept="image/*" style="font-size:12px;width:100%"><div class="checkrow"><input type="checkbox" id="imgVisible" checked><label for="imgVisible">表示</label></div><div class="checkrow"><input type="checkbox" id="imgLock" checked><label for="imgLock">ロック</label></div><div class="row"><label>透明度</label><input id="imgOpacity" type="range" min="0.1" max="1" step="0.05" value="0.45"></div><button id="clearImg" style="width:100%">下敷き削除</button></div>
+<div class="hint">図面画像を下敷きにして、補正線/図形でなぞる想定。AI下書きは次段階。</div>
+</div></aside>
+<main class="canvas-wrap">
+<div class="topbar"><button id="undoBtn">戻る</button><button id="redoBtn">進む</button><button id="gridBtn" class="active">グリッドON</button><button id="snapBtn" class="active">スナップON</button><select id="scaleSel"><option value="8">細 0.25m</option><option value="12">0.375m</option><option value="16" selected>0.5m</option><option value="24">0.75m</option><option value="32">1.0m</option><option value="64">2.0m</option></select><select id="editMode"><option value="resize">移動/サイズ変更</option><option value="vertex">頂点編集</option></select><label><input type="checkbox" id="continuous">連続作成</label><label><input type="checkbox" id="centerResize">中心基準</label><label><input type="checkbox" id="ratioResize">比率固定</label><span class="badge">青=拡大縮小 / 黄=頂点編集</span></div>
+<div class="stage-shell"><div class="sheet grid-on" id="sheet"><div class="sheet-title"><div><div class="ttl">A棟　1階</div><div class="sub">調査図</div></div><div class="legend"><div><b>試料No.</b>　試料名称　･･･石綿無検出</div><div><b>試料No.</b>　試料名称　･･･石綿含有</div><div>● ･･･採取位置</div><div><b>試料No.</b>　試料名称　･･･石綿含有みなし</div></div></div><div class="workarea"></div><svg id="svg" viewBox="0 0 1180 820"><defs><marker id="mkArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker><marker id="mkCircle" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><circle cx="5" cy="5" r="4" fill="white" stroke="#111827" stroke-width="1.5"/></marker><marker id="mkSquare" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><rect x="1.5" y="1.5" width="7" height="7" fill="white" stroke="#111827" stroke-width="1.5"/></marker></defs><g id="underG"></g><g id="objG"></g><g id="uiG"></g><g id="draftG"></g></svg></div></div>
+</main>
+<aside class="panel right"><h2>選択中 <span id="selType" class="badge">未選択</span></h2><div class="panel-body"><div id="editPanel"><div class="empty">図形を選択すると編集項目が出ます</div></div>
+<div class="hr"></div><h2 style="margin:-10px -10px 8px;border-radius:0;background:#fff">色</h2>
+<div class="mini">通常パレット</div><div id="basePalette" class="palette"></div>
+<div class="mini">カスタム</div><div id="customPalette" class="palette"></div>
+<button id="toggleDetailColor" style="width:100%">もっと細かく</button>
+<div id="detailColorBox" class="detail-color"><div class="row"><label>詳細色</label><input id="detailColor" class="colorbox" type="color" value="#dbeafe"></div><button id="saveCurrentColor" style="width:100%">この色を保存</button></div>
+<div id="colorStatus" class="color-status">現在色：未取得</div>
+<button id="resetColorCopy" style="width:100%;margin-top:8px">色を取り直す</button>
+<div class="hint">色コピー：1回目で色を取得、2回目以降で図形に塗ります。拾った色/作った色は保存できます。</div>
+</div></aside>
+</div>
+<script>
+const svg=document.getElementById('svg'), objG=document.getElementById('objG'), uiG=document.getElementById('uiG'), draftG=document.getElementById('draftG'), underG=document.getElementById('underG');
+let objects=[], selectedIds=[], tool='select', snap=true, grid=16, editMode='resize', seq=1, hist=[], redoStack=[], bucketColor='#dbeafe', colorCopyReady=false, polyHover=null;
+const basePalette=['#111827','#ffffff','#64748b','#d1d5db','#ef4444','#f97316','#facc15','#22c55e','#38bdf8','#2563eb','#8b5cf6','#ec4899'];
+let customPalette=JSON.parse(localStorage.getItem('chousaZuCustomPalette')||'[]');
+let drag=null, polyDraft=[], elbowDraft=[];
+let underlay={src:null,x:30,y:105,w:1120,h:685,opacity:.45,visible:true,locked:true};
+const materials=[{input:1,name:'石A'},{input:2,name:'オークの板材A'},{input:3,name:'銅ブロックA'},{input:5,name:'白色羊毛A'},{input:12,name:'レンガブロックA'},{input:29,name:'エンドストーンA'}];
+const id=()=> 'o'+(seq++); const clone=o=>JSON.parse(JSON.stringify(o)); const selected=()=>objects.filter(o=>selectedIds.includes(o.id)); const obj=idv=>objects.find(o=>o.id===idv);
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function pnt(evt){const r=svg.getBoundingClientRect();return{x:(evt.clientX-r.left)*1180/r.width,y:(evt.clientY-r.top)*820/r.height}}
+function ss(v){return snap?Math.round(v/grid)*grid:v} function sp(p){return{x:ss(p.x),y:ss(p.y)}}
+function pushHist(){hist.push(JSON.stringify({objects,underlay}));if(hist.length>80)hist.shift();redoStack=[]} function undo(){if(!hist.length)return;redoStack.push(JSON.stringify({objects,underlay}));let s=JSON.parse(hist.pop());objects=s.objects;underlay=s.underlay;selectedIds=[];render()} function redo(){if(!redoStack.length)return;hist.push(JSON.stringify({objects,underlay}));let s=JSON.parse(redoStack.pop());objects=s.objects;underlay=s.underlay;selectedIds=[];render()}
+function pathFromShape(o){let pts=shapePoints(o); return pts.map((p,i)=>(i?'L':'M')+p.x+','+p.y).join(' ')+' Z'}
+function shapePoints(o){let x=o.x,y=o.y,w=o.w,h=o.h; const P=(a,b)=>({x:x+a*w,y:y+b*h});
+ if(o.shape==='rect')return[P(0,0),P(1,0),P(1,1),P(0,1)];
+ if(o.shape==='rtri')return[P(0,0),P(0,1),P(1,1)];
+ if(o.shape==='l')return[P(0,0),P(.45,0),P(.45,.45),P(1,.45),P(1,1),P(0,1)];
+ if(o.shape==='t')return[P(0,0),P(1,0),P(1,.35),P(.62,.35),P(.62,1),P(.38,1),P(.38,.35),P(0,.35)];
+ if(o.shape==='cross')return[P(.38,0),P(.62,0),P(.62,.32),P(1,.32),P(1,.68),P(.62,.68),P(.62,1),P(.38,1),P(.38,.68),P(0,.68),P(0,.32),P(.38,.32)];
+ if(o.shape==='concave')return[P(0,0),P(1,0),P(1,1),P(.62,1),P(.62,.55),P(.38,.55),P(.38,1),P(0,1)];
+ return (o.points||[]).map(q=>({x:x+q[0]*w,y:y+q[1]*h}));
+}
+function rectFromPts(pts){let xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);let x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;return{x,y,w:Math.max(1,w),h:Math.max(1,h)}}
+function baseBox(o){
+  if(o.type==='shape')return{x:o.x,y:o.y,w:o.w,h:o.h};
+  if(o.type==='label')return{x:o.x,y:o.y,w:o.w||150,h:o.h||46};
+  if(o.type==='sample'){let w=o.w||18,h=o.h||18;return{x:o.x-w/2,y:o.y-h/2,w,h}};
+  if(o.type==='room'){let w=o.w||54,h=o.h||24;return{x:o.x-w/2,y:o.y-h/2,w,h}};
+  if(o.type==='text')return{x:o.x,y:o.y,w:o.w||110,h:o.h||32};
+  if(o.type==='line'){let b=rectFromPts(resolvedLinePts(o));return b}
+  return{x:0,y:0,w:0,h:0}
+}
+function pivotPoint(o){let b=baseBox(o);let p=o.pivot||'center';let m={center:[.5,.5],tl:[0,0],tr:[1,0],bl:[0,1],br:[1,1]};let a=m[p]||m.center;return{x:b.x+b.w*a[0],y:b.y+b.h*a[1]}}
+function rotAttr(o){let r=o.rot||0;if(!r)return'';let p=pivotPoint(o);return` rotate(${r} ${p.x} ${p.y})`}
+function linePath(pts){return pts.map((p,i)=>(i?'L':'M')+p.x+','+p.y).join(' ')}
+function markerFor(k){return k==='arrow'?'url(#mkArrow)':k==='circle'?'url(#mkCircle)':k==='square'?'url(#mkSquare)':''}
+
+function labelLines(o){let t=(o.text||'試料No.1-①\n部位 建材名称').split(/\n|\s*\/\s*/);return [t[0]||'試料No.1-①',t[1]||'部位 建材名称']}
+function anchorFor(o,side){
+  if(!o)return{x:0,y:0};
+  if(o.type==='sample'){
+    const r=(o.w||18)/2;
+    const map={center:[0,0],top:[0,-1],tr:[.707,-.707],right:[1,0],br:[.707,.707],bottom:[0,1],bl:[-.707,.707],left:[-1,0],tl:[-.707,-.707]};
+    const a=map[side]||map.center;
+    return{x:o.x+a[0]*r,y:o.y+a[1]*r};
+  }
+  if(o.type==='room'){
+    let w=o.w||54,h=o.h||24,x=o.x-w/2,y=o.y-h/2;
+    if(side==='top')return{x:o.x,y:y}; if(side==='bottom')return{x:o.x,y:y+h};
+    if(side==='left')return{x:x,y:o.y}; if(side==='right')return{x:x+w,y:o.y};
+    return{x:o.x,y:o.y};
+  }
+  let b=baseBox(o); if(side==='top')return{x:b.x+b.w/2,y:b.y};if(side==='bottom')return{x:b.x+b.w/2,y:b.y+b.h};if(side==='left')return{x:b.x,y:b.y+b.h/2};return{x:b.x+b.w,y:b.y+b.h/2};
+}
+function labelAnchor(o,side){return anchorFor(o,side)}
+function attachSides(o){return o.type==='sample'?['top','tr','right','br','bottom','bl','left','tl']:['top','right','bottom','left']}
+function nearestAttach(p,excludeId){
+  let best=null, bestD=22;
+  objects.forEach(o=>{
+    if(o.id===excludeId)return;
+    if(!['label','sample','room'].includes(o.type))return;
+    attachSides(o).forEach(side=>{let a=anchorFor(o,side);let d=Math.hypot(p.x-a.x,p.y-a.y);if(d<bestD){bestD=d;best={id:o.id,side,x:a.x,y:a.y}}});
+  });
+  return best;
+}
+
+function canPaint(o){return o&&['shape','sample'].includes(o.type)}
+function setCurrentColor(c, ready=true){bucketColor=toHex(c||bucketColor);colorCopyReady=ready;let d=document.getElementById('detailColor');if(d)d.value=bucketColor;let cbox=document.getElementById('bucketColor');if(cbox)cbox.value=bucketColor;renderPalette();}
+function applyBucket(o){if(!canPaint(o))return false;pushHist();o.fillColor=bucketColor;o.noFill=false;selectedIds=[o.id];render();flash('塗りました');return true}
+function pickColor(o){if(!canPaint(o))return false;setCurrentColor(o.fillColor||fillOf(o),true);selectedIds=[o.id];render();flash('色を取得しました');return true}
+function colorCopyClick(o){if(!canPaint(o))return false;if(!colorCopyReady){pickColor(o);return true}return applyBucket(o)}
+function saveCurrentColor(){let c=toHex(bucketColor);if(!customPalette.map(x=>x.toLowerCase()).includes(c.toLowerCase())){customPalette.push(c);localStorage.setItem('chousaZuCustomPalette',JSON.stringify(customPalette));renderPalette();flash('カスタムに保存しました')}}
+function toHex(c){if(!c)return '#dbeafe'; if(c[0]==='#')return c; const m=c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/); if(!m)return '#dbeafe'; return '#'+[m[1],m[2],m[3]].map(n=>(+n).toString(16).padStart(2,'0')).join('')}
+
+function fillOf(o){
+  if(!o)return '#dbeafe';
+  if(o.type==='sample')return o.fillColor||'#ef4444';
+  return o.fillColor||'#dbeafe';
+}
+function strokeOf(o){
+  if(!o)return '#334155';
+  if(o.type==='sample')return o.strokeColor||o.fillColor||'#ef4444';
+  return o.strokeColor||'#334155';
+}
+function lineColorOf(o){return (o&&o.lineColor)||'#111827'}
+function shapeStyle(o){
+  const fill = o.noFill ? 'rgba(255,255,255,0)' : fillOf(o);
+  const stroke = o.noStroke ? 'none' : strokeOf(o);
+  const sw = o.strokeWidth ?? 2;
+  const dash = o.dashed ? ';stroke-dasharray:8 6' : '';
+  return `fill:${fill};stroke:${stroke};stroke-width:${sw};vector-effect:non-scaling-stroke${dash}`;
+}
+function lineStyle(o){
+  const stroke = lineColorOf(o);
+  const sw = o.lineWidth ?? 3;
+  return `stroke:${stroke};stroke-width:${sw};fill:none;vector-effect:non-scaling-stroke`;
+}
+function layerRank(o){
+  if(!o)return 0;
+  if(o.type==='shape')return 10;
+  if(o.type==='line')return 20;
+  if(o.type==='sample')return 30;
+  if(o.type==='room')return 40;
+  if(o.type==='label')return 50;
+  return 45;
+}
+function renderOrder(){
+  return objects.map((o,i)=>({o,i})).sort((a,b)=>{
+    const d=layerRank(a.o)-layerRank(b.o);
+    return d || a.i-b.i;
+  }).map(x=>x.o);
+}
+
+function changeZ(o,mode){if(!o)return;let i=objects.findIndex(x=>x.id===o.id);if(i<0)return;pushHist();let [it]=objects.splice(i,1);let ni=i;if(mode==='front')ni=Math.min(objects.length,i+1);if(mode==='back')ni=Math.max(0,i-1);if(mode==='top')ni=objects.length;if(mode==='bottom')ni=0;objects.splice(ni,0,it);render()}
+function sampleAt(p){
+  for(let i=objects.length-1;i>=0;i--){
+    const o=objects[i];
+    if(o.type==='sample'){
+      const r=(o.w||18)/2+4;
+      if(Math.hypot(p.x-o.x,p.y-o.y)<=r)return o;
+    }
+  }
+  return null;
+}
+function endpointPos(o,idx){
+  let pts=o.pts||[];
+  if(idx===0 && o.startAttach){let t=obj(o.startAttach.id);if(t)return anchorFor(t,o.startAttach.side)}
+  if(idx===pts.length-1 && o.endAttach){let t=obj(o.endAttach.id);if(t)return anchorFor(t,o.endAttach.side)}
+  return clone(pts[idx]||{x:0,y:0});
+}
+function lineStart(o){return endpointPos(o,0)}
+function lineEnd(o){return endpointPos(o,(o.pts||[]).length-1)}
+function calcElbowMidX(o,a,b){
+  if(o.midRatio!=null && Math.abs(b.x-a.x)>1) return ss(a.x+(b.x-a.x)*o.midRatio);
+  if(o.midX!=null && Math.abs(b.x-a.x)>1){
+    o.midRatio=Math.max(-2,Math.min(3,(o.midX-a.x)/(b.x-a.x)));
+    return ss(a.x+(b.x-a.x)*o.midRatio);
+  }
+  return ss((a.x+b.x)/2);
+}
+function resolvedLinePts(o){
+  let pts=clone(o.pts||[]);
+  if(!pts.length)return pts;
+  let a=lineStart(o), b=lineEnd(o);
+  if((o.lineKind||'straight')==='elbow'){
+    let midX = calcElbowMidX(o,a,b);
+    return makeElbow(a,b,midX);
+  }
+  pts[0]=a; pts[pts.length-1]=b;
+  return pts;
+}
+function syncLineGeometry(o){
+  if(!o||o.type!=='line')return;
+  if((o.lineKind||'straight')==='elbow'){
+    let a=lineStart(o), b=lineEnd(o);
+    let midX=calcElbowMidX(o,a,b);
+    o.pts=makeElbow(a,b,midX);
+    if(o.pts.length>=4)o.midX=o.pts[1].x;
+  }else{
+    let a=lineStart(o), b=lineEnd(o);
+    if(o.pts && o.pts.length>=2){o.pts[0]=a;o.pts[o.pts.length-1]=b;if(o.pts.length>2)o.pts=[a,b];}
+  }
+}
+function render(){renderUnderlay();objG.innerHTML='';uiG.innerHTML='';renderOrder().forEach(o=>drawObj(o));drawUI();updatePanel();renderPalette();}
+function renderUnderlay(){underG.innerHTML='';if(!underlay.src||!underlay.visible)return;let cls=underlay.locked?'underlay':'underlay-edit';underG.insertAdjacentHTML('beforeend',`<image class="${cls}" data-underlay="1" href="${underlay.src}" x="${underlay.x}" y="${underlay.y}" width="${underlay.w}" height="${underlay.h}" opacity="${underlay.opacity}"></image>`)}
+function drawObj(o){let sel=selectedIds.includes(o.id), s=sel?' selected-stroke':''; if(o.type==='shape'){if(o.shape==='circle'){objG.insertAdjacentHTML('beforeend',`<ellipse data-id="${o.id}" class="circle-fill${s}" style="${shapeStyle(o)}" cx="${o.x+o.w/2}" cy="${o.y+o.h/2}" rx="${o.w/2}" ry="${o.h/2}" transform="${rotAttr(o)}"></ellipse>`)}else{objG.insertAdjacentHTML('beforeend',`<path data-id="${o.id}" class="obj-fill${s}" style="${shapeStyle(o)}" d="${pathFromShape(o)}" transform="${rotAttr(o)}"></path>`)} }
+ else if(o.type==='line'){let dash=o.dashed?' stroke-dasharray="8 6"':'';let start=markerFor(o.startCap), end=markerFor(o.endCap), pts=resolvedLinePts(o);objG.insertAdjacentHTML('beforeend',`<path data-id="${o.id}" class="obj-line${s}" style="${lineStyle(o)}" d="${linePath(pts)}"${dash} marker-start="${start}" marker-end="${end}"></path><path data-id="${o.id}" class="hit-line" d="${linePath(pts)}"></path>`)}
+ else if(o.type==='text'){objG.insertAdjacentHTML('beforeend',`<text data-id="${o.id}" class="plain-text${s}" x="${o.x}" y="${o.y}" transform="${rotAttr(o)}">${esc(o.text)}</text>`)}
+ else if(o.type==='room'){objG.insertAdjacentHTML('beforeend',`<text data-id="${o.id}" class="room-text${s}" x="${o.x}" y="${o.y}" transform="${rotAttr(o)}">${esc(o.text||'1-1')}</text>`)}
+ else if(o.type==='label'){let lines=labelLines(o);objG.insertAdjacentHTML('beforeend',`<g data-id="${o.id}" transform="${rotAttr(o)}"><rect class="label-box${s}" x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" rx="2"></rect><text class="label-text" x="${o.x+7}" y="${o.y+5}"><tspan x="${o.x+7}" dy="0">${esc(lines[0])}</tspan><tspan x="${o.x+7}" dy="18">${esc(lines[1])}</tspan></text></g>`)}
+ else if(o.type==='sample'){objG.insertAdjacentHTML('beforeend',`<circle data-id="${o.id}" class="sample-dot${s}" style="fill:${o.noFill?'rgba(255,255,255,0)':(o.fillColor||'#ef4444')};stroke:${o.noStroke?'none':(o.strokeColor||o.fillColor||'#ef4444')};stroke-width:${o.noStroke?0:(o.strokeWidth||1)};vector-effect:non-scaling-stroke" cx="${o.x}" cy="${o.y}" r="${(o.w||18)/2}" transform="${rotAttr(o)}"></circle>`)} }
+function drawUI(){if(!selectedIds.length)return; if(selectedIds.length>1){let pts=[];selected().forEach(o=>{let b=baseBox(o);pts.push({x:b.x,y:b.y},{x:b.x+b.w,y:b.y+b.h})});let b=rectFromPts(pts);uiG.insertAdjacentHTML('beforeend',`<rect class="selbox" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}"></rect>`);return}
+ let o=obj(selectedIds[0]); if(!o)return; let b=baseBox(o);uiG.insertAdjacentHTML('beforeend',`<rect class="selbox" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}"></rect>`);
+ if(o.type==='shape' && editMode==='vertex' && o.shape!=='circle'){shapePoints(o).forEach((p,i)=>uiG.insertAdjacentHTML('beforeend',`<circle class="vertex" data-vidx="${i}" cx="${p.x}" cy="${p.y}" r="7"></circle>`));return}
+ if(o.type==='line'){
+  let pts=resolvedLinePts(o), last=pts.length-1;
+  [0,last].forEach(i=>{let p=pts[i];let attached=(i===0&&o.startAttach)||(i===last&&o.endAttach);uiG.insertAdjacentHTML('beforeend',`<circle class="line-handle ${attached?'attached':''}" data-lidx="${i}" cx="${p.x}" cy="${p.y}" r="3.6"></circle>`)});
+  if((o.lineKind||'straight')==='elbow' && pts.length>=4){
+    let mid={x:pts[1].x,y:(pts[1].y+pts[2].y)/2};
+    uiG.insertAdjacentHTML('beforeend',`<circle class="elbow-mid" data-elbowmid="1" cx="${mid.x}" cy="${mid.y}" r="6"></circle>`);
+  }
+  return}
+ if(['shape','label'].includes(o.type)){let pts=[[b.x,b.y,'nw'],[b.x+b.w,b.y,'ne'],[b.x+b.w,b.y+b.h,'se'],[b.x,b.y+b.h,'sw']];pts.forEach((h,i)=>uiG.insertAdjacentHTML('beforeend',`<rect class="handle ${i%2?'alt':''}" data-h="${h[2]}" x="${h[0]-6}" y="${h[1]-6}" width="12" height="12" rx="2"></rect>`))}
+ if(['label','room'].includes(o.type)){attachSides(o).forEach(side=>{let a=anchorFor(o,side);uiG.insertAdjacentHTML('beforeend',`<circle class="conn-handle" data-conn="${side}" cx="${a.x}" cy="${a.y}" r="5"></circle>`)});}
+}
+function addObject(o){pushHist();objects.push(o);selectedIds=[o.id];if(!document.getElementById('continuous').checked){tool='select';setToolUI()}render()}
+function addShape(shape){let w=160,h=112;if(shape==='circle'){w=112;h=112}let x=ss(176+objects.length*10),y=ss(160+objects.length*8);w=ss(w);h=ss(h);addObject({id:id(),type:'shape',shape,x,y,w,h,rot:0,pivot:'center',fillColor:'#dbeafe',strokeColor:'#334155',strokeWidth:2,dashed:false,points:shape==='poly'?[[.1,.1],[.8,.18],[.9,.7],[.45,.9],[.12,.62]]:undefined})}
+function startDrag(kind,evt,extra={}){drag={kind,start:pnt(evt),orig:clone({objects,underlay}),...extra};svg.setPointerCapture?.(evt.pointerId)}
+function svgDown(e){let p=pnt(e);let target=e.target;
+ if(target.dataset.conn){let src=obj(selectedIds[0]);if(src && src.type!=='sample'){pushHist();let a=anchorFor(src,target.dataset.conn);let o={id:id(),type:'line',pts:[a,a],startCap:'none',endCap:'none',dashed:false,lineKind:'straight',lineColor:'#111827',lineWidth:3,startAttach:{id:src.id,side:target.dataset.conn}};objects.push(o);selectedIds=[o.id];startDrag('connline',e,{id:o.id});render();return}} if(target.dataset.h){pushHist();startDrag('resize',e,{handle:target.dataset.h,ids:[...selectedIds],center:e.ctrlKey||document.getElementById('centerResize').checked,ratio:e.shiftKey||document.getElementById('ratioResize').checked});return}
+ if(target.dataset.elbowmid){pushHist();startDrag('elbowmid',e,{id:selectedIds[0]});return}
+ if(target.dataset.vidx){pushHist();startDrag('vertex',e,{vidx:+target.dataset.vidx,id:selectedIds[0]});return}
+ if(target.dataset.lidx){pushHist();startDrag('linept',e,{lidx:+target.dataset.lidx,id:selectedIds[0]});return}
+ if(target.dataset.underlay && !underlay.locked){pushHist();startDrag('underlay',e);return}
+ if(tool==='colorcopy'){let hit=target.closest('[data-id]'); if(hit){colorCopyClick(obj(hit.dataset.id));} return}
+ if(tool==='line'||tool==='correct'){pushHist();let q=sp(p);let att=nearestAttach(q); if(att && obj(att.id)?.type==='sample') att=null; if(att)q={x:att.x,y:att.y};let o={id:id(),type:'line',pts:[q,q],startCap:'none',endCap:'none',dashed:false,lineKind:'straight',lineColor:'#111827',lineWidth:3}; if(att)o.startAttach={id:att.id,side:att.side};objects.push(o);selectedIds=[o.id];startDrag(tool==='correct'?'correctline':'newline',e,{id:o.id});render();return}
+ if(tool==='elbow'){pushHist();let q=sp(p);let att=nearestAttach(q); if(att && obj(att.id)?.type==='sample') att=null; if(att)q={x:att.x,y:att.y};let o={id:id(),type:'line',pts:[q,q,q,q],startCap:'none',endCap:'none',dashed:false,lineKind:'elbow',lineColor:'#111827',lineWidth:3}; if(att)o.startAttach={id:att.id,side:att.side};objects.push(o);selectedIds=[o.id];startDrag('newelbow',e,{id:o.id});render();return}
+ if(tool==='poly'){addPolyPoint(p);return}
+ if(tool==='text'){addObject({id:id(),type:'text',x:ss(p.x),y:ss(p.y),text:'テキスト',rot:0,pivot:'center'});return}
+ if(tool==='room'){addObject({id:id(),type:'room',x:ss(p.x),y:ss(p.y),w:54,h:24,text:'1-1',rot:0,pivot:'center'});return}
+ if(tool==='label'){addObject({id:id(),type:'label',x:ss(p.x),y:ss(p.y),w:150,h:46,text:'試料No.1-①\n部位 建材名称',rot:0,pivot:'center'});return}
+ if(tool==='sample'){addObject({id:id(),type:'sample',x:ss(p.x),y:ss(p.y),w:18,h:18,text:'',rot:0,pivot:'center',fillColor:'#ef4444',strokeColor:'#ef4444',strokeWidth:1});return}
+ let hit=target.closest('[data-id]'); if(hit){let hid=hit.dataset.id;if(e.shiftKey){selectedIds=selectedIds.includes(hid)?selectedIds.filter(x=>x!==hid):[...selectedIds,hid]}else if(!selectedIds.includes(hid))selectedIds=[hid];startDrag('move',e,{ids:[...selectedIds]});render();return}
+ selectedIds=[];startDrag('rubber',e);render();}
+function svgMove(e){let p=pnt(e); if(!drag){ if(tool==='poly'&&polyDraft.length){polyHover=sp(p);drawDraft();} return;} let dx=p.x-drag.start.x, dy=p.y-drag.start.y; if(drag.kind==='rubber'){draftG.innerHTML=`<rect class="rubber" x="${Math.min(drag.start.x,p.x)}" y="${Math.min(drag.start.y,p.y)}" width="${Math.abs(dx)}" height="${Math.abs(dy)}"></rect>`;return}
+ if(drag.kind==='newline'||drag.kind==='correctline'||drag.kind==='connline'){let o=obj(drag.id);let q=sp(p); if(drag.kind==='correctline') q=correctEnd(o.pts[0], q); let hit=nearestAttach(q,o?.id); if(hit)q={x:hit.x,y:hit.y}; o.pts[o.pts.length-1]=q;render();return}
+ if(drag.kind==='newelbow'){let o=obj(drag.id);let end=sp(p);let hit=nearestAttach(end,o?.id); if(hit)end={x:hit.x,y:hit.y};o.midRatio=.5;o.pts=makeElbow(o.pts[0],end);render();return}
+ if(drag.kind==='underlay'){underlay.x=ss(drag.orig.underlay.x+dx);underlay.y=ss(drag.orig.underlay.y+dy);render();return}
+ objects=clone(drag.orig.objects); if(drag.kind==='move'){drag.ids.forEach(idv=>moveObj(obj(idv),dx,dy,true));render();return}
+ if(drag.kind==='resize'){resizeObj(obj(drag.ids[0]),drag.handle,p,drag);render();return}
+ if(drag.kind==='vertex'){let o=obj(drag.id);let q=sp(p), b=baseBox(o); if(o && o.type==='shape'){if(!o.points){o.points=shapePoints(o).map(pt=>[(pt.x-o.x)/o.w,(pt.y-o.y)/o.h]);o.shape='poly'} o.points[drag.vidx]=[(q.x-o.x)/o.w,(q.y-o.y)/o.h]} render();return}
+ if(drag.kind==='elbowmid'){let o=obj(drag.id); if(o){let q=sp(p); let a=lineStart(o), b=lineEnd(o); o.midX=q.x; if(Math.abs(b.x-a.x)>1)o.midRatio=Math.max(-2,Math.min(3,(o.midX-a.x)/(b.x-a.x))); o.pts=makeElbow(a,b,o.midX);} render();return}
+ if(drag.kind==='linept'){
+  let o=obj(drag.id);
+  if(o){
+    let q=sp(p);
+    let pts=resolvedLinePts(o);
+    let last=pts.length-1;
+    if(drag.lidx===0 || drag.lidx===last){
+      let hit=nearestAttach(q,o.id);
+      if(hit)q={x:hit.x,y:hit.y};
+    }
+    if((o.lineKind||'straight')==='elbow'){
+      if(drag.lidx===0){
+        delete o.startAttach;
+        let a=q,b=lineEnd(o);
+        let mx=calcElbowMidX(o,a,b);
+        o.pts=makeElbow(a,b,mx);
+      }
+      else if(drag.lidx===last){
+        delete o.endAttach;
+        let a=lineStart(o),b=q;
+        let mx=calcElbowMidX(o,a,b);
+        o.pts=makeElbow(a,b,mx);
+      }
+      else {
+        let a=lineStart(o), b=lineEnd(o);
+        o.midX=ss(q.x);
+        if(Math.abs(b.x-a.x)>1)o.midRatio=Math.max(-2,Math.min(3,(o.midX-a.x)/(b.x-a.x)));
+        o.pts=makeElbow(a,b,o.midX);
+      }
+    }else{
+      if(drag.lidx===0){ delete o.startAttach; o.pts[0]=q; }
+      else if(drag.lidx===last){ delete o.endAttach; o.pts[o.pts.length-1]=q; }
+      else { o.pts[drag.lidx]=q; }
+    }
+  }
+  render();return}}
+function svgUp(e){if(!drag)return; 
+ if(drag.kind==='rubber'){let p=pnt(e), r={x:Math.min(drag.start.x,p.x),y:Math.min(drag.start.y,p.y),w:Math.abs(p.x-drag.start.x),h:Math.abs(p.y-drag.start.y)};selectedIds=objects.filter(o=>intersects(baseBox(o),r)).map(o=>o.id);draftG.innerHTML='';}
+ if(['newline','correctline','newelbow','connline'].includes(drag.kind)){
+  let o=obj(drag.id); if(o){let pts=resolvedLinePts(o);let q=pts[pts.length-1];let hit=nearestAttach(q,o.id); if(hit){o.endAttach={id:hit.id,side:hit.side};} syncLineGeometry(o);}
+}
+ if(drag.kind==='elbowmid'){let o=obj(drag.id); if(o){let q=sp(p); let a=lineStart(o), b=lineEnd(o); o.midX=q.x; if(Math.abs(b.x-a.x)>1)o.midRatio=Math.max(-2,Math.min(3,(o.midX-a.x)/(b.x-a.x))); o.pts=makeElbow(a,b,o.midX);} render();return}
+ if(drag.kind==='linept'){
+  let o=obj(drag.id); if(o){let pts=resolvedLinePts(o);let last=pts.length-1;
+    if(drag.lidx===0){let hit=nearestAttach(pts[0],o.id); if(hit){o.startAttach={id:hit.id,side:hit.side}}else{delete o.startAttach}}
+    if(drag.lidx===last){let hit=nearestAttach(pts[last],o.id); if(hit){o.endAttach={id:hit.id,side:hit.side}}else{delete o.endAttach}}
+    syncLineGeometry(o);
+  }
+ }
+ if(['newline','correctline','newelbow','connline'].includes(drag.kind) && !document.getElementById('continuous').checked){tool='select';setToolUI()} drag=null;render()}
+function intersects(a,b){return a.x<=b.x+b.w&&a.x+a.w>=b.x&&a.y<=b.y+b.h&&a.y+a.h>=b.y}
+function moveObj(o,dx,dy,doSnap=false){if(!o)return;if(o.type==='shape'||o.type==='label'||o.type==='room'){let nx=o.x+dx,ny=o.y+dy;o.x=doSnap?ss(nx):nx;o.y=doSnap?ss(ny):ny}else if(o.type==='line'){o.pts.forEach(p=>{p.x=doSnap?ss(p.x+dx):p.x+dx;p.y=doSnap?ss(p.y+dy):p.y+dy})}else{let nx=o.x+dx,ny=o.y+dy;o.x=doSnap?ss(nx):nx;o.y=doSnap?ss(ny):ny}}
+function snapSize(v){return snap?Math.max(grid,Math.round(v/grid)*grid):Math.max(16,v)}
+function resizeObj(o,h,p,dr){if(!o||!['shape','label'].includes(o.type))return;let oo=drag.orig.objects.find(x=>x.id===o.id), b=baseBox(oo);let x=b.x,y=b.y,w=b.w,hgt=b.h;let px=snap?ss(p.x):p.x,py=snap?ss(p.y):p.y;let cx=x+w/2,cy=y+hgt/2;let nx=x,ny=y,nw=w,nh=hgt;
+ if(dr.center){nw=Math.max(16,Math.abs(px-cx)*2);nh=Math.max(16,Math.abs(py-cy)*2);nx=cx-nw/2;ny=cy-nh/2}else{if(h.includes('e'))nw=Math.max(16,px-x);if(h.includes('s'))nh=Math.max(16,py-y);if(h.includes('w')){nw=Math.max(16,x+w-px);nx=x+w-nw}if(h.includes('n')){nh=Math.max(16,y+hgt-py);ny=y+hgt-nh}}
+ if(dr.ratio){let ar=w/hgt;if(nw/nh>ar)nw=nh*ar;else nh=nw/ar;if(dr.center){nx=cx-nw/2;ny=cy-nh/2}else{if(h.includes('w'))nx=x+w-nw;if(h.includes('n'))ny=y+hgt-nh}}
+ if(snap){nw=snapSize(nw);nh=snapSize(nh);if(dr.center){nx=cx-nw/2;ny=cy-nh/2}else{if(h.includes('w'))nx=x+w-nw;if(h.includes('n'))ny=y+hgt-nh;nx=ss(nx);ny=ss(ny)}}
+ o.x=nx;o.y=ny;o.w=nw;o.h=nh}
+function addPolyPoint(p){polyHover=null;let q=sp(p); if(polyDraft.length>=3){let f=polyDraft[0];if(Math.hypot(q.x-f.x,q.y-f.y)<18){finishPoly();return}} polyDraft.push(q);drawDraft();document.getElementById('finishPoly').style.display=polyDraft.length>=3?'block':'none';document.getElementById('cancelPoly').style.display='block'}
+function drawDraft(){draftG.innerHTML=''; if(polyDraft.length){draftG.insertAdjacentHTML('beforeend',`<polyline class="draft-line" points="${polyDraft.map(p=>p.x+','+p.y).join(' ')}"></polyline>`); if(polyHover){let last=polyDraft[polyDraft.length-1];draftG.insertAdjacentHTML('beforeend',`<line class="draft-line" x1="${last.x}" y1="${last.y}" x2="${polyHover.x}" y2="${polyHover.y}" stroke-dasharray="4 8"></line>`)} polyDraft.forEach(p=>draftG.insertAdjacentHTML('beforeend',`<circle class="draft-point" cx="${p.x}" cy="${p.y}" r="5"></circle>`))} if(elbowDraft.length){draftG.insertAdjacentHTML('beforeend',`<polyline class="draft-line" points="${elbowDraft.map(p=>p.x+','+p.y).join(' ')}"></polyline>`);elbowDraft.forEach(p=>draftG.insertAdjacentHTML('beforeend',`<circle class="draft-point" cx="${p.x}" cy="${p.y}" r="5"></circle>`))}}
+function finishPoly(){if(polyDraft.length<3)return;let b=rectFromPts(polyDraft);addObject({id:id(),type:'shape',shape:'poly',x:b.x,y:b.y,w:b.w,h:b.h,points:polyDraft.map(p=>[(p.x-b.x)/b.w,(p.y-b.y)/b.h]),rot:0,pivot:'center'});cancelPoly()} function cancelPoly(){polyDraft=[];polyHover=null;draftG.innerHTML='';document.getElementById('finishPoly').style.display='none';document.getElementById('cancelPoly').style.display='none'}
+function makeElbow(a,b,midX=null){let mx=midX==null?ss((a.x+b.x)/2):ss(midX);return[{x:a.x,y:a.y},{x:mx,y:a.y},{x:mx,y:b.y},{x:b.x,y:b.y}]}
+function correctEnd(a,b){if(!snap)return b;let dx=b.x-a.x,dy=b.y-a.y;let adx=Math.abs(dx),ady=Math.abs(dy);if(adx<ady*.35)return{x:a.x,y:b.y};if(ady<adx*.35)return{x:b.x,y:a.y};let m=Math.max(adx,ady);return{x:a.x+Math.sign(dx||1)*m,y:a.y+Math.sign(dy||1)*m}}
+function finishElbow(){} function cancelElbow(){elbowDraft=[];draftG.innerHTML='';let a=document.getElementById('finishElbow'),b=document.getElementById('cancelElbow');if(a)a.style.display='none';if(b)b.style.display='none'}
+function updatePanel(){const ep=document.getElementById('editPanel'), st=document.getElementById('selType'); if(!selectedIds.length){st.textContent='未選択';ep.innerHTML='<div class="empty">図形を選択すると編集項目が出ます</div>';return} if(selectedIds.length>1){st.textContent=selectedIds.length+'件'; ep.innerHTML=`<div class="empty">複数選択中：${selectedIds.length}件</div><button id="del2Btn" class="danger" style="width:100%;margin-top:8px">選択を削除</button>`;document.getElementById('del2Btn').onclick=delSel;return}
+let o=obj(selectedIds[0]);st.textContent=o.type==='shape'?'図形':o.type==='line'?'線':o.type==='text'?'テキスト':o.type==='room'?'部屋No.':o.type==='label'?'試料ラベル':o.type==='sample'?'採取位置':'オブジェクト';let b=baseBox(o);let html=''; if(['text','label','room'].includes(o.type))html+=`<div class="row"><label>文字</label><input id="edText" value="${esc((o.text||'').replace(/\n/g,' / '))}"></div>`;
+html+=`<div class="row"><label>X</label><input id="edX" type="number" value="${Math.round(b.x)}"></div><div class="row"><label>Y</label><input id="edY" type="number" value="${Math.round(b.y)}"></div>`; if(['shape','label'].includes(o.type))html+=`<div class="row"><label>幅</label><input id="edW" type="number" value="${Math.round(b.w)}"></div><div class="row"><label>高さ</label><input id="edH" type="number" value="${Math.round(b.h)}"></div>`;
+ if(['shape','sample'].includes(o.type))html+=`<div class="hr"></div><div class="row"><label>塗り色</label><input id="edFill" class="colorbox" type="color" value="${toHex(o.fillColor||fillOf(o))}"></div><div class="checkrow"><input id="edNoFill" type="checkbox"><label for="edNoFill">塗りなし（透明）</label></div><div class="row"><label>枠線色</label><input id="edStroke" class="colorbox" type="color" value="${toHex(o.strokeColor||strokeOf(o))}"></div><div class="checkrow"><input id="edNoStroke" type="checkbox"><label for="edNoStroke">枠線なし</label></div><div class="row"><label>枠線太さ</label><input id="edStrokeW" type="number" min="0" step="0.5" value="${o.strokeWidth||2}"></div><div class="checkrow"><input id="edShapeDash" type="checkbox"><label for="edShapeDash">点線</label></div>`;
+ if(o.type==='shape')html+=`<div class="hr"></div><div class="layergrid"><button id="zFront">前面へ</button><button id="zBack">背面へ</button><button id="zTop">最前面へ</button><button id="zBottom">最背面へ</button></div><div class="style-note">※図形レイヤー内で順番変更。ラベル/赤丸/コネクタは上位表示。</div>`;
+ if(o.type==='line')html+=`<div class="hr"></div><div class="row"><label>線色</label><input id="edLineColor" class="colorbox" type="color" value="${toHex(o.lineColor||lineColorOf(o))}"></div><div class="row"><label>線太さ</label><input id="edLineW" type="number" min="0.5" step="0.5" value="${o.lineWidth||3}"></div><div class="row"><label>始点</label><select id="startCap"><option value="none">なし</option><option value="arrow">矢印</option><option value="circle">丸</option><option value="square">四角</option></select></div><div class="row"><label>終点</label><select id="endCap"><option value="none">なし</option><option value="arrow">矢印</option><option value="circle">丸</option><option value="square">四角</option></select></div><div class="checkrow"><input id="edDash" type="checkbox"><label for="edDash">点線</label></div><div class="row"><label>線形</label><select id="lineKind"><option value="straight">直線</option><option value="elbow">カギ線</option></select></div><button id="addBend" style="width:100%">折れ点追加</button>`;
+ html+=`<div class="hr"></div><div class="row"><label>支点</label><select id="edPivot"><option value="center">中心</option><option value="tl">左上</option><option value="tr">右上</option><option value="bl">左下</option><option value="br">右下</option></select></div><div class="row"><label>角度</label><input id="edRot" type="number" step="0.1" value="${((o.rot||0)).toFixed(1)}"></div><div class="rotgrid"><button id="rotL">↶ 0.1°</button><button id="rotR">↷ 0.1°</button></div><div class="smallgrid" style="margin-top:6px"><button id="rotM1">-1°</button><button id="rot0">0°</button><button id="rotP1">+1°</button></div><div class="hr"></div><button id="copyBtn" style="width:100%">複製</button><button id="del2Btn" class="danger" style="width:100%;margin-top:8px">削除</button>`;
+ep.innerHTML=html;bindPanel(o)}
+function bindPanel(o){const $=id=>document.getElementById(id); if($('edText'))$('edText').onchange=e=>{pushHist();o.text=o.type==='label'?e.target.value.replace(' / ','\n'):e.target.value;render()}; if($('edX'))$('edX').onchange=e=>{pushHist();moveObj(o,+e.target.value-baseBox(o).x,0,false);render()}; if($('edY'))$('edY').onchange=e=>{pushHist();moveObj(o,0,+e.target.value-baseBox(o).y,false);render()}; if($('edW'))$('edW').onchange=e=>{pushHist();o.w=Math.max(8,+e.target.value);render()}; if($('edH'))$('edH').onchange=e=>{pushHist();o.h=Math.max(8,+e.target.value);render()}; if($('edRot'))$('edRot').onchange=e=>{pushHist();o.rot=+e.target.value;render()}; if($('edPivot')){$('edPivot').value=o.pivot||'center';$('edPivot').onchange=e=>{pushHist();o.pivot=e.target.value;render()}} 
+ if($('edFill')){$('edFill').onchange=e=>{pushHist();o.fillColor=e.target.value;o.noFill=false;setCurrentColor(e.target.value,true);render()};$('edNoFill').checked=!!o.noFill;$('edNoFill').onchange=e=>{pushHist();o.noFill=e.target.checked;render()};$('edStroke').onchange=e=>{pushHist();o.strokeColor=e.target.value;render()};if($('edNoStroke')){$('edNoStroke').checked=!!o.noStroke;$('edNoStroke').onchange=e=>{pushHist();o.noStroke=e.target.checked;render()}}$('edStrokeW').onchange=e=>{pushHist();o.strokeWidth=+e.target.value;render()};if($('edShapeDash')){$('edShapeDash').checked=!!o.dashed;$('edShapeDash').onchange=e=>{pushHist();o.dashed=e.target.checked;render()}}}
+ if($('zFront')){$('zFront').onclick=()=>changeZ(o,'front');$('zBack').onclick=()=>changeZ(o,'back');$('zTop').onclick=()=>changeZ(o,'top');$('zBottom').onclick=()=>changeZ(o,'bottom')}
+ if(o.type==='line'){ if($('edLineColor'))$('edLineColor').onchange=e=>{pushHist();o.lineColor=e.target.value;render()}; if($('edLineW'))$('edLineW').onchange=e=>{pushHist();o.lineWidth=+e.target.value;render()}; $('startCap').value=o.startCap||'none';$('endCap').value=o.endCap||'none';$('edDash').checked=!!o.dashed;if($('lineKind'))$('lineKind').value=o.lineKind||'straight';$('startCap').onchange=e=>{pushHist();o.startCap=e.target.value;render()};$('endCap').onchange=e=>{pushHist();o.endCap=e.target.value;render()};$('edDash').onchange=e=>{pushHist();o.dashed=e.target.checked;render()};if($('lineKind'))$('lineKind').onchange=e=>{pushHist();o.lineKind=e.target.value;let a=lineStart(o),b=lineEnd(o);if(o.lineKind==='elbow'&&o.pts.length>=2){o.midRatio=.5;o.pts=makeElbow(a,b);o.midX=o.pts[1].x}else if(o.pts.length>2){o.pts=[a,b];delete o.midX;delete o.midRatio}render()};$('addBend').onclick=()=>{pushHist();let pts=o.pts, mid=Math.floor((pts.length-1)/2), a=pts[mid], b=pts[mid+1]||pts[mid];pts.splice(mid+1,0,{x:ss((a.x+b.x)/2),y:ss((a.y+b.y)/2)});render()}}
+ $('rotL').onclick=()=>rotateSel(-.1);$('rotR').onclick=()=>rotateSel(.1);$('rotM1').onclick=()=>rotateSel(-1);$('rotP1').onclick=()=>rotateSel(1);$('rot0').onclick=()=>{pushHist();o.rot=0;render()};$('copyBtn').onclick=copySel;$('del2Btn').onclick=delSel}
+function rotateSel(d){let os=selected();if(!os.length)return;pushHist();os.forEach(o=>o.rot=Math.round(((o.rot||0)+d)*10)/10);render()} function copySel(){let os=selected();if(!os.length)return;pushHist();let ns=os.map(o=>{let n=clone(o);n.id=id();moveObj(n,24,24,false);return n});objects.push(...ns);selectedIds=ns.map(n=>n.id);render()} function delSel(){if(!selectedIds.length)return;pushHist();objects=objects.filter(o=>!selectedIds.includes(o.id));selectedIds=[];render()}
+function convertSelected(){let lines=selected().filter(o=>o.type==='line'); if(!lines.length){flash('線を範囲選択してから図形化してください');return} let pts=[]; lines.forEach(o=>o.pts.forEach(p=>pts.push({x:p.x,y:p.y}))); if(pts.length<3){flash('図形化には3点以上必要です');return} let f=pts[0], l=pts[pts.length-1]; if(Math.hypot(f.x-l.x,f.y-l.y)<grid*1.5)pts=pts.slice(0,-1);let b=rectFromPts(pts);pushHist();objects=objects.filter(o=>!selectedIds.includes(o.id));let n={id:id(),type:'shape',shape:'poly',x:b.x,y:b.y,w:b.w,h:b.h,points:pts.map(p=>[(p.x-b.x)/b.w,(p.y-b.y)/b.h]),rot:0,pivot:'center'};objects.push(n);selectedIds=[n.id];render();flash('囲った線をそのまま図形化しました')}
+function setToolUI(){document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('active',b.dataset.tool===tool))}
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;setToolUI();cancelPoly();cancelElbow();selectedIds=[];render()});document.querySelectorAll('[data-shape]').forEach(b=>b.onclick=()=>{if(b.dataset.shape==='poly'){tool='poly';setToolUI();selectedIds=[];render();flash('キャンバスをタップして多角形の点を追加')}else addShape(b.dataset.shape)});
+svg.addEventListener('pointerdown',svgDown);svg.addEventListener('pointermove',svgMove);svg.addEventListener('pointerup',svgUp);svg.addEventListener('pointerleave',svgUp);
+document.getElementById('gridBtn').onclick=e=>{document.getElementById('sheet').classList.toggle('grid-on');e.currentTarget.classList.toggle('active');e.currentTarget.textContent=e.currentTarget.classList.contains('active')?'グリッドON':'グリッドOFF'};document.getElementById('snapBtn').onclick=e=>{snap=!snap;e.currentTarget.classList.toggle('active');e.currentTarget.textContent=snap?'スナップON':'スナップOFF'};document.getElementById('scaleSel').onchange=e=>{grid=+e.target.value;document.documentElement.style.setProperty('--grid',grid+'px')};document.getElementById('editMode').onchange=e=>{editMode=e.target.value;render()};document.getElementById('undoBtn').onclick=undo;document.getElementById('redoBtn').onclick=redo;document.getElementById('deleteBtn').onclick=delSel;document.getElementById('finishPoly').onclick=finishPoly;document.getElementById('cancelPoly').onclick=cancelPoly;document.getElementById('convertBtn').onclick=convertSelected;
+document.getElementById('sampleRooms').onclick=()=>{pushHist();let lid=id();objects.push({id:id(),type:'shape',shape:'rect',x:120,y:150,w:190,h:130,rot:0,pivot:'center'},{id:id(),type:'shape',shape:'rtri',x:340,y:150,w:170,h:140,rot:0,pivot:'center'},{id:id(),type:'shape',shape:'l',x:540,y:150,w:210,h:160,rot:0,pivot:'center'},{id:id(),type:'room',x:180,y:205,w:54,h:24,text:'101',rot:0,pivot:'center'},{id:lid,type:'label',x:145,y:305,w:150,h:46,text:'試料No.1-①\n壁 石膏ボード',rot:0,pivot:'center'},{id:id(),type:'sample',x:455,y:260,w:18,h:18,text:'',rot:0,pivot:'center',fillColor:'#ef4444',strokeColor:'#ef4444',strokeWidth:1},{id:id(),type:'line',pts:[{x:295,y:328},{x:455,y:260}],startCap:'none',endCap:'none',dashed:false,startAttach:{id:lid,side:'right'}});render()};
+document.getElementById('imgInput').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{pushHist();underlay.src=r.result;underlay.visible=true;render()};r.readAsDataURL(f)};document.getElementById('imgOpacity').oninput=e=>{underlay.opacity=+e.target.value;render()};document.getElementById('imgVisible').onchange=e=>{underlay.visible=e.target.checked;render()};document.getElementById('imgLock').onchange=e=>{underlay.locked=e.target.checked;render()};document.getElementById('clearImg').onclick=()=>{pushHist();underlay.src=null;render()};
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault();undo()} if(e.ctrlKey&&e.key.toLowerCase()==='y'){e.preventDefault();redo()} if(e.key==='Delete')delSel()});
+
+function renderPalette(){
+  const bp=document.getElementById('basePalette'), cp=document.getElementById('customPalette'), st=document.getElementById('colorStatus');
+  function sw(c){return `<button class="swatch ${toHex(c).toLowerCase()===toHex(bucketColor).toLowerCase()?'active':''}" data-color="${toHex(c)}" style="background:${toHex(c)}" title="${toHex(c)}"></button>`}
+  if(bp)bp.innerHTML=basePalette.map(sw).join('');
+  if(cp)cp.innerHTML=customPalette.length?customPalette.map(sw).join(''):'<span class="mini">保存色なし</span>';
+  if(st)st.innerHTML=`現在色：<span style="display:inline-block;width:18px;height:18px;border:1px solid #94a3b8;border-radius:4px;vertical-align:middle;background:${bucketColor}"></span> ${colorCopyReady?bucketColor:'未取得'}<br><span class="mini">色コピー：1回目で取得、2回目以降で塗り</span>`;
+}
+function initPaletteUI(){
+  document.addEventListener('click',e=>{let b=e.target.closest('[data-color]');if(!b)return;setCurrentColor(b.dataset.color,true);flash('現在色を設定しました')});
+  const t=document.getElementById('toggleDetailColor'); if(t)t.onclick=()=>{let box=document.getElementById('detailColorBox');box.style.display=box.style.display==='block'?'none':'block'};
+  const d=document.getElementById('detailColor'); if(d)d.onchange=e=>setCurrentColor(e.target.value,true);
+  const s=document.getElementById('saveCurrentColor'); if(s)s.onclick=saveCurrentColor;
+  const r=document.getElementById('resetColorCopy'); if(r)r.onclick=()=>{colorCopyReady=false;renderPalette();flash('次のタップで色を取得します')};
+  renderPalette();
+}
+function flash(msg){let d=document.createElement('div');d.textContent=msg;Object.assign(d.style,{position:'fixed',left:'50%',top:'70px',transform:'translateX(-50%)',background:'#102033',color:'#fff',padding:'9px 14px',borderRadius:'999px',zIndex:9999,fontSize:'13px'});document.body.appendChild(d);setTimeout(()=>d.remove(),1500)}
+initPaletteUI();
+render();
+</script>
+</body>
+</html>

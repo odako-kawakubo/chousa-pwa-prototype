@@ -1,8 +1,9 @@
-const CACHE_NAME = "chousa-system-v0.14.14";
+const CACHE_NAME = "chousa-system-v0.14.15";
 const APP_FILES = [
   "./index.html",
   "./app.html",
   "./camera.html",
+  "./chousa_zu_tool_mock_v0_9b_3.html",
   "./manifest.json",
   "./version.json",
   "./service-worker.js"
