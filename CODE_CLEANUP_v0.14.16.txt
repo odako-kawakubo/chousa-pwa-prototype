@@ -1,0 +1,52 @@
+v0.14.16 コード整理記録
+
+目的
+- 実際には使われていない旧コードを削除し、「どの定義が動いているか」を一意にする。
+- 機能変更ではなく、現行の最後の実装を残したまま重複だけを整理する。
+
+実施内容
+1. 未使用の script.js を削除
+   - app.html / camera.html / index.html から参照されていないことを確認。
+   - ファイル内に </script> が混入しており、単体JSとして実行不能だった。
+
+2. 同名関数の旧定義を削除し、各関数を1定義へ統一
+   - nextSuffix
+   - findMaterialByName
+   - resolveId
+   - renderSimpleItems
+   - renderSimpleListBlock
+   - renderFinish
+   - renderSectionToggles
+   - usageOf
+   - renderRoomRecords
+   - renderPhotoRecords
+   - renderMaterials
+   - mNote
+   - renderSync
+   - openDrawer
+   - updateStickyOffsets
+   - renderMaterialDetailCompact
+   - deleteMaterialRecord
+   - updateDrawerMaterialOps
+   - mergeSelectedMaterialsFromDrawer
+   - deleteSelectedMaterialsFromDrawer
+   - groupedCheckPickerHtml
+
+3. 仕上表の旧focusin処理を削除
+   - 部屋番号＋階の文字一致方式を削除。
+   - 旧data-room-id方式も削除。
+   - v0.14.16の room-selected-v1416 を付与する処理だけを残した。
+
+確認結果
+- app.html内の同名function宣言: 重複なし
+- finish-table用focusinイベント: 1系統のみ
+- script.js参照: なし
+- app.htmlの全インラインJS: node --check OK
+- camera.htmlの全インラインJS: node --check OK
+- index.htmlの全インラインJS: node --check OK
+- 調査図HTMLのJS: node --check OK
+
+注意
+- 今回はコード整理であり、Firebase・OneDrive・iPad実機動作の確認は行っていない。
+- Firebase apiKey、Microsoft Client ID / Tenant IDはクライアント公開前提の識別子だが、Firestoreルール、GitHubリポジトリ公開範囲、GitHub Pages公開範囲は別途確認が必要。
+- SharePointの実フォルダURLを公開コードに残すかは運用上の判断が必要。

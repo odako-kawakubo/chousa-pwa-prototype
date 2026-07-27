@@ -2786,13 +2786,19 @@ function redoAction(){if(!redoStack.length)return; historyLock=true; undoStack.p
 function updateHistoryButtons(){const u=document.getElementById('undoBtn'); const r=document.getElementById('redoBtn'); if(u)u.disabled=!undoStack.length; if(r)r.disabled=!redoStack.length;}
 function normalizeInput(v){return String(v||'').trim().replace(/[Ａ-Ｚａ-ｚ０-９]/g,s=>String.fromCharCode(s.charCodeAt(0)-0xFEE0)).replace(/[a-z]/g,s=>s.toUpperCase())}
 function splitMaterialName(v){const s=normalizeInput(v); if(/[9]$/.test(s))return {base:s.slice(0,-1),suffix:'9',legacy9:true}; if(/[A-Z]$/.test(s))return {base:s.slice(0,-1),suffix:s.slice(-1),legacy9:false}; return {base:s,suffix:'',legacy9:false}}
-function nextSuffix(base){const letters=state.materials.filter(m=>m.base===base).map(m=>m.suffix).sort(); if(!letters.length)return 'A'; const code=letters[letters.length-1].charCodeAt(0); return code>=90?'Z':String.fromCharCode(code+1)}
+
+<!-- cleaned: obsolete duplicate function nextSuffix removed -->
+
 function materialColorIndex(materialId){const i=state.materials.findIndex(m=>m.id===materialId); return i<0?0:i%12}
-function findMaterialByName(name){const n=normalizeInput(name); return state.materials.find(m=>normalizeInput(m.name)===n)}
+
+<!-- cleaned: obsolete duplicate function findMaterialByName removed -->
+
 function createMaterial(base,suffix,method){const name=base+suffix; const existing=findMaterialByName(name); if(existing)return existing; const mat={id:'R'+String(materialSeq).padStart(3,'0'),inputId:inputSeq,base,suffix,name,method,note:''}; materialSeq++; inputSeq++; state.materials.push(mat); return mat}
 function registerName(roomId,area,part,line=0,shouldRender=true){if(shouldRender)remember();const c=getCell(roomId,area,part,'name',line); const v=normalizeInput(c.text); if(!v)return; const existing=findMaterialByName(v); if(existing){applyMaterialToCell(roomId,area,part,line,existing); addQueue('既存建材呼び出し',existing.name); if(shouldRender)renderAll(); return} const parsed=splitMaterialName(v); const base=parsed.base; const suffix=parsed.legacy9?nextSuffix(base):(parsed.suffix||nextSuffix(base)); const mat=createMaterial(base,suffix,parsed.legacy9?'旧9入力':'登録ボタン'); applyMaterialToCell(roomId,area,part,line,mat); selectedMaterialId=mat.id; addQueue('建材登録',mat.name); if(shouldRender)renderAll();}
 function applyMaterialToCell(roomId,area,part,line,mat){setRaw(roomId,area,part,'id',{text:String(mat.inputId),status:'id',materialId:mat.id},line); setRaw(roomId,area,part,'name',{text:mat.name,status:'registered',materialId:mat.id,base:mat.base,suffix:mat.suffix,cellId:cellKey(roomId,area,part,line,'name')},line)}
-function resolveId(value){const v=normalizeInput(value).toUpperCase(); if(!v)return null; return state.materials.find(m=>String(m.inputId)===v || m.id===v || m.id.replace('R','')===v)}
+
+<!-- cleaned: obsolete duplicate function resolveId removed -->
+
 function onIdBlur(roomId,area,part,line,value){remember();const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,part,line,'id')]; renderAll(); return} const m=resolveId(v); if(m){applyMaterialToCell(roomId,area,part,line,m); selectedMaterialId=m.id; addQueue('ID呼び出し',m.name)}else{setRaw(roomId,area,part,'id',{text:v,status:'unknown'},line); addQueue('ID入力',v)} renderAll();}
 function onNameBlur(roomId,area,part,line,value){remember();const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,part,line,'name')]; delete state.cells[cellKey(roomId,area,part,line,'id')]; renderAll(); return} const existing=findMaterialByName(v); if(existing){applyMaterialToCell(roomId,area,part,line,existing); selectedMaterialId=existing.id; addProjectMaterialCandidate(partForSuggest(roomId,area,part,line),existing.name); addQueue('既存建材呼び出し',existing.name); renderAll(); return} if(/[9]$/.test(v)){setRaw(roomId,area,part,'name',{text:v,status:'record_only'},line); delete state.cells[cellKey(roomId,area,part,line,'id')]; registerName(roomId,area,part,line,true); return} if(/[A-Z]$/.test(v)){const parsed=splitMaterialName(v); const mat=createMaterial(parsed.base,parsed.suffix,'英字指定'); applyMaterialToCell(roomId,area,part,line,mat); selectedMaterialId=mat.id; addProjectMaterialCandidate(partForSuggest(roomId,area,part,line),mat.name); addQueue('建材登録',mat.name); renderAll(); return} setRaw(roomId,area,part,'name',{text:v,status:'record_only',cellId:cellKey(roomId,area,part,line,'name')},line); delete state.cells[cellKey(roomId,area,part,line,'id')]; addProjectMaterialCandidate(partForSuggest(roomId,area,part,line),v); addQueue('仕上表変更',v); renderAll();}
 function onPartBlur(roomId,area,slot,line,value){remember();const v=normalizeInput(value); if(!v){delete state.cells[cellKey(roomId,area,slot,line,'part')]}else{setRaw(roomId,area,slot,'part',{text:v,status:'part_only'},line); addPartCandidateValue(v); addQueue('その他部位',v)} renderAll();}
@@ -2832,27 +2838,23 @@ function handleRoomCopy(area,roomId){remember(); const r=findRoom(roomId); if(!r
 function copyRoomData(area,sourceId,targetId){const parts=area==='外部'?externalParts:internalParts; const src=findRoom(sourceId), tgt=findRoom(targetId); if(!src||!tgt)return; if(roomLineCount(tgt)<roomLineCount(src))tgt.lines=roomLineCount(src); for(let line=0;line<roomLineCount(src);line++){for(const p of parts){for(const kind of ['id','name']){const k=cellKey(sourceId,area,p,line,kind); const tk=cellKey(targetId,area,p,line,kind); if(state.cells[k])state.cells[tk]={...state.cells[k],cellId:tk}; else delete state.cells[tk];}} for(const o of otherSlots){for(const kind of ['id','part','name']){const k=cellKey(sourceId,area,o,line,kind); const tk=cellKey(targetId,area,o,line,kind); if(state.cells[k])state.cells[tk]={...state.cells[k],cellId:tk}; else delete state.cells[tk];}}}}
 function renderSection(area,parts){const colspan=sectionColspan(parts); let html=sectionRow(area,colspan); if(collapsed[area])return html; html+=headerFor(area,parts); for(const r of roomsForArea(area)){for(let line=0;line<roomLineCount(r);line++){html+=`<tr class="${line===0?'room-start':'room-sub'} area-${area==='外部'?'external':'internal'}">`; if(line===0){const span=roomLineCount(r); html+=`<td class="floor" rowspan="${span}">${renderFloorCell(r,area)}</td><td class="room-no" rowspan="${span}">${renderRoomNoCell(r,area)}</td><td class="copy-col" rowspan="${span}">${renderCopyCell(r,area)}</td><td class="room-name" rowspan="${span}">${renderRoomNameCell(r)}</td>`} for(const p of parts){html+=`<td>${renderIdInput(r.id,area,p,line)}</td><td>${renderNameInput(r.id,area,p,line)}</td>`} for(const o of otherSlots){html+=`<td>${renderIdInput(r.id,area,o,line)}</td><td>${renderPartInput(r.id,area,o,line)}</td><td>${renderNameInput(r.id,area,o,line)}</td>`} html+='</tr>'}} return html;}
 function renderSimpleListRow(){const colspan=sectionColspan(internalParts); if(collapsed['簡易リスト'])return `<tr class="simple-list-row"><td colspan="${colspan}"><div class="simple-list-box"><b>簡易リスト</b><span class="hint"> 閉じています</span></div></td></tr>`; return `<tr class="simple-list-row"><td colspan="${colspan}"><div class="simple-list-box"><div class="simple-list-head"><b>簡易リスト</b><span class="tag">${state.materials.length}件</span></div><div class="simple-list-items" id="simpleListItems">${renderSimpleItems()}</div>${renderSelectedDetail()}</div></td></tr>`}
-function renderSimpleItems(){return state.materials.length?state.materials.map(m=>`<button class="simple-item ${colorMode?'mat-color-'+materialColorIndex(m.id):''} ${selectedMaterialId===m.id?'selected':''}" onclick="selectMaterial('${m.id}')">【${m.inputId}】${esc(m.name)}</button>`).join(''):'<span class="hint">登録済建材はまだありません</span>'}
+
+<!-- cleaned: obsolete duplicate function renderSimpleItems removed -->
+
 function renderSelectedDetail(){const m=state.materials.find(x=>x.id===selectedMaterialId); if(!m)return '<div class="simple-detail"><span class="hint">建材を選択すると使用箇所と調査備考を表示します</span></div>'; return `<div class="simple-detail"><b>選択中：【${m.inputId}】${esc(m.name)}</b><span>使用箇所：${esc(usageOf(m))}</span><span>調査備考：${esc(m.note||'未入力')}</span><button class="btn small" onclick="editMaterialNote('${m.id}')">備考編集</button></div>`}
-function renderSimpleListBlock(){
-  if(collapsed['簡易リスト'])return `<div class="simple-list-block compact-material-bar"><div class="simple-list-box"><div class="simple-list-items"><span class="hint">登録済建材を閉じています</span></div></div></div>`;
-  return `<div class="simple-list-block compact-material-bar"><div class="simple-list-box"><div class="simple-list-items" id="simpleListItems">${renderSimpleItems()}</div></div></div>`;
-}
+
+<!-- cleaned: obsolete duplicate function renderSimpleListBlock removed -->
+
 function renderSectionTable(area,parts){
   const tableClass=area==='外部'?'external-table':'internal-table';
   return `<div class="finish-section ${area==='外部'?'finish-external':'finish-internal'}"><table class="finish-table ${tableClass}">${renderSection(area,parts)}</table></div>`;
 }
-function renderFinish(){
-  renderSectionToggles();
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  let html=renderSectionTable('外部',externalParts)+renderSimpleListBlock()+renderSectionTable('内部',internalParts);
-  container.innerHTML=html;
-  document.getElementById('matCount').textContent=state.materials.length;
-  {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
-  document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
-  container.classList.toggle('color-mode',colorMode);
-}
-function renderSectionToggles(){const el=document.getElementById('sectionToggles'); if(!el)return; el.innerHTML=['外部','簡易リスト','内部'].map(n=>`<button class="section-toggle ${collapsed[n]?'closed':''}" onclick="toggleSection('${n}')">${collapsed[n]?'▶':'▼'} ${n}</button>`).join('')}
+
+<!-- cleaned: obsolete duplicate function renderFinish removed -->
+
+
+<!-- cleaned: obsolete duplicate function renderSectionToggles removed -->
+
 
 
 function partForSuggest(roomId,area,part,line){
@@ -3013,23 +3015,23 @@ function toggleColorMode(){remember(); colorMode=!colorMode; renderAll()}
 function editMaterialNote(id){const m=state.materials.find(x=>x.id===id); if(!m)return; remember(); const v=prompt('調査備考を入力',m.note||''); if(v!==null){m.note=v; addQueue('調査備考',m.name); renderAll()}}
 function openNoteForCell(roomId,area,part,line){const c=getCell(roomId,area,part,'name',line); if(c.materialId)editMaterialNote(c.materialId)}
 
-function usageOf(m){const arr=[]; for(const r of allRooms()){for(const area of ['外部','内部']){for(let line=0;line<roomLineCount(r);line++){for(const p of [...externalParts,...internalParts]){const c=getCell(r.id,area,p,'name',line); if(c.materialId===m.id)arr.push(`${r.no}${r.name} ${p}`)} for(const o of otherSlots){const c=getCell(r.id,area,o,'name',line); const part=getCell(r.id,area,o,'part',line); if(c.materialId===m.id)arr.push(`${r.no}${r.name} ${part.text||o}`)}}}} return arr.join('、')||'-'}
 
-function renderRoomRecords(){
-  const rooms=allRooms();const pill=document.getElementById('recordCountPill');if(pill)pill.innerHTML='部屋レコード <b>'+rooms.length+'</b>件';const ap=document.getElementById('recordActivePill');if(ap)ap.style.display='none';const hint=document.getElementById('recordTabHint');if(hint)hint.textContent='部屋情報と仕上表セルを部屋ID単位で差分同期。';
-  let rows='<tr><th class="rec-id">部屋ID</th><th>区分</th><th>階</th><th>部屋No.</th><th class="room-rec-name">部屋名</th><th>入力セル数</th><th class="rec-wide">仕上表内容</th><th>状態</th></tr>';
-  for(const area of ['外部','内部'])for(const r of roomsForArea(area)){const slots=[];for(const key of Object.keys(state.cells)){const [rid,a,part,line,kind]=key.split('|');if(rid!==r.id||a!==area||kind!=='name')continue;const c=state.cells[key];if(c&&c.text)slots.push(part+(Number(line)>0?'②':'')+'：'+c.text);}rows+=`<tr><td class="rec-id">${esc(r.id)}</td><td>${esc(area)}</td><td>${esc(r.floor||'')}</td><td>${esc(r.no||'')}</td><td class="room-rec-name">${esc(r.name||'')}</td><td>${slots.length}</td><td class="rec-wide">${esc(slots.join('、'))}</td><td>${r.active===false?'削除済':'有効'}</td></tr>`;}
-  document.getElementById('recordsTable').innerHTML=rows;
-}
-function renderPhotoRecords(){
-  const photos=(state.photos||[]).filter(p=>!p.deleted);const pill=document.getElementById('recordCountPill');if(pill)pill.innerHTML='写真レコード <b>'+photos.length+'</b>件';const ap=document.getElementById('recordActivePill');if(ap)ap.style.display='none';const hint=document.getElementById('recordTabHint');if(hint)hint.textContent='写真本体はOneDrive/SharePoint、メタ情報はFirestoreへphotoId単位で同期。';
-  let rows='<tr><th class="rec-id">写真ID</th><th>区分</th><th>ファイル名</th><th>部屋</th><th>建材</th><th>部位/段階</th><th>代表</th><th>同期状態</th><th>撮影端末</th><th>撮影日時</th></tr>';
-  for(const p of photos){rows+=`<tr><td class="rec-id">${esc(photoIdOf(p))}</td><td>${esc(photoModeLabel((p.photoMode||p.kind)==='sample'?'sample':'visual'))}</td><td class="photo-rec-name">${esc(p.fileName||'')}</td><td>${esc(p.roomNo||p.roomId||'')}</td><td>${esc(p.materialName||p.materialId||'')}</td><td>${esc(p.sampleStage||p.targetPart||p.photoType||'')}</td><td>${p.isRepresentative?'代表':'-'}</td><td>${esc(p.uploadStatus||'')}</td><td>${esc(p.takenBy||'')}</td><td>${esc(p.takenAtClient||'')}</td></tr>`;}
-  document.getElementById('recordsTable').innerHTML=rows;
-}
+<!-- cleaned: obsolete duplicate function usageOf removed -->
 
-function renderMaterials(){let rows='<tr><th>入力ID</th><th>建材ID</th><th>建材名</th><th>使用箇所</th><th>調査備考</th><th>採取数</th><th>採取場所</th><th>採取部位</th><th>分析</th><th>操作</th></tr>'; for(const m of state.materials){rows+=`<tr><td>${m.inputId}</td><td>${m.id}</td><td>${m.name}</td><td>${usageOf(m)}</td><td><input style="width:170px" value="${esc(m.note||'')}" onblur="mNote('${m.id}',this.value)"></td><td><input style="width:52px" value="1"></td><td><input style="width:110px" placeholder="候補表示"></td><td><input style="width:90px" placeholder="部位"></td><td><select><option>未</option><option>要</option><option>不要</option><option>含有</option><option>不検出</option></select></td><td><button class="btn small" onclick="createSample('${m.id}')">試料</button></td></tr>`} document.getElementById('materialsTable').innerHTML=rows}
-function mNote(id,value){const m=state.materials.find(x=>x.id===id); if(m){remember();m.note=value; addQueue('調査備考',m.name); renderAll()}}
+
+
+<!-- cleaned: obsolete duplicate function renderRoomRecords removed -->
+
+
+<!-- cleaned: obsolete duplicate function renderPhotoRecords removed -->
+
+
+
+<!-- cleaned: obsolete duplicate function renderMaterials removed -->
+
+
+<!-- cleaned: obsolete duplicate function mNote removed -->
+
 function renderPhotos(options){
   options=options||{};
   const body=document.getElementById('photoModeBody');
@@ -3107,31 +3109,9 @@ function isPhotoPendingSync(p){
   const status=String((p&&p.uploadStatus)||'').toLowerCase();
   return !!(p&&p.dataUrl) && !['uploaded','共有済','同期済'].includes(status) && !p.deleted;
 }
-function renderSync(){
-  const photoWait=(state.photos||[]).filter(isPhotoPendingSync).length;
-  const queueCount=(state.queue||[]).length;
-  const pending=queueCount+photoWait;
-  const mini=document.getElementById('miniUnsynced');
-  if(mini)mini.textContent=pending;
-  const syncState=document.getElementById('firebasePill');
-  if(syncState){
-    const current=String(syncState.textContent||'');
-    const hasError=/エラー|失敗/.test(current);
-    const inProgress=/接続中|接続準備|保存中|アップロード中|反映中/.test(current);
-    if(!online){syncState.textContent='オフライン';syncState.className='header-sync-state warn';}
-    else if(hasError){syncState.className='header-sync-state warn';}
-    else if(inProgress){syncState.textContent='同期中…';syncState.className='header-sync-state warn';}
-    else if(pending){syncState.textContent='未同期あり';syncState.className='header-sync-state warn';}
-    else{syncState.textContent='同期完了';syncState.className='header-sync-state';}
-  }
-  document.getElementById('syncFinish').textContent=(state.queue||[]).filter(q=>q.type.includes('仕上表')||q.type.includes('ID')||q.type.includes('その他')||q.type.includes('部屋')).length;
-  document.getElementById('syncMaterials').textContent=(state.queue||[]).filter(q=>q.type.includes('建材')||q.type.includes('登録')||q.type.includes('採取')).length;
-  document.getElementById('syncPhotos').textContent=photoWait;
-  const rows=[];
-  (state.queue||[]).forEach(q=>rows.push(`<div class="sync-row"><span>${esc(q.type)}：${esc(q.detail)}</span><span class="hint">${q.time}</span></div>`));
-  (state.photos||[]).filter(isPhotoPendingSync).forEach(p=>rows.push(`<div class="sync-row"><span>写真：${esc(p.fileName||photoIdOf(p)||'未命名')}（${esc(p.uploadStatus||'未送信')}）</span></div>`));
-  document.getElementById('syncList').innerHTML=rows.length?rows.join(''):'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>';
-}
+
+<!-- cleaned: obsolete duplicate function renderSync removed -->
+
 function renderAll(){renderFinish();renderMaterials();renderRecords();renderPhotos();renderSamples();renderSync();renderSettings();updateHistoryButtons();scheduleStateSave()}
 function showTab(id){
   document.querySelectorAll('.content').forEach(x=>x.style.display='none');
@@ -3206,7 +3186,9 @@ function toggleSide(){
 }
 function closeProjectSide(){const side=document.getElementById('projectSidePanel');const back=document.getElementById('projectSideBackdrop');if(side){side.classList.remove('open');side.setAttribute('aria-hidden','true')}if(back)back.classList.remove('open')}
 
-function openDrawer(){document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('open')}
+
+<!-- cleaned: obsolete duplicate function openDrawer removed -->
+
 function closeDrawer(){document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerBackdrop').classList.remove('open')}
 function appUrlWithStamp(path){
   const url = new URL(path || ('./app.html'), location.href);
@@ -3270,29 +3252,12 @@ function renderFinishAreaTabs(){
     <button class="finish-area-tab ${activeFinishArea==='外部'?'active':''}" onclick="switchFinishArea('外部')">外部</button>
   </div>`;
 }
-function renderFinish(){
-  renderSectionToggles();
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  const parts=activeFinishArea==='外部'?externalParts:internalParts;
-  let html=renderFinishAreaTabs()+renderSimpleListBlock()+renderSectionTable(activeFinishArea,parts);
-  container.innerHTML=html;
-  document.getElementById('matCount').textContent=state.materials.length;
-  {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
-  document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
-  container.classList.toggle('color-mode',colorMode);
-  setTimeout(updateStickyOffsets, 0);
-}
-function updateStickyOffsets(){
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  if(!container)return;
-  const bars=document.getElementById('finishStaticBars');
-  const tabs=(bars||container).querySelector('.finish-area-tabs');
-  const bar=(bars||container).querySelector('.simple-list-block');
-  const tabH=tabs?Math.ceil(tabs.getBoundingClientRect().height):38;
-  const barH=bar?Math.ceil(bar.getBoundingClientRect().height):30;
-  container.style.setProperty('--area-tabs-height', tabH+'px');
-  container.style.setProperty('--material-bar-height', barH+'px');
-}
+
+<!-- cleaned: obsolete duplicate function renderFinish removed -->
+
+
+<!-- cleaned: obsolete duplicate function updateStickyOffsets removed -->
+
 function renderSectionToggles(){
   const el=document.getElementById('sectionToggles');
   if(!el)return;
@@ -3302,11 +3267,9 @@ function renderSectionToggles(){
 
 
 // v0.8.9 fixed4: 項目名行を表のtheadに戻して列幅崩れを抑える
-function renderMaterialDetailCompact(){
-  const m=state.materials.find(x=>x.id===selectedMaterialId);
-  if(!m)return '';
-  return `<div class="material-detail-compact"><b>【${m.inputId}】${esc(m.name)}</b><span>使用箇所：${esc(usageOf(m))}</span><span>調査備考：${esc(m.note||'未入力')}</span><button class="btn small" onclick="editMaterialNote('${m.id}')">備考編集</button></div>`;
-}
+
+<!-- cleaned: obsolete duplicate function renderMaterialDetailCompact removed -->
+
 function renderSimpleListBlock(){
   if(collapsed['簡易リスト'])return `<div class="simple-list-block compact-material-bar"><div class="simple-list-box"><div class="simple-list-items"><span class="hint">登録済建材を閉じています</span></div></div></div>`;
   return `<div class="simple-list-block compact-material-bar"><div class="simple-list-box"><div class="simple-list-items" id="simpleListItems">${renderSimpleItems()}</div>${renderMaterialDetailCompact()}</div></div>`;
@@ -3348,21 +3311,9 @@ function renderUnifiedTable(area,parts){
   const tableClass=area==='外部'?'external-table':'internal-table';
   return `<div class="finish-section unified-section ${area==='外部'?'finish-external':'finish-internal'}"><table class="finish-table unified-table ${tableClass}">${renderColGroup(parts)}<thead>${headerFor(area,parts)}</thead><tbody>${renderBodyRows(area,parts)}</tbody></table></div>`;
 }
-function renderFinish(){
-  renderSectionToggles();
-  const bars=document.getElementById('finishStaticBars');
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  const parts=activeFinishArea==='外部'?externalParts:internalParts;
-  if(bars)bars.innerHTML=renderFinishAreaTabs()+renderSimpleListBlock();
-  container.innerHTML=renderUnifiedTable(activeFinishArea,parts);
-  container.classList.add('v89-fixed4','v92-fixed','v93-fixed');
-  document.getElementById('matCount').textContent=activeMaterials().length;
-  {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
-  document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
-  container.classList.toggle('color-mode',colorMode);
-  if(bars)bars.classList.toggle('color-mode',colorMode);
-  setTimeout(updateStickyOffsets, 0);
-}
+
+<!-- cleaned: obsolete duplicate function renderFinish removed -->
+
 
 
 
@@ -3538,48 +3489,16 @@ function renderMaterialRecords(){
 }
 function roomPositionCode(area,room,index){if(area==='外部')return String(index+1).padStart(3,'0');const floorNum=(String(room.floor||'').match(/\d+/)||['1'])[0];const sameFloor=roomsForArea(area).filter(r=>String(r.floor||'')===String(room.floor||''));const roomIndex=Math.max(0,sameFloor.findIndex(r=>r.id===room.id))+1;return String(Number(floorNum)*100+roomIndex).padStart(3,'0');}
 function finishPositionCode(part,line,area){const parts=area==='外部'?externalParts:internalParts;let idx=parts.indexOf(part);if(idx<0)idx=otherSlots.indexOf(part)+parts.length;return String((idx+1)*100+(Number(line)+1)).padStart(3,'0');}
-function renderRoomRecords(){
-  let recordCount=0;const pill=document.getElementById('recordCountPill');const ap=document.getElementById('recordActivePill');if(ap)ap.style.display='none';const hint=document.getElementById('recordTabHint');if(hint)hint.textContent='仕上表の空白セルも含め、1セル＝1レコード。IDは区分-階部屋位置-列行。';
-  let rows='<tr><th class="rec-id">仕上セルID</th><th>区分</th><th>部屋位置</th><th>階</th><th>部屋No.</th><th>部屋名</th><th>位置</th><th>部位</th><th>建材ID</th><th>入力ID</th><th>建材名称</th><th>状態</th><th>更新端末</th><th>更新日時</th></tr>';
-  for(const area of ['外部','内部']){const areaRooms=roomsForArea(area);const parts=area==='外部'?externalParts:internalParts;areaRooms.forEach((r,ri)=>{const roomPos=roomPositionCode(area,r,ri);const areaCode=area==='内部'?'I':'E';for(let line=0;line<roomLineCount(r);line++)for(const part of [...parts,...otherSlots]){const pos=finishPositionCode(part,line,area);const recId=`${areaCode}-${roomPos}-${pos}`;const nameCell=getCell(r.id,area,part,'name',line);const idCell=getCell(r.id,area,part,'id',line);const actualPart=otherSlots.includes(part)?(getCell(r.id,area,part,'part',line).text||part):part;recordCount++;rows+=`<tr><td class="rec-id rec-position">${esc(recId)}</td><td>${esc(area)}</td><td>${esc(roomPos)}</td><td>${esc(r.floor||'')}</td><td>${esc(r.no||'')}</td><td>${esc(r.name||'')}</td><td>${esc(pos)}</td><td>${esc(actualPart)}</td><td>${esc(nameCell.materialId||'')}</td><td>${esc(idCell.text||'')}</td><td class="rec-name ${nameCell.text?'':'record-empty'}">${esc(nameCell.text||'未入力')}</td><td>${r.active===false?'無効':'有効'}</td><td>${esc(nameCell.updatedDevice||'')}</td><td>${esc(nameCell.updatedAt||'')}</td></tr>`;}});}
-  if(pill)pill.innerHTML='仕上セルレコード <b>'+recordCount+'</b>件';document.getElementById('recordsTable').innerHTML=rows;
-}
-function renderPhotoRecords(){
-  const photos=(state.photos||[]).filter(p=>!p.deleted);const pill=document.getElementById('recordCountPill');if(pill)pill.innerHTML='写真レコード <b>'+photos.length+'</b>件';const ap=document.getElementById('recordActivePill');if(ap)ap.style.display='none';const hint=document.getElementById('recordTabHint');if(hint)hint.textContent='写真IDは区分-端末-3桁連番。建材IDは空欄可。写真本体はOneDriveへ保存。';
-  let rows='<tr><th class="rec-id">写真ID</th><th>区分</th><th>ファイル名</th><th>部屋</th><th>建材ID</th><th>部位／撮影区分</th><th>代表</th><th>同期状態</th><th>撮影端末</th><th>撮影日時</th><th>編集有無</th><th>最終編集</th><th>最終編集端末</th><th>最終編集日時</th></tr>';
-  photos.forEach((p,i)=>{const mode=(p.photoMode||p.kind)==='sample'?'sample':'visual';const prefix=mode==='sample'?'S':'V';const device=(p.deviceCode||p.takenBy||'IP01').replace(/[^A-Za-z0-9]/g,'').slice(0,6)||'IP01';const pid=(p.photoId&&/^[VS]-/.test(p.photoId))?p.photoId:`${prefix}-${device}-${String(i+1).padStart(3,'0')}`;const edit=p.lastEdit||p.editSummary||'';rows+=`<tr><td class="rec-id">${esc(pid)}</td><td>${esc(photoModeLabel(mode))}</td><td class="photo-rec-name">${esc(p.fileName||'')}</td><td>${esc(p.roomNo||p.roomId||'')}</td><td>${esc(p.materialId||'')}</td><td>${esc(p.sampleStage||p.targetPart||p.photoType||'')}</td><td>${p.isRepresentative?'代表':'-'}</td><td>${esc(p.uploadStatus||'未同期')}</td><td>${esc(p.takenBy||device)}</td><td>${esc(p.takenAtClient||'')}</td><td>${edit?'あり':'なし'}</td><td class="edit-summary">${esc(edit)}</td><td>${esc(p.lastEditedBy||'')}</td><td>${esc(p.lastEditedAt||'')}</td></tr>`;});
-  if(!photos.length)rows+='<tr><td colspan="14" class="rec-muted">写真レコードはまだありません</td></tr>';document.getElementById('recordsTable').innerHTML=rows;
-}
 
-function renderMaterials(){
-  const records=syncMaterialRecordsFromFinishSheet();
-  const cnt=document.getElementById('activeMaterialCount'); if(cnt)cnt.textContent=records.length;
-  let rows='<tr><th class="mat-no">建材No.</th><th class="input-id">入力ID</th><th>部位</th><th>建材名称</th><th>建材使用箇所</th><th>レベル</th><th>分析の要否</th><th>調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>操作</th></tr>';
-  records.forEach((m,i)=>{
-    ensureMaterialRecordDefaults(m,{parts:m.usageParts||[],places:m.usagePlaces||[]});
-    const colorClass=colorMode?' mat-color-'+materialColorIndex(m.id):'';
-    rows+=`<tr>
-      <td class="mat-no${colorClass}">${i+1}</td>
-      <td class="input-id${colorClass}">${esc(m.inputId)}</td>
-      <td class="mat-part">${esc(joinRecord(m.usageParts))}</td>
-      <td class="mat-name${colorClass}"><input value="${escapeAttr(m.name)}" onblur="updateMaterialName('${m.id}',this.value)"></td>
-      <td class="mat-place">${esc(joinRecord(m.usagePlaces))}</td>
-      <td>${levelSelect(m)}</td>
-      <td>${analysisNeedSelect(m)}</td>
-      <td class="mat-note"><input value="${escapeAttr(m.note||'')}" onblur="mNote('${m.id}',this.value)" placeholder="調査備考"></td>
-      <td>${sampleCountSelect(m)}</td>
-      <td class="${sampleEnabledByIndex(m,0)?'':'disabled-cell'}">${samplePlaceSelect(m,0)}</td>
-      <td class="${sampleEnabledByIndex(m,1)?'':'disabled-cell'}">${samplePlaceSelect(m,1)}</td>
-      <td class="${sampleEnabledByIndex(m,2)?'':'disabled-cell'}">${samplePlaceSelect(m,2)}</td>
-      <td class="${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}">${samplePartSelect(m)}</td>
-      <td class="sample-check ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}">${sampleCheckInput(m)}</td>
-      <td class="sample-date ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}">${sampleDateInput(m)}</td>
-      <td class="ops">${mergeTargetSelect(m,records)}<button class="btn small" onclick="mergeMaterialRecord('${m.id}')">統合</button> <button class="btn small" onclick="deleteMaterialRecord('${m.id}')">削除</button></td>
-    </tr>`;
-  });
-  if(!records.length)rows+='<tr><td colspan="16" class="muted-cell">対象建材はまだありません</td></tr>';
-  const table=document.getElementById('materialsTable'); if(table){table.innerHTML=rows; table.classList.toggle('color-mode',colorMode);}
-}
+<!-- cleaned: removed obsolete duplicate renderRoomRecords -->
+
+
+<!-- cleaned: removed obsolete duplicate renderPhotoRecords -->
+
+
+
+<!-- cleaned: removed obsolete duplicate renderMaterials -->
+
 function replaceCellMaterial(roomId,area,part,line,mat){
   setRaw(roomId,area,part,'id',{text:String(mat.inputId),status:'id',materialId:mat.id},line);
   setRaw(roomId,area,part,'name',{text:mat.name,status:'registered',materialId:mat.id,base:mat.base,suffix:mat.suffix,cellId:cellKey(roomId,area,part,line,'name')},line);
@@ -3643,18 +3562,9 @@ function mergeMaterialRecord(fromId){
   addQueue('建材統合',`${from.name} → ${to.name}`);
   renderAll();
 }
-function deleteMaterialRecord(id){
-  const m=materialById(id); if(!m)return;
-  if(!confirm(`${m.name} を建材リストから外し、仕上表上の該当セルも空にします。`))return;
-  remember();
-  clearMaterialFromFinishSheet(id);
-  m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
-  addSystemMemo(m,`削除：${m.name} をリストから除外`);
-  if(selectedMaterialId===id)selectedMaterialId=null;
-  compactMaterialSuffixes();
-  addQueue('建材削除',m.name);
-  renderAll();
-}
+
+<!-- cleaned: removed obsolete duplicate deleteMaterialRecord -->
+
 function nextSuffix(base){
   const letters=activeMaterials().filter(m=>m.base===base).map(m=>m.suffix).sort();
   if(!letters.length)return 'A';
@@ -3669,21 +3579,9 @@ function findMaterialByName(name){const n=normalizeInput(name); return activeMat
 function renderSimpleItems(){const mats=activeMaterials(); return mats.length?mats.map(m=>`<button class="simple-item ${colorMode?'mat-color-'+materialColorIndex(m.id):''} ${selectedMaterialId===m.id?'selected':''}" onclick="selectMaterial('${m.id}')">【${m.inputId}】${esc(m.name)}</button>`).join(''):'<span class="hint">登録済建材はまだありません</span>'}
 function renderMaterialDetailCompact(){const m=activeMaterials().find(x=>x.id===selectedMaterialId); if(!m)return ''; return `<div class="material-detail-compact"><b>【${m.inputId}】${esc(m.name)}</b><span>使用箇所：${esc(joinRecord((collectMaterialUsage(m.id).places)))}</span><span>調査備考：${esc(m.note||'未入力')}</span><button class="btn small" onclick="editMaterialNote('${m.id}')">備考編集</button></div>`;}
 function usageOf(m){const u=collectMaterialUsage(m.id); return u.places.map(p=>p).join('、') || '-'}
-function renderFinish(){
-  renderSectionToggles();
-  const bars=document.getElementById('finishStaticBars');
-  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
-  const parts=activeFinishArea==='外部'?externalParts:internalParts;
-  if(bars)bars.innerHTML=renderFinishAreaTabs()+renderSimpleListBlock();
-  container.innerHTML=renderUnifiedTable(activeFinishArea,parts);
-  container.classList.add('v89-fixed4','v92-fixed','v93-fixed');
-  document.getElementById('matCount').textContent=activeMaterials().length;
-  {const rc=document.getElementById('recordCount'); if(rc) rc.textContent=countRecordOnly();}
-  document.getElementById('colorBtn').textContent=colorMode?'カラー表示 ON':'カラー表示 OFF';
-  container.classList.toggle('color-mode',colorMode);
-  if(bars)bars.classList.toggle('color-mode',colorMode);
-  setTimeout(updateStickyOffsets, 0);
-}
+
+<!-- cleaned: removed obsolete duplicate renderFinish -->
+
 
 
 /* v0.10.8 simple project switch */
@@ -3919,70 +3817,21 @@ function openMaterialOps(){
   if(!selectedMaterialId){alert('先に建材リストの行を選択してください'); return;}
   openDrawer();
 }
-function updateDrawerMaterialOps(){
-  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
-  let box=document.getElementById('drawerMaterialOps');
-  if(!box){
-    box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box';
-    body.insertBefore(box, body.firstChild);
-  }
-  const records=activeMaterials();
-  const m=records.find(x=>x.id===selectedMaterialId);
-  if(!m){box.innerHTML='<h4>選択建材</h4><div class="hint">建材リストで行を選択すると、ここで統合・削除できます。</div>';return;}
-  const noMap=materialNoMap(records);
-  const targets=records.filter(x=>x.id!==m.id).map(x=>`<option value="${esc(x.id)}">${noMap[x.id]||'-'}　${esc(x.name)}</option>`).join('');
-  box.innerHTML=`<h4>選択建材の操作</h4>
-    <div class="hint"><b>${noMap[m.id]||'-'}　${esc(joinRecord(m.usageParts||[]))}　${esc(m.name)}</b><br>建材ID：${esc(m.id)}</div>
-    <button class="btn" onclick="editMaterialNote('${m.id}')">調査備考を編集</button>
-    <div style="margin-top:8px"><select id="mergeTo_${m.id}" style="width:100%;height:32px;border:1px solid var(--line);border-radius:8px;padding:4px 6px"><option value="">統合先を選択</option>${targets}</select></div>
-    <button class="btn" onclick="mergeMaterialRecord('${m.id}')">選択建材を統合</button>
-    <button class="btn" onclick="deleteMaterialRecord('${m.id}')">選択建材を削除</button>`;
-}
+
+<!-- cleaned: removed obsolete duplicate updateDrawerMaterialOps -->
+
 function openDrawer(){updateDrawerMaterialOps();document.getElementById('drawer').classList.add('open'); document.getElementById('drawerBackdrop').classList.add('open')}
 
-function renderRoomRecords(){
-  const rooms=allRooms();const pill=document.getElementById('recordCountPill');if(pill)pill.innerHTML='部屋レコード <b>'+rooms.length+'</b>件';const ap=document.getElementById('recordActivePill');if(ap)ap.style.display='none';const hint=document.getElementById('recordTabHint');if(hint)hint.textContent='部屋情報と仕上表セルを部屋ID単位で差分同期。';
-  let rows='<tr><th class="rec-id">部屋ID</th><th>区分</th><th>階</th><th>部屋No.</th><th class="room-rec-name">部屋名</th><th>入力セル数</th><th class="rec-wide">仕上表内容</th><th>状態</th></tr>';
-  for(const area of ['外部','内部'])for(const r of roomsForArea(area)){const slots=[];for(const key of Object.keys(state.cells)){const [rid,a,part,line,kind]=key.split('|');if(rid!==r.id||a!==area||kind!=='name')continue;const c=state.cells[key];if(c&&c.text)slots.push(part+(Number(line)>0?'②':'')+'：'+c.text);}rows+=`<tr><td class="rec-id">${esc(r.id)}</td><td>${esc(area)}</td><td>${esc(r.floor||'')}</td><td>${esc(r.no||'')}</td><td class="room-rec-name">${esc(r.name||'')}</td><td>${slots.length}</td><td class="rec-wide">${esc(slots.join('、'))}</td><td>${r.active===false?'削除済':'有効'}</td></tr>`;}
-  document.getElementById('recordsTable').innerHTML=rows;
-}
-function renderPhotoRecords(){
-  const photos=(state.photos||[]).filter(p=>!p.deleted);const pill=document.getElementById('recordCountPill');if(pill)pill.innerHTML='写真レコード <b>'+photos.length+'</b>件';const ap=document.getElementById('recordActivePill');if(ap)ap.style.display='none';const hint=document.getElementById('recordTabHint');if(hint)hint.textContent='写真本体はOneDrive/SharePoint、メタ情報はFirestoreへphotoId単位で同期。';
-  let rows='<tr><th class="rec-id">写真ID</th><th>区分</th><th>ファイル名</th><th>部屋</th><th>建材</th><th>部位/段階</th><th>代表</th><th>同期状態</th><th>撮影端末</th><th>撮影日時</th></tr>';
-  for(const p of photos){rows+=`<tr><td class="rec-id">${esc(photoIdOf(p))}</td><td>${esc(photoModeLabel((p.photoMode||p.kind)==='sample'?'sample':'visual'))}</td><td class="photo-rec-name">${esc(p.fileName||'')}</td><td>${esc(p.roomNo||p.roomId||'')}</td><td>${esc(p.materialName||p.materialId||'')}</td><td>${esc(p.sampleStage||p.targetPart||p.photoType||'')}</td><td>${p.isRepresentative?'代表':'-'}</td><td>${esc(p.uploadStatus||'')}</td><td>${esc(p.takenBy||'')}</td><td>${esc(p.takenAtClient||'')}</td></tr>`;}
-  document.getElementById('recordsTable').innerHTML=rows;
-}
 
-function renderMaterials(){
-  const records=syncMaterialRecordsFromFinishSheet();
-  updateMaterialListHeader(records);
-  let rows='<tr><th class="mat-no">建材No.</th><th class="input-id">入力ID</th><th>部位</th><th class="mat-name">建材名称</th><th class="mat-place">建材使用箇所</th><th>レベル</th><th>分析の要否</th><th class="mat-note">調査備考</th><th>採取数</th><th>採取場所1</th><th>採取場所2</th><th>採取場所3</th><th>採取部位</th><th>採取</th><th>採取日</th><th>確認</th></tr>';
-  records.forEach((m,i)=>{
-    ensureMaterialRecordDefaults(m,{parts:m.usageParts||[],places:m.usagePlaces||[]});
-    const colorClass=colorMode?' mat-color-'+materialColorIndex(m.id):'';
-    const selected=selectedMaterialId===m.id?' selected-material-row':'';
-    rows+=`<tr class="${selected}" onclick="selectMaterialFromList('${m.id}')">
-      <td class="mat-no${colorClass}">${i+1}</td>
-      <td class="input-id${colorClass}">${esc(m.inputId)}</td>
-      <td class="mat-part"><div class="wrap2">${esc(joinRecord(m.usageParts))}</div></td>
-      <td class="mat-name${colorClass}" onclick="event.stopPropagation()"><input value="${escapeAttr(m.name)}" onfocus="selectMaterialFromList('${m.id}')" onblur="updateMaterialName('${m.id}',this.value)"></td>
-      <td class="mat-place"><div class="wrap2">${esc(joinRecord(m.usagePlaces))}</div></td>
-      <td onclick="event.stopPropagation()">${levelSelect(m)}</td>
-      <td onclick="event.stopPropagation()">${analysisNeedSelect(m)}</td>
-      <td class="mat-note" onclick="event.stopPropagation()"><input value="${escapeAttr(m.note||'')}" onfocus="selectMaterialFromList('${m.id}')" onblur="mNote('${m.id}',this.value)" placeholder="調査備考"></td>
-      <td onclick="event.stopPropagation()">${sampleCountSelect(m)}</td>
-      <td class="${sampleEnabledByIndex(m,0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,0)}</td>
-      <td class="${sampleEnabledByIndex(m,1)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,1)}</td>
-      <td class="${sampleEnabledByIndex(m,2)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePlaceSelect(m,2)}</td>
-      <td class="${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${samplePartSelect(m)}</td>
-      <td class="sample-check ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${sampleCheckInput(m)}</td>
-      <td class="sample-date ${(isSamplingEnabled(m)&&Number(m.sampleCount||0)>0)?'':'disabled-cell'}" onclick="event.stopPropagation()">${sampleDateInput(m)}</td>
-      <td class="row-marker" title="${escapeAttr((i+1)+' '+joinRecord(m.usageParts||[])+' '+(m.name||''))}">${materialRowMarker(m,i+1)}</td>
-    </tr>`;
-  });
-  if(!records.length)rows+='<tr><td colspan="16" class="muted-cell">対象建材はまだありません</td></tr>';
-  const table=document.getElementById('materialsTable'); if(table){table.innerHTML=rows; table.classList.toggle('color-mode',colorMode);}
-}
+<!-- cleaned: removed obsolete duplicate renderRoomRecords -->
+
+
+<!-- cleaned: removed obsolete duplicate renderPhotoRecords -->
+
+
+
+<!-- cleaned: removed obsolete duplicate renderMaterials -->
+
 
 
 
@@ -4056,52 +3905,12 @@ function materialPlacesForWarning(id){
   forEachMaterialUse(id,(r)=>{if(r&&r.no)found.push(r.no)});
   return uniqueList(found).join('、');
 }
-function mergeSelectedMaterialsFromDrawer(){
-  const toId=document.getElementById('mergeTargetSelect')?.value||'';
-  const to=materialById(toId);
-  const fromIds=selectedValuesByClass('merge-source-select').filter(id=>id!==toId);
-  if(!to)return alert('統合先の建材を選んでください');
-  if(!fromIds.length)return alert('統合する建材を選んでください');
-  const names=fromIds.map(id=>materialById(id)?.name).filter(Boolean).join('、');
-  if(!confirm(`${names} を ${to.name} に統合します。仕上表上の該当セルも統合先に置換します。`))return;
-  remember();
-  for(const fromId of fromIds){
-    const from=materialById(fromId); if(!from||from.id===to.id)continue;
-    forEachMaterialUse(from.id,(r,area,part,line)=>replaceCellMaterial(r.id,area,part,line,to));
-    mergeNotes(to,from);
-    from.active=false; from.mergedTo=to.id; from.mergedAt=new Date().toISOString();
-    addSystemMemo(from,`統合：${from.name} → ${to.name}`);
-    addSystemMemo(to,`統合受入：${from.name} を統合`);
-    addQueue('建材統合',`${from.name} → ${to.name}`);
-  }
-  selectedMaterialId=to.id;
-  compactMaterialSuffixes();
-  closeDrawer();
-  renderAll();
-}
-function deleteSelectedMaterialsFromDrawer(){
-  const ids=selectedValuesByClass('delete-target-select');
-  if(!ids.length)return alert('削除する建材を選んでください');
-  const lines=[];
-  for(const id of ids){
-    const m=materialById(id); if(!m)continue;
-    const places=materialPlacesForWarning(id);
-    lines.push(places?`${m.name}：${places} にあります`:`${m.name}：仕上表上の使用なし`);
-  }
-  if(!confirm(`${lines.join('\n')}\n\n仕上表から消しますか？`))return;
-  remember();
-  for(const id of ids){
-    const m=materialById(id); if(!m)continue;
-    clearMaterialFromFinishSheet(id);
-    m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
-    addSystemMemo(m,`削除：${m.name} をリストから除外`);
-    addQueue('建材削除',m.name);
-    if(selectedMaterialId===id)selectedMaterialId=null;
-  }
-  compactMaterialSuffixes();
-  closeDrawer();
-  renderAll();
-}
+
+<!-- cleaned: removed obsolete duplicate mergeSelectedMaterialsFromDrawer -->
+
+
+<!-- cleaned: removed obsolete duplicate deleteSelectedMaterialsFromDrawer -->
+
 function deleteMaterialRecord(id){
   const m=materialById(id); if(!m)return;
   const places=materialPlacesForWarning(id);
@@ -4116,35 +3925,9 @@ function deleteMaterialRecord(id){
   addQueue('建材削除',m.name);
   renderAll();
 }
-function updateDrawerMaterialOps(){
-  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
-  let box=document.getElementById('drawerMaterialOps');
-  if(!box){box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box'; body.insertBefore(box, body.firstChild);}
-  const records=activeMaterials().slice().sort(reviewBaseSort);
-  const m=records.find(x=>x.id===selectedMaterialId)||records[0];
-  const defaultTarget=m?m.id:'';
-  const defaultSource=records.find(x=>x.id!==defaultTarget)?.id||'';
-  box.innerHTML=`<h4>建材リスト操作</h4>
-    <div class="hint">建材はベース名順で表示。統合先と統合する建材を選んで操作します。</div>
-    <div class="drawer-material-target">
-      <h5>統合</h5>
-      <div class="hint">統合先の建材</div>
-      <div class="material-picker-list"><select id="mergeTargetSelect" onchange="document.querySelectorAll('.merge-source-select').forEach(s=>{const v=s.value;s.innerHTML=reviewMaterialOptions(v,[this.value]);s.value=v;})">${reviewMaterialOptions(defaultTarget,[])}</select></div>
-      <div class="hint" style="margin-top:8px">統合する建材</div>
-      <div class="material-picker-list" id="mergeSourceList"></div>
-      <div class="drawer-material-actions"><button class="btn small" onclick="addMergeSourceSelect()">さらに選択…</button><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
-      <div class="picker-note">例：仕上塗材Aへ、仕上塗材B/Cを統合。</div>
-    </div>
-    <div class="drawer-material-target">
-      <h5>削除</h5>
-      <div class="hint">削除する建材</div>
-      <div class="material-picker-list" id="deleteTargetList"></div>
-      <div class="drawer-material-actions"><button class="btn small" onclick="addDeleteTargetSelect()">さらに選択…</button><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
-      <div class="picker-note">削除時は、仕上表に残っている使用箇所を確認してから消します。</div>
-    </div>`;
-  addMergeSourceSelect(defaultSource);
-  addDeleteTargetSelect(defaultTarget);
-}
+
+<!-- cleaned: removed obsolete duplicate updateDrawerMaterialOps -->
+
 
 function renderRoomRecords(){
   const rooms=allRooms();const pill=document.getElementById('recordCountPill');if(pill)pill.innerHTML='部屋レコード <b>'+rooms.length+'</b>件';const ap=document.getElementById('recordActivePill');if(ap)ap.style.display='none';const hint=document.getElementById('recordTabHint');if(hint)hint.textContent='部屋情報と仕上表セルを部屋ID単位で差分同期。';
@@ -4227,21 +4010,9 @@ function materialPickLine(m,noMap){
   const no=noMap&&noMap[m.id]?noMap[m.id]:'-';
   return `<span class="material-pick-main"><span class="material-pick-no">No.${esc(no)}</span><span class="material-pick-name">${esc(m.name||'')}</span><span class="material-pick-inputid">ID:${esc(m.inputId||'')}</span></span>`;
 }
-function groupedCheckPickerHtml(cls,checkedIds=[],single=false){
-  const checked=new Set((checkedIds||[]).filter(Boolean));
-  const noMap=materialNoMap(activeMaterials());
-  const groups=reviewGroupedMaterials();
-  if(!groups.length)return '<div class="hint">対象建材がありません</div>';
-  return `<div class="group-check-picker">${groups.map(([base,items])=>`
-    <div class="material-pick-group">
-      <div class="material-pick-group-title">${esc(base)}</div>
-      ${items.map(m=>`
-        <label class="material-pick-row">
-          <input type="checkbox" class="${cls}" value="${esc(m.id)}" ${checked.has(m.id)?'checked':''} ${single?`onchange="if(this.checked){document.querySelectorAll('.${cls}').forEach(x=>{if(x!==this)x.checked=false;});}"`:''}>
-          ${materialPickLine(m,noMap)}
-        </label>`).join('')}
-    </div>`).join('')}</div>`;
-}
+
+<!-- cleaned: removed obsolete duplicate groupedCheckPickerHtml -->
+
 function checkedValuesByClass(cls){
   return Array.from(document.querySelectorAll('.'+cls)).filter(x=>x.checked).map(x=>x.value).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);
 }
@@ -4268,55 +4039,12 @@ function mergeSelectedMaterialsFromDrawer(){
   closeDrawer();
   renderAll();
 }
-function deleteSelectedMaterialsFromDrawer(){
-  const ids=checkedValuesByClass('delete-target-check');
-  if(!ids.length)return alert('削除する建材を選んでください');
-  const lines=[];
-  for(const id of ids){
-    const m=materialById(id); if(!m)continue;
-    const places=materialPlacesForWarning(id);
-    lines.push(places?`${m.name}：${places} にあります`:`${m.name}：仕上表上の使用なし`);
-  }
-  if(!confirm(`${lines.join('\n')}\n\n仕上表から消しますか？`))return;
-  remember();
-  for(const id of ids){
-    const m=materialById(id); if(!m)continue;
-    clearMaterialFromFinishSheet(id);
-    m.active=false; m.deleted=true; m.deletedAt=new Date().toISOString();
-    addSystemMemo(m,`削除：${m.name} をリストから除外`);
-    addQueue('建材削除',m.name);
-    if(selectedMaterialId===id)selectedMaterialId=null;
-  }
-  compactMaterialSuffixes();
-  closeDrawer();
-  renderAll();
-}
-function updateDrawerMaterialOps(){
-  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
-  let box=document.getElementById('drawerMaterialOps');
-  if(!box){box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box'; body.insertBefore(box, body.firstChild);}
-  const records=activeMaterials().slice().sort(reviewBaseSort);
-  const defaultTarget=(records.find(x=>x.id===selectedMaterialId)||records[0]||{}).id||'';
-  const defaultSource=(records.find(x=>x.id!==defaultTarget)||{}).id||'';
-  box.innerHTML=`<h4>建材リスト操作</h4>
-    <div class="hint">統合と削除を分けて操作します。建材はベース名ごとにまとめ、A/B/C順で表示します。</div>
-    <div class="drawer-material-target review2">
-      <h5>統合</h5>
-      <div class="hint">統合先の建材</div>
-      ${groupedCheckPickerHtml('merge-target-check',[defaultTarget],true)}
-      <div class="hint" style="margin-top:9px">統合する建材</div>
-      ${groupedCheckPickerHtml('merge-source-check',defaultSource?[defaultSource]:[],false)}
-      <div class="drawer-material-actions"><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
-      <div class="picker-note">例：仕上塗材Aを統合先にして、仕上塗材B/Cをチェック。</div>
-    </div>
-    <div class="drawer-material-target review2">
-      <h5>削除</h5>
-      <div class="hint">削除する建材</div>
-      ${groupedCheckPickerHtml('delete-target-check',defaultTarget?[defaultTarget]:[],false)}
-      <div class="drawer-material-actions"><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
-      <div class="picker-note">削除時は、仕上表に残っている使用箇所を確認してから消します。</div>
-    </div>`;
-}
+
+<!-- cleaned: removed obsolete duplicate deleteSelectedMaterialsFromDrawer -->
+
+
+<!-- cleaned: removed obsolete duplicate updateDrawerMaterialOps -->
+
 
 
 
@@ -4405,32 +4133,9 @@ function collapsiblePickerHtml(title,summaryId,selectedId,pickerId,cls,checkedId
     </div>
   </div>`;
 }
-function updateDrawerMaterialOps(){
-  const body=document.querySelector('#drawer .drawer-body'); if(!body)return;
-  let box=document.getElementById('drawerMaterialOps');
-  if(!box){box=document.createElement('div'); box.id='drawerMaterialOps'; box.className='drawer-box'; body.insertBefore(box, body.firstChild);}
-  const records=activeMaterials().slice().sort(reviewBaseSort);
-  const defaultTarget=(records.find(x=>x.id===selectedMaterialId)||{}).id||'';
-  box.innerHTML=`<h4>建材リスト操作</h4>
-    <div class="hint">必要な欄だけ開いて選択します。統合先は1つ選ぶと自動で閉じます。</div>
-    <div class="drawer-material-target review3">
-      <h5>統合</h5>
-      <div class="hint">統合先の建材</div>
-      ${collapsiblePickerHtml('統合先の建材','mergeTargetSummary','mergeTargetSelected','mergeTargetPicker','merge-target-check',defaultTarget?[defaultTarget]:[],true,'統合先を選択してください')}
-      <div class="hint" style="margin-top:9px">統合する建材</div>
-      ${collapsiblePickerHtml('統合する建材','mergeSourceSummary','mergeSourceSelected','mergeSourcePicker','merge-source-check',[],false,'さらに選択…')}
-      <div class="drawer-material-actions"><button class="btn primary" onclick="mergeSelectedMaterialsFromDrawer()">統合</button></div>
-      <div class="picker-note">例：仕上塗材Aを統合先にして、仕上塗材B/Cをチェック。</div>
-    </div>
-    <div class="drawer-material-target review3">
-      <h5>削除</h5>
-      <div class="hint">削除する建材</div>
-      ${collapsiblePickerHtml('削除する建材','deleteTargetSummary','deleteTargetSelected','deleteTargetPicker','delete-target-check',[],false,'さらに選択…')}
-      <div class="drawer-material-actions"><button class="btn danger" onclick="deleteSelectedMaterialsFromDrawer()">削除</button></div>
-      <div class="picker-note">削除時は、仕上表に残っている使用箇所を確認してから消します。</div>
-    </div>`;
-  refreshPickerSummaries();
-}
+
+<!-- cleaned: removed obsolete duplicate updateDrawerMaterialOps -->
+
 
 
 /* v0.10.9 review4: merge source exclusion + flat list cells */
@@ -5882,7 +5587,9 @@ renderSettings=function(){v1414RenderSettings();const table=document.getElementB
 document.addEventListener('keydown',e=>{if(e.target.matches('#materialsTable .mat-name input')&&e.key==='Enter'){e.preventDefault();e.target.blur();}});
 document.addEventListener('change',e=>{if(e.target.matches('#materialsTable .mat-name input')){const tr=e.target.closest('tr');const id=tr?.querySelector('.input-id')?.textContent?.trim();const m=(state.materials||[]).find(x=>String(x.inputId)===String(id));if(m)updateMaterialName(m.id,e.target.value);}});
 // Excel-like room block highlighting.
-document.addEventListener('focusin',e=>{const table=e.target.closest('.finish-table');if(!table)return;document.querySelectorAll('.finish-table tr.room-focus').forEach(x=>x.classList.remove('room-focus'));document.querySelectorAll('.finish-table .cell-focus').forEach(x=>x.classList.remove('cell-focus'));const tr=e.target.closest('tr');if(!tr)return;const roomCell=tr.querySelector('.room-no');const roomNo=(roomCell?.innerText||roomCell?.querySelector('input')?.value||'').trim();const floor=(tr.querySelector('.floor')?.innerText||tr.querySelector('.floor input')?.value||'').trim();[...table.rows].forEach(r=>{const rn=(r.querySelector('.room-no')?.innerText||r.querySelector('.room-no input')?.value||'').trim();const fl=(r.querySelector('.floor')?.innerText||r.querySelector('.floor input')?.value||'').trim();if(roomNo&&rn===roomNo&&fl===floor)r.classList.add('room-focus');});(e.target.closest('td')||e.target).classList.add('cell-focus');});
+
+<!-- cleaned: removed obsolete duplicate obsolete_focusin -->
+
 document.addEventListener('focusout',e=>{if(!e.target.closest('.finish-table'))return;setTimeout(()=>{if(!document.activeElement?.closest('.finish-table')){document.querySelectorAll('.finish-table tr.room-focus').forEach(x=>x.classList.remove('room-focus'));document.querySelectorAll('.finish-table .cell-focus').forEach(x=>x.classList.remove('cell-focus'));}},0);});
 let v1414LastSync=localStorage.getItem('chousaLastSyncAt')||'';
 function v1414PhotoPending(){return (state.photos||[]).filter(p=>p&&!p.deleted&&p.dataUrl&&!['uploaded','共有済','同期済'].includes(String(p.uploadStatus||''))).length;}
@@ -5932,7 +5639,9 @@ headerFor=function(area,parts){
 // Add group classes and stable room/floor identifiers to body rows.
 renderBodyRows=function(area,parts){let html='';let prevFloor=null;for(const r of roomsForArea(area)){const floorStart=prevFloor!==null&&String(prevFloor)!==String(r.floor||'');prevFloor=r.floor||'';for(let line=0;line<roomLineCount(r);line++){html+=`<tr data-room-id="${escapeAttr(r.id)}" data-room-floor="${escapeAttr(r.floor||'')}" class="${line===0?'room-start':''} ${line>0?'room-sub':''} ${line===0&&floorStart?'floor-start':''} area-${area==='外部'?'external':'internal'}">`;if(line===0){const span=roomLineCount(r);html+=`<td class="floor" rowspan="${span}">${renderFloorCell(r,area)}</td><td class="room-no" rowspan="${span}">${renderRoomNoCell(r,area)}</td><td class="copy-col" rowspan="${span}">${renderCopyCell(r,area)}</td><td class="room-name" rowspan="${span}">${renderRoomNameCell(r)}</td>`;}for(const p of parts){html+=`<td class="group-start">${renderIdInput(r.id,area,p,line)}</td><td class="group-end">${renderNameInput(r.id,area,p,line)}</td>`;}for(const o of otherSlots){html+=`<td class="group-start">${renderIdInput(r.id,area,o,line)}</td><td>${renderPartInput(r.id,area,o,line)}</td><td class="group-end">${renderNameInput(r.id,area,o,line)}</td>`;}html+='</tr>';}}return html;};
 // Entire room block highlighting, including rowspan cells and every input row.
-document.addEventListener('focusin',e=>{const table=e.target.closest('.finish-table');if(!table)return;table.querySelectorAll('tr.room-focus').forEach(x=>x.classList.remove('room-focus'));table.querySelectorAll('.cell-focus').forEach(x=>x.classList.remove('cell-focus'));const tr=e.target.closest('tr[data-room-id]');if(!tr)return;const roomId=tr.dataset.roomId;table.querySelectorAll(`tr[data-room-id="${CSS.escape(roomId)}"]`).forEach(r=>r.classList.add('room-focus'));const td=e.target.closest('td');if(td)td.classList.add('cell-focus');},true);
+
+<!-- cleaned: removed obsolete duplicate obsolete_focusin -->
+
 // Tombstone sync for delete/merge, with offline queue.
 function persistMaterialTombstone(m,reason){if(!m)return Promise.resolve();m.updatedAtClient=new Date().toISOString();return Promise.resolve(saveMaterialRecordToFirebase(m.id,reason||'建材削除')).catch(()=>{});}
 const _deleteOne=deleteMaterialRecord;
