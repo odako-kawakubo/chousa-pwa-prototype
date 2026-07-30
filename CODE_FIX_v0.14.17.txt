@@ -23,3 +23,41 @@ v0.14.17 修正記録(GitHub版 v0.14.16をベースに移植)
 - app.html内の同名function宣言: 重複なし(388件、再発なし)
 - 上記2箇所以外の差分なし(diffで確認済み)
 - 未確認: 実際のFirebase複数端末環境、iPad実機での挙動
+
+---
+v0.14.18 追加修正
+
+修正3: 共有調査フォルダの検索キーワードをフォルダ実名「04 調査」に復元
+- v0.14.15で「画面表示から内部名称を隠す」目的の変更により、SHAREPOINT_UPLOAD_FOLDER_NAME が
+  実フォルダ名と異なる "共有調査フォルダ" に書き換わっていた。
+- この定数は検索キーワードとしても使われているため、共有リンク解決に失敗した場合の
+  フォールバック検索(OneDriveの実フォルダ名検索)が常に失敗するようになっていた。
+- v0.14.12〜v0.14.14時点の値「04 調査」に復元。
+
+修正4: 仕上表の部屋ブロックでarea-external/area-internalクラスが欠落していた不具合を修正
+- renderBodyRows関数が重複代入されており、後勝ちしていた版でarea-external/area-internal
+  クラスとdata-room-floor属性が欠落していた。これにより内部/外部で背景色を分けるCSSが
+  効かなくなっていた。
+- 属性が揃っている方の版に一本化。
+
+修正5(付随・実害なしのクリーンアップ): レコードテーブルのスクロール制御を1本化
+- ensureRecordsScroll/ensureRecordsScrollV1416という2層の継ぎ足しを1本の関数に統合。
+- record-table-wrap/records-scrollのmax-height指定が3層(-165px/-220px/-230px)に重複していたのを
+  最終的な有効値(-230px)のみへ整理。見た目・動作は変更前と同一。
+
+追加で見つかった未対応事項
+- function宣言だけでなく「名前=function(){}」という代入形式の重複も21件見つかった
+  (setFirebasePill, applyFirebaseMaterialRecords, saveAllMaterialRecordsToFirebase,
+  headerFor, renderSettings, showTab, deleteMaterialRecord, mergeSelectedMaterialsFromDrawer,
+  renderProjectList, deleteProject, switchProject, deleteSelectedMaterialsFromDrawer,
+  connectFirebaseForActiveProject, updateProjectMetaField, refreshPickerSummaries,
+  toggleCollapsePicker, handleSinglePickerChange, renderSync ほか)。
+  抜き取り確認した範囲では、後勝ちの版が意図通りの改良版になっており、
+  現時点で確認できた実害はない。ただしdead codeとして残っており、
+  今回のrenderBodyRowsのような「後の版が退化する」事故の温床になり得るため、
+  別途まとまった時間で整理することを推奨する。
+
+確認結果
+- app.html / camera.html / index.html: 全インラインJS node --check OK
+- renderBodyRows: 1箇所のみ(重複解消)
+- SHAREPOINT_UPLOAD_FOLDER_NAME: "04 調査"に復元
