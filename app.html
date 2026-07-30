@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA v0.14.20</title>
+<title>調査システムPWA v0.14.21</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer;position:relative;padding-right:46px}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.project-delete-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fff;color:#b91c1c;font-size:16px;line-height:1;cursor:pointer}.project-delete-btn:hover{background:#fef2f2}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -2167,7 +2167,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.20';
+const APP_VERSION='0.14.21';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -2180,6 +2180,7 @@ function applyAppVersionDisplay(){
   if(settingsVer)settingsVer.textContent=APP_VERSION;
 }
 let online=true, materialSeq=1, inputSeq=1, activePhotoRoom='i1', selectedMaterialId=null, colorMode=false, pendingRoomFocus=null;
+let lastBulkRoomIds=null, lastRoomCopySrcId=null, lastRoomCopyTargetId=null;
 let undoStack=[], redoStack=[], historyLock=false;
 const roomCopy={source:null,warnings:{},done:{},working:{},backups:{}};
 const externalParts=['床 犬走','外壁','屋根','軒裏'];
@@ -2220,10 +2221,12 @@ const appState={
   initialSync:{projectId:'',materials:false,rooms:false,photos:false,projectState:false}
 };
 function getDeviceName(){
-  while(!String(appState.deviceName||'').trim()){
-    const value=prompt('この端末名を入力してください（必須）','事務所PC');
-    if(value===null){ alert('端末名を設定しないと同期を開始できません。'); continue; }
-    appState.deviceName=normalizeInput(value);
+  if(!String(appState.deviceName||'').trim()){
+    let value=null;
+    try{ value=prompt('この端末名を入力してください（必須）','事務所PC'); }catch(e){ value=null; }
+    const normalized=value===null?'':normalizeInput(value);
+    appState.deviceName=normalized||`端末-${Date.now().toString(36)}`;
+    if(!normalized)alert('端末名を確定できなかったため、仮の端末名を設定しました。後で「設定」タブから変更できます。');
   }
   localStorage.setItem('deviceName',appState.deviceName);
   return appState.deviceName;
@@ -2392,6 +2395,25 @@ function applyFinishPositionsFromFirebase(records){
     }
   }
 }
+let deferRemoteRender=false;
+let pendingRemoteRender=false;
+function isFinishTableElement(el){
+  const container=document.getElementById('finishTables')||document.getElementById('finishTable');
+  return !!(container && el instanceof Node && container.contains(el));
+}
+function requestRemoteRenderAll(){
+  if(deferRemoteRender){ pendingRemoteRender=true; return; }
+  renderAll();
+}
+document.addEventListener('focusin',e=>{ if(isFinishTableElement(e.target))deferRemoteRender=true; });
+document.addEventListener('focusout',e=>{
+  setTimeout(()=>{
+    if(!isFinishTableElement(document.activeElement)){
+      deferRemoteRender=false;
+      if(pendingRemoteRender){ pendingRemoteRender=false; renderAll(); }
+    }
+  },0);
+});
 function applyFirebaseMaterialRecords(changes, isEmpty){
   const list=Array.isArray(changes)?changes:[];
   if(isEmpty && !Object.keys(appState.materialRecords||{}).length){
@@ -2423,7 +2445,7 @@ function applyFirebaseMaterialRecords(changes, isEmpty){
     }
     state.materials.sort((a,b)=>Number(a.inputId||999999)-Number(b.inputId||999999)||String(a.id).localeCompare(String(b.id)));
   }finally{appState.applyingRemote=false;}
-  renderAll();
+  requestRemoteRenderAll();
 }
 let syncQueueClearTimer=null;
 function scheduleSyncedQueueClear(){
@@ -2487,7 +2509,7 @@ function applyFirebaseRoomRecords(changes,isEmpty){
   if(isEmpty&&!appState.roomRecordsBootstrapped){appState.roomRecordsBootstrapped=true;setTimeout(()=>saveAllRoomRecordsToFirebase('初期投入'),350);return;}
   appState.applyingRemote=true;
   try{for(const change of (changes||[])){const rec=change.record||{};const id=rec.roomId||rec.id;if(!id)continue;if(change.type==='removed'){for(const area of ['外部','内部'])state.roomsByArea[area]=(state.roomsByArea[area]||[]).filter(r=>r.id!==id);for(const k of Object.keys(state.cells))if(k.startsWith(id+'|'))delete state.cells[k];}else applyRoomRecord(rec);}}finally{appState.applyingRemote=false;}
-  renderAll();
+  requestRemoteRenderAll();
 }
 function saveRoomRecordToFirebase(roomId,reason){if(appState.applyingRemote||!window.FirebaseSync)return;const room=findRoom(roomId);if(!room)return;const area=roomArea(roomId);const projectId=appState.currentProjectId||currentFirestoreProjectId();return window.FirebaseSync.saveRoomRecord(projectId,roomId,serializeRoomRecord(room,area)).then(()=>{setFirebasePill('部屋保存済: '+(reason||room.no),'ok');scheduleSyncedQueueClear();}).catch(err=>{console.error(err);setFirebasePill('部屋保存エラー','warn');});}
 function saveRoomSlotToFirebase(roomId,area,part,line,reason){if(appState.applyingRemote||!window.FirebaseSync)return;const projectId=appState.currentProjectId||currentFirestoreProjectId();const sk=roomSlotKey(part,line);const payload=roomSlotPayload(roomId,area,part,line);const has=payload.id||payload.name||payload.partCell;const patch={updatedBy:getDeviceName(),updatedAtClient:new Date().toISOString(),appVersion:APP_VERSION};patch['slots.'+sk]=has?payload:window.FirebaseSync.deleteFieldValue();return window.FirebaseSync.patchRoomRecord(projectId,roomId,patch).then(()=>{setFirebasePill('仕上表差分保存済: '+(reason||part),'ok');scheduleSyncedQueueClear();}).catch(err=>{console.error(err);setFirebasePill('仕上表保存エラー','warn');});}
@@ -2578,7 +2600,7 @@ function applyFirebaseProjectState(remote){
       m.ledgerOverrides=JSON.parse(JSON.stringify(remote.projectMeta.ledgerOverrides||m.ledgerOverrides||{}));
       if(remote.projectMeta.isTemporary!==undefined)m.isTemporary=!!remote.projectMeta.isTemporary;
     }
-    renderAll();renderProjectList();
+    requestRemoteRenderAll();renderProjectList();
   }finally{ appState.applyingRemote=false; }
 }
 function saveProjectStateToFirebase(reason){
@@ -3170,9 +3192,9 @@ function addRoomAfter(refId,floor,no,name='',area='内部'){remember(); const li
 function addOneRoom(id,area='内部'){const r=findRoom(id); if(!r)return; const no=area==='外部'?'':nextRoomNo(r.floor,area); addRoomAfter(id,r.floor,no,'',area)}
 function addInputLine(id,area='内部'){const r=findRoom(id); if(!r)return; remember(); r.lines=roomLineCount(r)+1; addQueue('入力行追加',`${area} ${r.no} ${r.name}`); renderAll()}
 function addStairRoom(id){const r=findRoom(id); if(!r)return; addRoomAfter(id,'階段',nextRoomNo('階段','内部'),'','内部')}
-function addNextFloor(id,area='内部'){if(area!=='内部')return; remember(); const list=roomsForArea('内部'); const nf=nextFloorName(); const floorNum=(String(nf).match(/\d+/)||['1'])[0]; const insertIndex=list.findIndex(r=>r.id===id); const rooms=[]; for(let i=1;i<=10;i++)rooms.push({id:makeRoomId('内部'),floor:nf,no:`${floorNum}-${i}`,name:'',lines:2}); list.splice(insertIndex+1,0,...rooms); addQueue('階追加',`${nf} 10部屋`); renderAll(); focusRoomNo(rooms[0].id,'内部')}
+function addNextFloor(id,area='内部'){if(area!=='内部')return; remember(); const list=roomsForArea('内部'); const nf=nextFloorName(); const floorNum=(String(nf).match(/\d+/)||['1'])[0]; const insertIndex=list.findIndex(r=>r.id===id); const rooms=[]; for(let i=1;i<=10;i++)rooms.push({id:makeRoomId('内部'),floor:nf,no:`${floorNum}-${i}`,name:'',lines:2}); list.splice(insertIndex+1,0,...rooms); lastBulkRoomIds=rooms.map(r=>r.id); addQueue('階追加',`${nf} 10部屋`); renderAll(); focusRoomNo(rooms[0].id,'内部')}
 function addRoom(){const list=roomsForArea('内部'); const r=list[list.length-1]; addOneRoom(r.id,'内部')}
-function copyFirstRoom(){const list=roomsForArea('内部'); const src=list[0], id=makeRoomId('内部'); if(!src)return; remember(); list.push({id,floor:src.floor,no:'コピー',name:'コピー部屋',lines:src.lines||2}); for(const key in state.cells){if(key.startsWith(src.id+'|'))state.cells[key.replace(src.id,id)]={...state.cells[key]}} addQueue('部屋コピー',src.no); renderAll()}
+function copyFirstRoom(){const list=roomsForArea('内部'); const src=list[0], id=makeRoomId('内部'); if(!src)return; remember(); list.push({id,floor:src.floor,no:'コピー',name:'コピー部屋',lines:src.lines||2}); for(const key in state.cells){if(key.startsWith(src.id+'|'))state.cells[key.replace(src.id,id)]={...state.cells[key]}} lastRoomCopySrcId=src.id; lastRoomCopyTargetId=id; addQueue('部屋コピー',src.no); renderAll()}
 function getActiveProjectMeta(){return projectMeta[activeProjectId]||{no:'',name:'',sub:''}}
 function getCameraLaunchParams(mode){
   const meta=getActiveProjectMeta();
@@ -4921,7 +4943,19 @@ function renderSamplePointBlock(point){const counts=sampleStageCounts(point),nex
   wrap('mNote',function(id){saveMaterialRecordToFirebase(id,'調査備考');});
   wrap('editMaterialNote',function(id){saveMaterialRecordToFirebase(id,'調査備考');});
   wrap('updateRoom',function(id){saveRoomRecordToFirebase(id,'部屋情報');});
-  ['handleRoomCopy','addRoomAfter','addOneRoom','addInputLine','addStairRoom','addNextFloor','copyFirstRoom'].forEach(name=>wrap(name,function(){saveAllRoomRecordsToFirebase(name);}));
+  wrap('handleRoomCopy',function(area,roomId){
+    saveRoomRecordToFirebase(roomId,'handleRoomCopy');
+    if(roomCopy&&roomCopy.source&&roomCopy.source.roomId&&roomCopy.source.roomId!==roomId)saveRoomRecordToFirebase(roomCopy.source.roomId,'handleRoomCopy');
+  });
+  ['addRoomAfter','addOneRoom','addStairRoom'].forEach(name=>wrap(name,function(){
+    if(pendingRoomFocus&&pendingRoomFocus.id)saveRoomRecordToFirebase(pendingRoomFocus.id,name);
+  }));
+  wrap('addInputLine',function(id){saveRoomRecordToFirebase(id,'addInputLine');});
+  wrap('addNextFloor',function(){(lastBulkRoomIds||[]).forEach(id=>saveRoomRecordToFirebase(id,'addNextFloor'));});
+  wrap('copyFirstRoom',function(){
+    if(lastRoomCopySrcId)saveRoomRecordToFirebase(lastRoomCopySrcId,'copyFirstRoom');
+    if(lastRoomCopyTargetId)saveRoomRecordToFirebase(lastRoomCopyTargetId,'copyFirstRoom');
+  });
   ['deleteMaterialRecord','deleteSelectedMaterialsFromDrawer'].forEach(name=>wrap(name,function(){saveAllMaterialRecordsToFirebase(name);saveAllRoomRecordsToFirebase(name);}));
   wrap('switchProject',function(){connectFirebaseForActiveProject();});
   window.syncNow=function(){if(!online)return alert('オフラインです。通信復帰後に同期します。');saveAllMaterialRecordsToFirebase('手動同期');saveAllRoomRecordsToFirebase('手動同期');retryPendingIntegratedPhotos();state.queue=[];renderAll();alert('差分同期処理を開始しました。');};
