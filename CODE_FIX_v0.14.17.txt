@@ -61,3 +61,63 @@ v0.14.18 追加修正
 - app.html / camera.html / index.html: 全インラインJS node --check OK
 - renderBodyRows: 1箇所のみ(重複解消)
 - SHAREPOINT_UPLOAD_FOLDER_NAME: "04 調査"に復元
+
+---
+v0.14.19 追加修正
+
+修正6(重要): 案件を「正式案件に切替」した時、firestoreProjectIdが更新されず端末間で別ドキュメントに同期していた不具合を修正
+- 症状: 各端末で「同期済み」と表示されるのに、片方の入力がもう片方に全く反映されない
+- 原因:
+  - 「現場で新規作成」した案件には firestoreProjectId = 'temp_'+案件番号+'_'+作成時刻 という
+    一時的でユニークな値が割り当てられる
+  - その後「正式案件に切替」しても、案件番号・案件名・OneDriveフォルダ情報は更新されるが
+    firestoreProjectIdだけはtempのまま残っていた
+  - 一方、別端末が同じ案件をOneDrive経由で「既存案件を開く」で開くと、
+    最初からfirestoreProjectId = 案件番号 のクリーンな値で接続する
+  - 結果、現場で最初に作った端末はtemp_XXX_timestamp、別端末は案件番号、という
+    別々のFirestoreドキュメントにそれぞれ同期完了してしまい、お互いに反映されない
+- 対応:
+  - formalizeActiveProject内でfirestoreProjectIdを案件番号に揃えるよう変更
+  - IDが変わった場合はconnectFirebaseForActiveProjectで接続し直し、
+    その時点までの入力内容(案件全体・部屋レコード・建材レコード)を新しいドキュメントへ書き込み
+  - 切替完了メッセージに、他端末側での同期状況確認を促す注意文を追加
+- 未対応・要確認:
+  - 今回の修正はこれ以降の「正式案件に切替」操作に対してのみ有効。
+    v0.14.18以前に既にtemp_XXX_timestamp形式で正式案件に切り替えてしまった案件については、
+    旧ドキュメント側にデータが取り残されている可能性がある。該当案件があれば、
+    Firestoreコンソールで一度確認することを推奨する。
+
+---
+v0.14.20 修正(コンソールログから発見した致命的バグ)
+
+修正7(最重要): 起動時にrenderAll()内でReferenceErrorが発生し、Firestoreへの接続が
+一度も行われないまま起動処理が止まっていた不具合を修正
+- 症状: 複数端末間でリアルタイム同期が全く反映されない(バックアップ/localStorage/
+  ID不一致の問題を全て解消した後も再現)
+- 原因:
+  - 起動処理: `initProjects(); ...; renderAll(); connectFirebaseForActiveProject(); ...`
+  - renderAll()の中でrenderSync()を呼んでいるが、renderSync本体の定義は
+    別のscriptブロック(後方)にあり、GitHub版の整理作業で手前にあった宣言を
+    誤って「重複」と判断し削除していた(`<!-- cleaned: obsolete duplicate function
+    renderSync removed -->`というコメントが残っていた)
+  - 関数宣言の巻き上げ(hoisting)はscriptブロックをまたがないため、
+    起動直後のrenderAll()実行時に`renderSync is not defined`のReferenceErrorが発生
+  - 同じ文の並びにある直後のconnectFirebaseForActiveProject()が実行されないまま
+    起動処理が停止していた => Firestoreの購読(onSnapshot)が最初から一度も
+    貼られない => どれだけ待ってもリアルタイム反映が起きない、という状態
+- 対応: renderAll()内の呼び出しを`if(typeof renderSync==='function')renderSync();`
+  という安全なガード付きに変更
+
+修正8: queuePendingOp内の変数名タイポ(dedupeKey is not defined)を修正
+- 症状: 建材登録のたびにコンソールに`ReferenceError: dedupeKey is not defined`
+- 原因: `const dedupe=...`と定義した変数を、後ろで省略記法`{...,dedupeKey,...}`として
+  参照していた(変数名の書き間違い)
+- 対応: 変数名を`dedupeKey`に統一
+
+未対応(コードの問題ではない)
+- `resource-exhausted: Quota exceeded` (Firestore無料枠の一時的な超過)。
+  時間経過でのリセット待ちか、Blazeプラン(従量課金)への切替が必要。
+
+確認結果
+- app.html: node --check OK
+- renderAll呼び出し箇所の周辺、他の変更なし(diffで確認)
