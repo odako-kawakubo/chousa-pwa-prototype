@@ -1,0 +1,5 @@
+v0.14.22
+
+- blankProjectSnapshot()を、projectStore.blankや現在案件のスナップショットに一切依存しない完全生成式に変更(defaultRoomsByArea/defaultMaterialCandidates/defaultPartCandidates等コード上の初期値から毎回JSON文字列を組み立てる形に修正)。過去に汚染されたprojectStore.blankが既存案件取込へ永続的に混入していた不具合を解消
+- 壊れていたフォールバック分岐(snapshotState()が返すJSON文字列を{...current}でスプレッドし、文字インデックスの無意味なオブジェクトになっていた箇所)も併せて解消
+- odk(ODKデモ案件)・blank(内部テンプレート)を、案件一覧(renderProjectList)および削除後の次アクティブ案件選定(deleteProject)から除外し、通常操作でアクティブ案件として開けないよう修正
