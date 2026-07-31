@@ -12,4 +12,9 @@ v0.14.24
   - wrap()にoptions引数(skipAfterOnFalse)を追加。指定した関数のみ、元の関数の戻り値がfalseの場合はafter(Firestore保存等)を呼ばないようにした。onIdBlur・onNameBlur・onPartBlur・registerNameの4箇所のみこのオプションを有効化し、他のwrap()利用箇所(建材削除・部屋追加・案件切替など)は従来通り
   - onIdBlur・onNameBlur・onPartBlur・registerNameの4関数それぞれに、remember()より前の判定を追加。セルの値が実質的に変わっていない場合はfalseを返し、remember()(Undo記録)・state.cells更新・addQueue・renderAll・Firestore保存のいずれも行わないようにした。値が変わった場合は従来通り処理し、trueを返す
   - registerNameは「建材登録」ボタンからも呼ばれるため、この修正により、既に登録済みの内容に対するボタン連打(重複実行)も無変更操作として保存を抑止するようになった(blur抑止に加えた意図的な拡張)
-  - 確認事項: onNameBlur内部から末尾9入力確定時に呼び出されるregisterNameは、wrap()適用後のグローバル関数(window.registerName)を参照するため、値変更を伴う確定操作では、registerName側(タグ「建材登録」)とonNameBlur側(タグ「建材名」)の両方でFirestore保存が発生する(二重発火)。これは今回の修正前から存在する既存の挙動であり、今回のスコープでは変更していない
+  - 確認事項: onNameBlur内部から末尾9入力確定時に呼び出されるregisterNameは、wrap()適用後のグローバル関数(window.registerName)を参照するため、値変更を伴う確定操作では、registerName側(タグ「建材登録」)とonNameBlur側(タグ「建材名」)の両方でFirestore保存が発生する(二重発火)。これは今回の修正前から存在する既存の挙動であり、今回のスコープでは変更していない(→v0.14.24-Dで自動登録経路自体を廃止し解消)
+- D: 建材登録の仕様整理(実施日: 2026-07-31)
+  - splitMaterialName()から末尾9の特別扱い(legacy9)を削除。末尾が数字の場合は特別扱いせず、そのままbaseの一部として扱うよう変更。戻り値からlegacy9プロパティ自体を削除。末尾英字の解析(/[A-Z]$/)は維持
+  - registerName()から、parsed.legacy9に依存する分岐(旧9入力時のsuffix='9'固定・登録理由'旧9入力')を削除し、常に「末尾英字が明示されていればsuffixとして使用、なければnextSuffix()で自動採番」「登録理由は常に'登録ボタン'」という単純なロジックに統一。v0.14.24-Cで実装した無変更判定(先頭のremember()前チェック)はそのまま維持
+  - onNameBlur()から、blur時に自動登録していた2分岐(末尾9でregisterName()を内部呼び出しする分岐／末尾英字で'英字指定'として即時createMaterialする分岐)を削除。既存建材と完全一致しない入力は、いずれもrecord_only状態(登録ボタン表示)で確定するのみとなり、建材登録は「登録」ボタン経由に統一。これにより、末尾9確定時にonNameBlur側とregisterName側でFirestore保存・remember()が二重発生していた既知の問題(v0.14.24-C時点で報告済み)も併せて解消
+  - legacy9・旧9入力・英字指定の各文字列は、修正後のapp.html内に残存しないことを確認済み
