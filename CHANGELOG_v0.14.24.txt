@@ -1,0 +1,8 @@
+v0.14.24
+- A: 削除時のデータ整合性(実施日: 2026-07-31)
+  - compactMaterialSuffixes()が、繰り上がりで名前が変わった建材IDの配列(changedMaterialIds)を返すように変更
+  - 建材削除(単体: deleteMaterialRecord / 複数: deleteSelectedMaterialsFromDrawer)で、繰り上がった建材をFirestoreへ個別保存(saveMaterialRecordToFirebase)するよう修正。従来は削除対象の建材1件しか保存されず、繰り上がった建材名がFirestore上で古いまま残っていた
+  - 削除時の部屋保存を、案件内の全部屋(saveAllRoomRecordsToFirebase)から、削除対象建材の使用部屋＋繰り上がり建材の使用部屋のみ(saveRoomRecordToFirebaseを影響部屋ごとに呼び出し)に変更
+  - 写真・採取情報側のmaterialName(撮影・採取時点でコピー保持された建材名)は今回変更していない(別途方針検討)
+- B: 未実装(初期投入の安全化)
+- C: 未実装(無変更blurの保存抑止)
