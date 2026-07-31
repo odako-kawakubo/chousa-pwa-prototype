@@ -4,5 +4,8 @@ v0.14.24
   - 建材削除(単体: deleteMaterialRecord / 複数: deleteSelectedMaterialsFromDrawer)で、繰り上がった建材をFirestoreへ個別保存(saveMaterialRecordToFirebase)するよう修正。従来は削除対象の建材1件しか保存されず、繰り上がった建材名がFirestore上で古いまま残っていた
   - 削除時の部屋保存を、案件内の全部屋(saveAllRoomRecordsToFirebase)から、削除対象建材の使用部屋＋繰り上がり建材の使用部屋のみ(saveRoomRecordToFirebaseを影響部屋ごとに呼び出し)に変更
   - 写真・採取情報側のmaterialName(撮影・採取時点でコピー保持された建材名)は今回変更していない(別途方針検討)
-- B: 未実装(初期投入の安全化)
+- B: 初期投入(bootstrap)条件の安全化(実施日: 2026-07-31)
+  - appStateにallowBootstrapフラグを追加(デフォルトfalse)。connectFirebaseForActiveProject()にoptions引数を追加し、resetFirebaseProjectSession()経由でappState.allowBootstrapへ反映
+  - applyFirebaseMaterialRecords()・applyFirebaseRoomRecords()のisEmpty分岐に、appState.allowBootstrapがtrueの場合のみ初期投入(全件アップロード)を行う条件を追加。falseの場合はローカル状態を変更せずreturnするのみとし、Firestoreへの書き込みを行わない
+  - 新規案件作成(createMockProject)・Firestore未登録の既存案件取込(selectSharedProjectでprobe.exists===falseの場合)のみallowBootstrap:trueを指定。案件切替(switchProject)・起動時・再接続・オンライン復帰・手動同期(syncNow)・正式案件切替(formalizeActiveProject)・既存案件取込(Firestoreに既にデータがある場合)はallowBootstrap:falseとし、確認なしの初期投入が発火しないようにした
 - C: 未実装(無変更blurの保存抑止)

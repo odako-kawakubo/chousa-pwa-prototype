@@ -2218,6 +2218,7 @@ const appState={
   firebaseReady:false,
   applyingRemote:false,
   bootstrappedProjects:{},
+  allowBootstrap:false,
   initialSync:{projectId:'',materials:false,rooms:false,photos:false,projectState:false}
 };
 function getDeviceName(){
@@ -2417,7 +2418,7 @@ document.addEventListener('focusout',e=>{
 function applyFirebaseMaterialRecords(changes, isEmpty){
   const list=Array.isArray(changes)?changes:[];
   if(isEmpty && !Object.keys(appState.materialRecords||{}).length){
-    if(!appState.bootstrappedProjects[appState.currentProjectId]){
+    if(appState.allowBootstrap && !appState.bootstrappedProjects[appState.currentProjectId]){
       appState.bootstrappedProjects[appState.currentProjectId]=true;
       setTimeout(()=>saveAllMaterialRecordsToFirebase('初期投入'),300);
     }
@@ -2506,7 +2507,8 @@ function applyRoomRecord(rec){
   }
 }
 function applyFirebaseRoomRecords(changes,isEmpty){
-  if(isEmpty&&!appState.roomRecordsBootstrapped){appState.roomRecordsBootstrapped=true;setTimeout(()=>saveAllRoomRecordsToFirebase('初期投入'),350);return;}
+  if(isEmpty&&appState.allowBootstrap&&!appState.roomRecordsBootstrapped){appState.roomRecordsBootstrapped=true;setTimeout(()=>saveAllRoomRecordsToFirebase('初期投入'),350);return;}
+  if(isEmpty)return;
   appState.applyingRemote=true;
   try{for(const change of (changes||[])){const rec=change.record||{};const id=rec.roomId||rec.id;if(!id)continue;if(change.type==='removed'){for(const area of ['外部','内部'])state.roomsByArea[area]=(state.roomsByArea[area]||[]).filter(r=>r.id!==id);for(const k of Object.keys(state.cells))if(k.startsWith(id+'|'))delete state.cells[k];}else applyRoomRecord(rec);}}finally{appState.applyingRemote=false;}
   requestRemoteRenderAll();
@@ -2516,7 +2518,7 @@ function saveRoomSlotToFirebase(roomId,area,part,line,reason){if(appState.applyi
 function saveAllRoomRecordsToFirebase(reason){const tasks=[];for(const area of ['外部','内部'])for(const room of roomsForArea(area))tasks.push(saveRoomRecordToFirebase(room.id,reason));return Promise.allSettled(tasks);}
 
 let firebaseConnectionGeneration=0;
-function resetFirebaseProjectSession(projectId){
+function resetFirebaseProjectSession(projectId, allowBootstrap){
   appState.currentProjectId=String(projectId||'');
   appState.materialRecords={};
   appState.photoRecords={};
@@ -2524,14 +2526,15 @@ function resetFirebaseProjectSession(projectId){
   appState.initialSync={projectId:String(projectId||''),materials:false,rooms:false,photos:false,projectState:false};
   appState.firebaseReady=false;
   appState.applyingRemote=false;
+  appState.allowBootstrap=!!allowBootstrap;
   clearTimeout(projectStateSaveTimer);
   clearTimeout(syncQueueClearTimer);
 }
-function connectFirebaseForActiveProject(){
+function connectFirebaseForActiveProject(options={}){
   getDeviceName();
   const projectId=currentFirestoreProjectId();
   const generation=++firebaseConnectionGeneration;
-  resetFirebaseProjectSession(projectId);
+  resetFirebaseProjectSession(projectId, options.allowBootstrap);
   setFirebasePill('Firebase 接続準備: '+projectId,'warn');
   const isCurrent=()=>generation===firebaseConnectionGeneration && projectId===currentFirestoreProjectId() && projectId===appState.currentProjectId;
   const run=()=>{
@@ -3794,7 +3797,7 @@ OneDrive上の案件フォルダ、写真、バックアップおよび共有デ
     window.activeProjectId=nextId;
     if(projectStore[nextId])restoreState(projectStore[nextId]);
     undoStack=[];redoStack=[];selectedMaterialId=null;
-    if(typeof connectFirebaseForActiveProject==='function')connectFirebaseForActiveProject();
+    if(typeof connectFirebaseForActiveProject==='function')connectFirebaseForActiveProject({allowBootstrap:false});
     setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
   }
 
@@ -4975,10 +4978,10 @@ function renderSamplePointBlock(point){const counts=sampleStageCounts(point),nex
     if(lastRoomCopyTargetId)saveRoomRecordToFirebase(lastRoomCopyTargetId,'copyFirstRoom');
   });
   ['deleteMaterialRecord','deleteSelectedMaterialsFromDrawer'].forEach(name=>wrap(name,function(){saveAllMaterialRecordsToFirebase(name);saveAllRoomRecordsToFirebase(name);}));
-  wrap('switchProject',function(){connectFirebaseForActiveProject();});
+  wrap('switchProject',function(){connectFirebaseForActiveProject({allowBootstrap:false});});
   window.syncNow=function(){if(!online)return alert('オフラインです。通信復帰後に同期します。');saveAllMaterialRecordsToFirebase('手動同期');saveAllRoomRecordsToFirebase('手動同期');retryPendingIntegratedPhotos();state.queue=[];renderAll();alert('差分同期処理を開始しました。');};
 })();
-initProjects(); persistenceEnabled=true; applyAppVersionDisplay(); renderAll(); connectFirebaseForActiveProject(); setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
+initProjects(); persistenceEnabled=true; applyAppVersionDisplay(); renderAll(); connectFirebaseForActiveProject({allowBootstrap:false}); setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
 
 window.addEventListener('load',()=>{
   const requestedTab=new URLSearchParams(location.search).get('tab');
@@ -5344,7 +5347,7 @@ async function restoreProjectByNumber(){
     renderProjectList();renderAll();
     showStatus('Firestoreから案件データを同期中…');
     setMicrosoftPill(payload?'案件復元済':'案件フォルダ確認済','ok');
-    connectFirebaseForActiveProject();
+    connectFirebaseForActiveProject({allowBootstrap:false});
     setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
     showStatus(payload?'復元完了。案件を開きました。':'案件を追加しました。Firestore同期を開始しています。','ok');
     setTimeout(closeProjectSide,900);
@@ -5433,7 +5436,7 @@ function beginReconnect(isQuota=false){
   clearTimeout(reconnectTimer);
   const delay=quotaWaiting?Math.max(1000,quotaReconnectUntil-now):4000;
   reconnectTimer=setTimeout(()=>{
-    if(navigator.onLine){connectFirebaseForActiveProject();flushPendingOps();}
+    if(navigator.onLine){connectFirebaseForActiveProject({allowBootstrap:false});flushPendingOps();}
     else beginReconnect(quotaReconnectUntil>Date.now());
   },delay);
 }
@@ -5442,10 +5445,10 @@ async function executePendingOp(op){const f=window.FirebaseSync;if(!f)throw new 
 async function flushPendingOps(){if(!navigator.onLine||!window.FirebaseSync)return false;const projectId=pendingProjectKey();const list=[...pendingOps(projectId)];if(!list.length){if(appState.firebaseReady)setSimpleSyncState('同期済み');return true;}setSimpleSyncState('同期中');for(const op of list){try{await executePendingOp(op);removePendingOp(projectId,op.dedupeKey);}catch(err){console.warn('未送信再送失敗',op,err);beginReconnect(isQuotaError(err));return false;}}endReconnect();if(appState.firebaseReady)setSimpleSyncState('同期済み');renderSync();return true;}
 loadPendingSyncStore();
 window.addEventListener('offline',()=>{online=false;beginReconnect();});
-window.addEventListener('online',()=>{online=true;setSimpleSyncState('再接続中');connectFirebaseForActiveProject();setTimeout(flushPendingOps,800);});
+window.addEventListener('online',()=>{online=true;setSimpleSyncState('再接続中');connectFirebaseForActiveProject({allowBootstrap:false});setTimeout(flushPendingOps,800);});
 
 const originalConnectFirebase=connectFirebaseForActiveProject;
-connectFirebaseForActiveProject=function(){try{window.FirebaseSync?.disconnectProjectListeners?.();}catch(e){};setSimpleSyncState('同期中');return originalConnectFirebase();};
+connectFirebaseForActiveProject=function(options){try{window.FirebaseSync?.disconnectProjectListeners?.();}catch(e){};setSimpleSyncState('同期中');return originalConnectFirebase(options);};
 const originalSetFirebasePill=setFirebasePill;
 setFirebasePill=function(text,cls){originalSetFirebasePill(text,cls);const raw=String(text||'');if(/エラー|失敗/.test(raw)){beginReconnect(/resource-exhausted|quota|利用上限|クォータ/i.test(raw));}else if(/初回同期完了/.test(raw)){endReconnect();flushPendingOps().then(()=>{if(!hasPendingOps())setSimpleSyncState('同期済み');});}};
 window.onFirebaseStatus=(message,cls)=>setFirebasePill(message,cls);
@@ -5487,7 +5490,7 @@ createMockProject=async function(){
     activeProjectId=id;window.activeProjectId=id;resetStateForBlankProject();projectStore[id]=snapshotState();
     const folders=await window.MicrosoftPhotoUpload.ensureProjectFolders(firestoreProjectId);projectMeta[id].oneDrive=folders;
     persistenceEnabled=true;saveStateToStorage();renderProjectList();renderAll();closeProjectSide();
-    await registerProjectInFirebase(id).catch(()=>{});connectFirebaseForActiveProject();setTimeout(()=>scheduleProjectStateSync('新規案件'),500);
+    await registerProjectInFirebase(id).catch(()=>{});connectFirebaseForActiveProject({allowBootstrap:true});setTimeout(()=>scheduleProjectStateSync('新規案件'),500);
   }catch(err){delete projectMeta[id];delete projectStore[id];alert('現場新規案件を作成できませんでした。\n'+(err?.message||err));}
 };
 
@@ -5579,7 +5582,7 @@ async function selectSharedProject(projectNo){
   try{const probe=await window.FirebaseSync.probeProject(projectNo);let id=localProjectIdByNo(projectNo);if(!probe.exists){const ok=confirm('この案件は調査システムでまだ開始されていません。\n新しい調査案件として開始しますか？');if(!ok)return;}
     if(!id){id='project_'+projectNo.replace(/[^A-Za-z0-9_-]/g,'_');projectMeta[id]={no:projectNo,name:row.name,address:row.address,sub:row.address,firestoreProjectId:projectNo,isTemporary:false,ledgerValues:{name:row.name,address:row.address},ledgerOverrides:{name:false,address:false},oneDrive:{driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};projectStore[id]=blankProjectSnapshot();}
     else{const previous=projectMeta[id]||{};const nextAddress=row.address||previous.address||'';projectMeta[id]={...previous,name:row.name||previous.name||'',address:nextAddress,sub:nextAddress||previous.sub||'',firestoreProjectId:previous.firestoreProjectId||projectNo,isTemporary:false,ledgerValues:{name:row.name||previous.name||'',address:row.address||previous.ledgerValues?.address||''},oneDrive:{...(previous.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};}
-    saveActiveProject();activeProjectId=id;window.activeProjectId=id;loadProject(id);await window.MicrosoftPhotoUpload.ensureProjectFolders(projectMeta[id].firestoreProjectId);persistenceEnabled=true;saveStateToStorage();renderProjectList();renderAll();connectFirebaseForActiveProject();if(!probe.exists)setTimeout(()=>scheduleProjectStateSync('案件開始'),500);closeSharedProjectPicker();closeProjectSide();
+    saveActiveProject();activeProjectId=id;window.activeProjectId=id;loadProject(id);await window.MicrosoftPhotoUpload.ensureProjectFolders(projectMeta[id].firestoreProjectId);persistenceEnabled=true;saveStateToStorage();renderProjectList();renderAll();connectFirebaseForActiveProject({allowBootstrap:!probe.exists});if(!probe.exists)setTimeout(()=>scheduleProjectStateSync('案件開始'),500);closeSharedProjectPicker();closeProjectSide();
   }catch(err){status.className='project-restore-status show error';status.textContent='クラウドデータを取得できませんでした。\n通信状態を確認して、もう一度お試しください。\n'+(err?.message||err);}
 }
 function openFormalizeProjectDialog(){if(!projectMeta[activeProjectId]?.isTemporary)return; if(!guardProjectChange())return;openSharedProjectPicker('formalize');}
@@ -5590,7 +5593,7 @@ async function formalizeActiveProject(row,folder){const meta=projectMeta[activeP
   // 案件番号に揃えて、旧tempドキュメントの内容を新ドキュメントへ書き込み直す。
   meta.firestoreProjectId=row.projectNo;
   meta.ledgerValues={name:row.name||meta.name||'',address:row.address||''};meta.ledgerOverrides={name:false,address:!row.address&&!!meta.address};meta.oneDrive={...(meta.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl,systemFolderId:sys.id};saveStateToStorage();
-  if(oldFirestoreProjectId&&oldFirestoreProjectId!==meta.firestoreProjectId){connectFirebaseForActiveProject();await Promise.all([saveProjectStateToFirebase('正式案件切替(ID移行)'),typeof saveAllRoomRecordsToFirebase==='function'?saveAllRoomRecordsToFirebase('正式案件切替(ID移行)'):Promise.resolve(),typeof saveAllMaterialRecordsToFirebase==='function'?saveAllMaterialRecordsToFirebase('正式案件切替(ID移行)'):Promise.resolve()]).catch(err=>console.warn('正式案件切替時の新ID書き込みに失敗',err));}
+  if(oldFirestoreProjectId&&oldFirestoreProjectId!==meta.firestoreProjectId){connectFirebaseForActiveProject({allowBootstrap:false});await Promise.all([saveProjectStateToFirebase('正式案件切替(ID移行)'),typeof saveAllRoomRecordsToFirebase==='function'?saveAllRoomRecordsToFirebase('正式案件切替(ID移行)'):Promise.resolve(),typeof saveAllMaterialRecordsToFirebase==='function'?saveAllMaterialRecordsToFirebase('正式案件切替(ID移行)'):Promise.resolve()]).catch(err=>console.warn('正式案件切替時の新ID書き込みに失敗',err));}
   else scheduleProjectStateSync('正式案件切替');
   renderAll();renderProjectList();closeSharedProjectPicker();alert('正式案件へ切り替えました。'+(oldFirestoreProjectId&&oldFirestoreProjectId!==meta.firestoreProjectId?'\n\n注意: この端末でここまで入力した内容を新しい同期先へ書き込みました。他の端末がすでに同じ案件を開いている場合は、一度アプリを開き直して同期状況を確認してください。':''));}catch(err){alert(err?.message||err);}}
 
@@ -5928,7 +5931,7 @@ renderSync=function(){
 };
 syncNow=async function(){
   if(!navigator.onLine){renderSync();return alert('オフラインです。未送信データは端末内に保持されています。');}
-  setSimpleSyncState('同期中');try{await connectFirebaseForActiveProject?.();await flushPendingOps();await retryPendingIntegratedPhotos?.();v1414LastSync=Date.now();localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));renderSync();}catch(err){console.error(err);beginReconnect?.(isQuotaError(err));renderSync();alert('同期を完了できませんでした。未送信データは端末内に保持されています。');}
+  setSimpleSyncState('同期中');try{await connectFirebaseForActiveProject?.({allowBootstrap:false});await flushPendingOps();await retryPendingIntegratedPhotos?.();v1414LastSync=Date.now();localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));renderSync();}catch(err){console.error(err);beginReconnect?.(isQuotaError(err));renderSync();alert('同期を完了できませんでした。未送信データは端末内に保持されています。');}
 };
 
 // Two-level part grouping with thin boundaries and compact header.
