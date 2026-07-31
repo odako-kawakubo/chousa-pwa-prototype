@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA v0.14.22</title>
+<title>調査システムPWA v0.14.23</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer;position:relative;padding-right:46px}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.project-delete-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fff;color:#b91c1c;font-size:16px;line-height:1;cursor:pointer}.project-delete-btn:hover{background:#fef2f2}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -2167,7 +2167,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.22';
+const APP_VERSION='0.14.23';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -3792,7 +3792,7 @@ OneDrive上の案件フォルダ、写真、バックアップおよび共有デ
     if(projectStore[nextId])restoreState(projectStore[nextId]);
     undoStack=[];redoStack=[];selectedMaterialId=null;
     if(typeof connectFirebaseForActiveProject==='function')connectFirebaseForActiveProject();
-    setTimeout(loadIntegratedPhotoRecords,0);
+    setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
   }
 
   persistenceEnabled=true;
@@ -3811,7 +3811,7 @@ function switchProject(id){
   selectedMaterialId=null;
   renderProjectList();
   renderAll();
-  setTimeout(loadIntegratedPhotoRecords,0);
+  setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
 }
 function initProjects(){
   const currentRooms=cloneData(state.roomsByArea);
@@ -4975,7 +4975,7 @@ function renderSamplePointBlock(point){const counts=sampleStageCounts(point),nex
   wrap('switchProject',function(){connectFirebaseForActiveProject();});
   window.syncNow=function(){if(!online)return alert('オフラインです。通信復帰後に同期します。');saveAllMaterialRecordsToFirebase('手動同期');saveAllRoomRecordsToFirebase('手動同期');retryPendingIntegratedPhotos();state.queue=[];renderAll();alert('差分同期処理を開始しました。');};
 })();
-initProjects(); persistenceEnabled=true; applyAppVersionDisplay(); renderAll(); connectFirebaseForActiveProject(); setTimeout(loadIntegratedPhotoRecords,0);
+initProjects(); persistenceEnabled=true; applyAppVersionDisplay(); renderAll(); connectFirebaseForActiveProject(); setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
 
 window.addEventListener('load',()=>{
   const requestedTab=new URLSearchParams(location.search).get('tab');
@@ -5342,7 +5342,7 @@ async function restoreProjectByNumber(){
     showStatus('Firestoreから案件データを同期中…');
     setMicrosoftPill(payload?'案件復元済':'案件フォルダ確認済','ok');
     connectFirebaseForActiveProject();
-    setTimeout(loadIntegratedPhotoRecords,0);
+    setTimeout(()=>{if(typeof loadIntegratedPhotoRecords==='function')loadIntegratedPhotoRecords();},0);
     showStatus(payload?'復元完了。案件を開きました。':'案件を追加しました。Firestore同期を開始しています。','ok');
     setTimeout(closeProjectSide,900);
   }catch(err){
@@ -5399,6 +5399,11 @@ const PENDING_SYNC_KEY='chousa-pwa-pending-v0.14.16';
 let pendingSyncStore={};
 let reconnectStartedAt=0;
 let reconnectTimer=null;
+let quotaReconnectUntil=0;
+function isQuotaError(err){
+  const text=String((err&&err.code)||'')+' '+String((err&&err.message)||err||'');
+  return /resource-exhausted|quota exceeded|quota/i.test(text);
+}
 let sharedLedgerRows=[];
 let sharedFolderRows=[];
 let sharedProjectMode='open';
@@ -5410,11 +5415,28 @@ function pendingOps(projectId=pendingProjectKey()){return Array.isArray(pendingS
 function hasPendingOps(projectId=pendingProjectKey()){return pendingOps(projectId).length>0;}
 function queuePendingOp(op){const key=op.projectId||pendingProjectKey();const list=pendingOps(key);const dedupeKey=op.dedupeKey||op.type+':'+Date.now();const idx=list.findIndex(x=>x.dedupeKey===dedupeKey);const item={...op,projectId:key,dedupeKey,queuedAt:new Date().toISOString()};if(idx>=0)list[idx]=item;else list.push(item);pendingSyncStore[key]=list;savePendingSyncStore();setSimpleSyncState(navigator.onLine?'同期中':'再接続中');renderSync();}
 function removePendingOp(projectId,dedupeKey){pendingSyncStore[projectId]=pendingOps(projectId).filter(x=>x.dedupeKey!==dedupeKey);if(!pendingSyncStore[projectId].length)delete pendingSyncStore[projectId];savePendingSyncStore();}
-function setSimpleSyncState(state){const el=document.getElementById('firebasePill');if(!el)return;el.textContent=state;el.className='header-sync-state '+(state==='同期エラー'?'error':(state==='同期済み'?'':'warn'));}
-function beginReconnect(){if(!reconnectStartedAt)reconnectStartedAt=Date.now();setSimpleSyncState(Date.now()-reconnectStartedAt>=30000?'同期エラー':'再接続中');clearTimeout(reconnectTimer);reconnectTimer=setTimeout(()=>{if(navigator.onLine){connectFirebaseForActiveProject();flushPendingOps();}else beginReconnect();},4000);}
-function endReconnect(){reconnectStartedAt=0;clearTimeout(reconnectTimer);reconnectTimer=null;}
+function setSimpleSyncState(state){
+  const el=document.getElementById('firebasePill');if(!el)return;
+  el.textContent=state;
+  const isError = state==='同期エラー' || /利用上限|クォータ/.test(state);
+  el.className='header-sync-state '+(isError?'error':(state==='同期済み'?'':'warn'));
+}
+function beginReconnect(isQuota=false){
+  const now=Date.now();
+  if(isQuota){quotaReconnectUntil=now+(15*60*1000);}
+  const quotaWaiting=quotaReconnectUntil>now;
+  if(!reconnectStartedAt)reconnectStartedAt=now;
+  setSimpleSyncState(quotaWaiting?'Firestore利用上限のため一時停止中':(now-reconnectStartedAt>=30000?'同期エラー':'再接続中'));
+  clearTimeout(reconnectTimer);
+  const delay=quotaWaiting?Math.max(1000,quotaReconnectUntil-now):4000;
+  reconnectTimer=setTimeout(()=>{
+    if(navigator.onLine){connectFirebaseForActiveProject();flushPendingOps();}
+    else beginReconnect(quotaReconnectUntil>Date.now());
+  },delay);
+}
+function endReconnect(){reconnectStartedAt=0;quotaReconnectUntil=0;clearTimeout(reconnectTimer);reconnectTimer=null;}
 async function executePendingOp(op){const f=window.FirebaseSync;if(!f)throw new Error('Firebase未初期化');if(op.type==='material')return f.saveMaterialRecord(op.projectId,op.recordId,op.payload);if(op.type==='room')return f.saveRoomRecord(op.projectId,op.recordId,op.payload);if(op.type==='roomPatch'){const patch={...op.payload};for(const k of Object.keys(patch)){if(patch[k]&&patch[k].__delete)patch[k]=f.deleteFieldValue();}return f.patchRoomRecord(op.projectId,op.recordId,patch);}if(op.type==='projectState')return f.saveProjectState(op.projectId,op.payload);if(op.type==='projectRegistry')return f.saveProjectRegistryRecord(op.recordId,op.payload);throw new Error('未対応の同期種別: '+op.type);}
-async function flushPendingOps(){if(!navigator.onLine||!window.FirebaseSync)return false;const projectId=pendingProjectKey();const list=[...pendingOps(projectId)];if(!list.length){if(appState.firebaseReady)setSimpleSyncState('同期済み');return true;}setSimpleSyncState('同期中');for(const op of list){try{await executePendingOp(op);removePendingOp(projectId,op.dedupeKey);}catch(err){console.warn('未送信再送失敗',op,err);beginReconnect();return false;}}endReconnect();if(appState.firebaseReady)setSimpleSyncState('同期済み');renderSync();return true;}
+async function flushPendingOps(){if(!navigator.onLine||!window.FirebaseSync)return false;const projectId=pendingProjectKey();const list=[...pendingOps(projectId)];if(!list.length){if(appState.firebaseReady)setSimpleSyncState('同期済み');return true;}setSimpleSyncState('同期中');for(const op of list){try{await executePendingOp(op);removePendingOp(projectId,op.dedupeKey);}catch(err){console.warn('未送信再送失敗',op,err);beginReconnect(isQuotaError(err));return false;}}endReconnect();if(appState.firebaseReady)setSimpleSyncState('同期済み');renderSync();return true;}
 loadPendingSyncStore();
 window.addEventListener('offline',()=>{online=false;beginReconnect();});
 window.addEventListener('online',()=>{online=true;setSimpleSyncState('再接続中');connectFirebaseForActiveProject();setTimeout(flushPendingOps,800);});
@@ -5422,27 +5444,34 @@ window.addEventListener('online',()=>{online=true;setSimpleSyncState('再接続�
 const originalConnectFirebase=connectFirebaseForActiveProject;
 connectFirebaseForActiveProject=function(){try{window.FirebaseSync?.disconnectProjectListeners?.();}catch(e){};setSimpleSyncState('同期中');return originalConnectFirebase();};
 const originalSetFirebasePill=setFirebasePill;
-setFirebasePill=function(text,cls){originalSetFirebasePill(text,cls);const raw=String(text||'');if(/エラー|失敗/.test(raw)){beginReconnect();}else if(/初回同期完了/.test(raw)){endReconnect();flushPendingOps().then(()=>{if(!hasPendingOps())setSimpleSyncState('同期済み');});}};
+setFirebasePill=function(text,cls){originalSetFirebasePill(text,cls);const raw=String(text||'');if(/エラー|失敗/.test(raw)){beginReconnect(/resource-exhausted|quota|利用上限|クォータ/i.test(raw));}else if(/初回同期完了/.test(raw)){endReconnect();flushPendingOps().then(()=>{if(!hasPendingOps())setSimpleSyncState('同期済み');});}};
 window.onFirebaseStatus=(message,cls)=>setFirebasePill(message,cls);
 
-function guardProjectChange(){if(hasPendingOps()){alert('未送信の変更があります。\n同期完了後に案件を切り替えてください。');return false;}return true;}
+function guardProjectChange(options={}){
+  if(!hasPendingOps())return true;
+  if(options.allowKeepPending){
+    return confirm('未送信の変更があります。\n変更はこの端末に保持されます。\nこのまま案件を切り替えますか？');
+  }
+  alert('未送信の変更があります。\nこの操作は同期完了後に行ってください。');
+  return false;
+}
 const originalSwitchProject=switchProject;
-switchProject=function(id){if(id!==activeProjectId&&!guardProjectChange())return;const r=originalSwitchProject(id);if(id===activeProjectId)setTimeout(()=>refreshActiveLedgerInfo({silent:true}),400);return r;};
+switchProject=function(id){if(id!==activeProjectId&&!guardProjectChange({allowKeepPending:true}))return;const r=originalSwitchProject(id);if(id===activeProjectId)setTimeout(()=>refreshActiveLedgerInfo({silent:true}),400);return r;};
 const originalDeleteProject=deleteProject;
 deleteProject=function(id){if(id===activeProjectId&&!guardProjectChange())return;return originalDeleteProject(id);};
 
 function installReliableSaves(){
-  saveMaterialRecordToFirebase=function(id,reason){if(appState.applyingRemote)return Promise.resolve();const m=materialById(id);if(!m||!window.FirebaseSync)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeMaterialRecord(m),dedupeKey='material:'+id;return window.FirebaseSync.saveMaterialRecord(projectId,id,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();if(!hasPendingOps())setSimpleSyncState('同期済み');}).catch(err=>{queuePendingOp({type:'material',projectId,recordId:id,payload,dedupeKey});beginReconnect();throw err;});};
-  saveRoomRecordToFirebase=function(roomId,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const room=findRoom(roomId);if(!room)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeRoomRecord(room,roomArea(roomId)),dedupeKey='room:'+roomId;return window.FirebaseSync.saveRoomRecord(projectId,roomId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{queuePendingOp({type:'room',projectId,recordId:roomId,payload,dedupeKey});beginReconnect();throw err;});};
-  saveRoomSlotToFirebase=function(roomId,area,part,line,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const projectId=pendingProjectKey(),sk=roomSlotKey(part,line),slot=roomSlotPayload(roomId,area,part,line),has=slot.id||slot.name||slot.partCell,payload={updatedBy:getDeviceName(),updatedAtClient:new Date().toISOString(),appVersion:APP_VERSION};payload['slots.'+sk]=has?slot:window.FirebaseSync.deleteFieldValue();const dedupeKey='roomPatch:'+roomId+':'+sk;return window.FirebaseSync.patchRoomRecord(projectId,roomId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{const serial={...payload};if(!has)serial['slots.'+sk]={__delete:true};queuePendingOp({type:'roomPatch',projectId,recordId:roomId,payload:serial,dedupeKey});beginReconnect();throw err;});};
-  saveProjectStateToFirebase=function(reason){if(appState.applyingRemote||!window.FirebaseSync?.saveProjectState)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeProjectState(),dedupeKey='projectState';return window.FirebaseSync.saveProjectState(projectId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{queuePendingOp({type:'projectState',projectId,payload,dedupeKey});beginReconnect();throw err;});};
+  saveMaterialRecordToFirebase=function(id,reason){if(appState.applyingRemote)return Promise.resolve();const m=materialById(id);if(!m||!window.FirebaseSync)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeMaterialRecord(m),dedupeKey='material:'+id;return window.FirebaseSync.saveMaterialRecord(projectId,id,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();if(!hasPendingOps())setSimpleSyncState('同期済み');}).catch(err=>{queuePendingOp({type:'material',projectId,recordId:id,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
+  saveRoomRecordToFirebase=function(roomId,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const room=findRoom(roomId);if(!room)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeRoomRecord(room,roomArea(roomId)),dedupeKey='room:'+roomId;return window.FirebaseSync.saveRoomRecord(projectId,roomId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{queuePendingOp({type:'room',projectId,recordId:roomId,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
+  saveRoomSlotToFirebase=function(roomId,area,part,line,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const projectId=pendingProjectKey(),sk=roomSlotKey(part,line),slot=roomSlotPayload(roomId,area,part,line),has=slot.id||slot.name||slot.partCell,payload={updatedBy:getDeviceName(),updatedAtClient:new Date().toISOString(),appVersion:APP_VERSION};payload['slots.'+sk]=has?slot:window.FirebaseSync.deleteFieldValue();const dedupeKey='roomPatch:'+roomId+':'+sk;return window.FirebaseSync.patchRoomRecord(projectId,roomId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{const serial={...payload};if(!has)serial['slots.'+sk]={__delete:true};queuePendingOp({type:'roomPatch',projectId,recordId:roomId,payload:serial,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
+  saveProjectStateToFirebase=function(reason){if(appState.applyingRemote||!window.FirebaseSync?.saveProjectState)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeProjectState(),dedupeKey='projectState';return window.FirebaseSync.saveProjectState(projectId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{queuePendingOp({type:'projectState',projectId,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
 }
 installReliableSaves();
 
 function yymmdd(date=new Date()){return String(date.getFullYear()).slice(-2)+String(date.getMonth()+1).padStart(2,'0')+String(date.getDate()).padStart(2,'0');}
 function nextTemporaryNumber(){const d=yymmdd();const nums=Object.values(projectMeta).map(x=>String(x?.no||'')).filter(x=>x.startsWith(d+'-')).map(x=>Number(x.split('-')[1])||0);return d+'-'+String((nums.length?Math.max(...nums):0)+1).padStart(2,'0');}
 createMockProject=async function(){
-  if(!guardProjectChange())return;
+  if(!guardProjectChange({allowKeepPending:true}))return;
   const name=prompt('案件名を入力してください','');if(name===null)return;const projectName=String(name).trim();if(!projectName)return alert('案件名を入力してください');
   const addr=prompt('住所を入力してください','');if(addr===null)return;const address=String(addr).trim();
   const no=nextTemporaryNumber();const firestoreProjectId='temp_'+no+'_'+Date.now();
@@ -5543,7 +5572,7 @@ async function selectSharedProject(projectNo){
     status:(ledger&&ledger.status)||''
   };
   if(sharedProjectMode==='formalize')return formalizeActiveProject(row,folder);
-  if(!guardProjectChange())return;const status=document.getElementById('sharedProjectStatus');status.className='project-restore-status show warn';status.textContent='クラウドデータを確認中…';
+  if(!guardProjectChange({allowKeepPending:true}))return;const status=document.getElementById('sharedProjectStatus');status.className='project-restore-status show warn';status.textContent='クラウドデータを確認中…';
   try{const probe=await window.FirebaseSync.probeProject(projectNo);let id=localProjectIdByNo(projectNo);if(!probe.exists){const ok=confirm('この案件は調査システムでまだ開始されていません。\n新しい調査案件として開始しますか？');if(!ok)return;}
     if(!id){id='project_'+projectNo.replace(/[^A-Za-z0-9_-]/g,'_');projectMeta[id]={no:projectNo,name:row.name,address:row.address,sub:row.address,firestoreProjectId:projectNo,isTemporary:false,ledgerValues:{name:row.name,address:row.address},ledgerOverrides:{name:false,address:false},oneDrive:{driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};projectStore[id]=blankProjectSnapshot();}
     else{const previous=projectMeta[id]||{};const nextAddress=row.address||previous.address||'';projectMeta[id]={...previous,name:row.name||previous.name||'',address:nextAddress,sub:nextAddress||previous.sub||'',firestoreProjectId:previous.firestoreProjectId||projectNo,isTemporary:false,ledgerValues:{name:row.name||previous.name||'',address:row.address||previous.ledgerValues?.address||''},oneDrive:{...(previous.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};}
@@ -5686,7 +5715,7 @@ document.addEventListener('focusout',e=>{if(!e.target.closest('.finish-table'))r
 let v1414LastSync=localStorage.getItem('chousaLastSyncAt')||'';
 function v1414PhotoPending(){return (state.photos||[]).filter(p=>p&&!p.deleted&&p.dataUrl&&!['uploaded','共有済','同期済'].includes(String(p.uploadStatus||''))).length;}
 function renderSync(){const pending=typeof pendingOps==='function'?pendingOps(pendingProjectKey()).length:0;const photos=v1414PhotoPending();const connected=!!appState.firebaseReady&&navigator.onLine;const overall=document.getElementById('syncOverallState');const fire=document.getElementById('syncFirestoreState');const po=document.getElementById('syncPendingOps');const pp=document.getElementById('syncPhotos');const lt=document.getElementById('syncLastTime');if(overall){overall.textContent=!navigator.onLine?'再接続中':(pending||photos?'未送信あり':'同期済み');overall.className=!navigator.onLine||pending||photos?'sync-state-warn':'sync-state-ok';}if(fire){fire.textContent=connected?'接続済み':(navigator.onLine?'接続中':'オフライン');fire.className=connected?'sync-state-ok':'sync-state-warn';}if(po)po.textContent=pending+'件';if(pp)pp.textContent=photos+'件';if(lt)lt.textContent=v1414LastSync?new Date(v1414LastSync).toLocaleString('ja-JP'):'-';const list=document.getElementById('syncList');if(list)list.innerHTML=(pending||photos)?'<div class="sync-row"><span class="hint">端末内に安全に保持されています。通信復帰後に再送します。</span></div>':'<div class="sync-row"><span class="hint">同期待ちはありません</span></div>';}
-window.syncNow=async function(){if(!navigator.onLine){renderSync();return alert('オフラインです。変更は端末内に保存されています。');}setSimpleSyncState?.('同期中');try{await connectFirebaseForActiveProject?.();await flushPendingOps?.();await retryPendingIntegratedPhotos?.();v1414LastSync=new Date().toISOString();localStorage.setItem('chousaLastSyncAt',v1414LastSync);setSimpleSyncState?.('同期済み');renderSync();}catch(err){beginReconnect?.();renderSync();alert('同期を再試行しましたが、一部が残っています。\n'+(err?.message||err));}};
+window.syncNow=async function(){if(!navigator.onLine){renderSync();return alert('オフラインです。変更は端末内に保存されています。');}setSimpleSyncState?.('同期中');try{await connectFirebaseForActiveProject?.();await flushPendingOps?.();await retryPendingIntegratedPhotos?.();v1414LastSync=new Date().toISOString();localStorage.setItem('chousaLastSyncAt',v1414LastSync);setSimpleSyncState?.('同期済み');renderSync();}catch(err){beginReconnect?.(isQuotaError(err));renderSync();alert('同期を再試行しましたが、一部が残っています。\n'+(err?.message||err));}};
 const v1414ShowTab=showTab;showTab=function(tab){v1414ShowTab(tab);if(tab==='sync')renderSync();};
 setTimeout(()=>{renderSettings();renderSync();},0);
 </script>
@@ -5816,7 +5845,7 @@ saveMaterialRecordToFirebase=function(id,reason){
     removePendingOp(queued.projectId,queued.dedupeKey);v1414LastSync=Date.now();
     try{localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));}catch(_){}
     if(!hasPendingOps())setSimpleSyncState('同期済み');renderSync();return true;
-  }).catch(err=>{beginReconnect?.();renderSync();throw err;});
+  }).catch(err=>{beginReconnect?.(isQuotaError(err));renderSync();throw err;});
 };
 saveAllMaterialRecordsToFirebase=function(reason){return Promise.allSettled((state.materials||[]).map(m=>saveMaterialRecordToFirebase(m.id,reason||'全件保存')));};
 
@@ -5873,7 +5902,7 @@ renderSync=function(){
 };
 syncNow=async function(){
   if(!navigator.onLine){renderSync();return alert('オフラインです。未送信データは端末内に保持されています。');}
-  setSimpleSyncState('同期中');try{await connectFirebaseForActiveProject?.();await flushPendingOps();await retryPendingIntegratedPhotos?.();v1414LastSync=Date.now();localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));renderSync();}catch(err){console.error(err);beginReconnect?.();renderSync();alert('同期を完了できませんでした。未送信データは端末内に保持されています。');}
+  setSimpleSyncState('同期中');try{await connectFirebaseForActiveProject?.();await flushPendingOps();await retryPendingIntegratedPhotos?.();v1414LastSync=Date.now();localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));renderSync();}catch(err){console.error(err);beginReconnect?.(isQuotaError(err));renderSync();alert('同期を完了できませんでした。未送信データは端末内に保持されています。');}
 };
 
 // Two-level part grouping with thin boundaries and compact header.

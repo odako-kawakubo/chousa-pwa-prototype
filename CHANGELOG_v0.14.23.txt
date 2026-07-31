@@ -1,0 +1,7 @@
+v0.14.23
+
+- setTimeout(loadIntegratedPhotoRecords,0)の4箇所(スクリプトタグをまたいだ未定義参照エラー)を、実行時に存在確認するラムダに変更
+- Firestoreクォータ超過(resource-exhausted)検出時、再試行間隔を4秒から15分に延長。isQuotaError()で実際のエラーオブジェクト(err.code/err.message)を判定し、flushPendingOps・saveMaterialRecordToFirebase・saveRoomRecordToFirebase・saveRoomSlotToFirebase・saveProjectStateToFirebase・syncNow系の各catchで反映
+- クォータ待機中に別経路から一般的な保存エラーが発生しても、15分待機が4秒へ巻き戻らないようquotaReconnectUntilで期限を一元管理
+- 同期状態表示に「Firestore利用上限のため一時停止中」を追加し、エラー色表示に含めた
+- guardProjectChange()にallowKeepPendingオプションを追加。switchProject・createMockProject・selectSharedProjectは未送信データがあっても確認の上で操作を継続可能に変更(deleteProject・openFormalizeProjectDialogは従来通りブロック)
