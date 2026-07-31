@@ -8,4 +8,8 @@ v0.14.24
   - appStateにallowBootstrapフラグを追加(デフォルトfalse)。connectFirebaseForActiveProject()にoptions引数を追加し、resetFirebaseProjectSession()経由でappState.allowBootstrapへ反映
   - applyFirebaseMaterialRecords()・applyFirebaseRoomRecords()のisEmpty分岐に、appState.allowBootstrapがtrueの場合のみ初期投入(全件アップロード)を行う条件を追加。falseの場合はローカル状態を変更せずreturnするのみとし、Firestoreへの書き込みを行わない
   - 新規案件作成(createMockProject)・Firestore未登録の既存案件取込(selectSharedProjectでprobe.exists===falseの場合)のみallowBootstrap:trueを指定。案件切替(switchProject)・起動時・再接続・オンライン復帰・手動同期(syncNow)・正式案件切替(formalizeActiveProject)・既存案件取込(Firestoreに既にデータがある場合)はallowBootstrap:falseとし、確認なしの初期投入が発火しないようにした
-- C: 未実装(無変更blurの保存抑止)
+- C: 無変更blurの保存抑止(実施日: 2026-07-31)
+  - wrap()にoptions引数(skipAfterOnFalse)を追加。指定した関数のみ、元の関数の戻り値がfalseの場合はafter(Firestore保存等)を呼ばないようにした。onIdBlur・onNameBlur・onPartBlur・registerNameの4箇所のみこのオプションを有効化し、他のwrap()利用箇所(建材削除・部屋追加・案件切替など)は従来通り
+  - onIdBlur・onNameBlur・onPartBlur・registerNameの4関数それぞれに、remember()より前の判定を追加。セルの値が実質的に変わっていない場合はfalseを返し、remember()(Undo記録)・state.cells更新・addQueue・renderAll・Firestore保存のいずれも行わないようにした。値が変わった場合は従来通り処理し、trueを返す
+  - registerNameは「建材登録」ボタンからも呼ばれるため、この修正により、既に登録済みの内容に対するボタン連打(重複実行)も無変更操作として保存を抑止するようになった(blur抑止に加えた意図的な拡張)
+  - 確認事項: onNameBlur内部から末尾9入力確定時に呼び出されるregisterNameは、wrap()適用後のグローバル関数(window.registerName)を参照するため、値変更を伴う確定操作では、registerName側(タグ「建材登録」)とonNameBlur側(タグ「建材名」)の両方でFirestore保存が発生する(二重発火)。これは今回の修正前から存在する既存の挙動であり、今回のスコープでは変更していない
