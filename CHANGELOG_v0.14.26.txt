@@ -1,0 +1,8 @@
+v0.14.26
+
+- 新規案件作成(createMockProject)時、Firestore接続切替が遅すぎる不具合を修正(実施日: 2026-08-03)
+  - projectMeta/activeProjectId/projectStoreの切替が完了した直後にconnectFirebaseForActiveProject({allowBootstrap:true})を呼ぶよう順序を変更。OneDrive案件フォルダ作成(ensureProjectFolders)・共有用JSON作成(uploadSurveyBackup)・案件一覧登録(registerProjectInFirebase)は、Firestore接続切替の後に行うよう変更した
+  - 従来は上記のOneDrive・Firestore通信を複数回awaitし終えるまでFirestoreの購読(onSnapshotリスナー)が直前に開いていた案件へ接続されたままになっており、新規作成直後は「同期先ID」と「現在接続中のFirestore ID」が一致しない状態が生じていた
+  - Firestore接続切替(connectFirebaseForActiveProject)より後に発生した失敗(OneDriveフォルダ作成失敗など)では、ローカルのprojectMeta・projectStoreを削除しないよう変更。Firestore購読は新案件を指したままローカル情報だけが消える、という不整合を避けるため。接続切替より前の失敗(Microsoftログイン未確認など)は従来通りローカル情報を削除する
+  - registerProjectInFirebase()はprojects/_registry/projectListという、案件個別のリアルタイム同期購読(firestoreProjectIdベース)とは独立したFirestoreパスへの書き込みであり、connectFirebaseForActiveProjectより先に完了している必要がないことを確認した上で順序を入れ替えた
+  - selectSharedProjectにも同様の「OneDriveフォルダ作成→Firestore接続」という遅延パターンが存在するが、今回はcreateMockProjectのみに対象を限定し、selectSharedProject・formalizeActiveProjectは変更していない(formalizeActiveProjectはv0.14.25でfirestoreProjectIdを変更しなくなったため、そもそも接続切替自体が発生しない)
