@@ -1,0 +1,11 @@
+v0.14.25
+
+- Firestore同期先ID(firestoreProjectId)を案件番号から完全に分離する設計変更を実施(実施日: 2026-08-03)
+  - 固定同期先ID発行関数generateProjectSyncId()を新設(形式: pj_<タイムスタンプ>_<ランダム4桁>)。案件作成時に1回だけ発行し、以後(正式化を含め)変更しない
+  - createMockProject(): firestoreProjectIdの発行を'temp_'+no+'_'+Date.now()からgenerateProjectSyncId()に変更。OneDrive案件フォルダ作成(ensureProjectFolders)の直後に、共有用JSON(survey-data.json)を即時作成するよう変更(uploadSurveyBackupを直接呼び出し)。JSON作成に失敗しても、既に作成したローカル案件データ(projectMeta・projectStore)は削除せず、「共有用JSONの作成に失敗しました」と通知して再試行可能な状態を維持する
+  - window.MicrosoftPhotoUpload.readSurveyJsonFromFolder(folder)を新設。「案件フォルダ→調査システム→調査情報→survey-data.json」の正しい3階層でJSONを読む(死んでいるreadProjectBackupByNumberの誤った2階層探索は流用していない)。meta.oneDriveにsystemFolderId/infoFolderIdが既知の場合はそれを優先利用し、無ければフォルダ名で探索する両対応。ファイルが無い場合はnullを返す
+  - selectSharedProject(): 案件選択後、まずreadSurveyJsonFromFolder()でJSONを確認するフローに変更。JSONがあればproject情報とsurveyを復元しJSON内のfirestoreProjectIdを使用、無ければ「バックアップJSONがありません。空の案件として開始しますか？」と確認の上、新規にgenerateProjectSyncId()でIDを発行。Firestoreの存在確認(probeProject)は、案件番号ではなく必ずJSON内(または新規発行)のfirestoreProjectIdに対して行うよう修正。Firestoreに既存データがある場合はallowBootstrap:falseで接続しFirestore側を正本として扱い、Firestoreが完全に空の場合に限りallowBootstrap:trueでJSON復元データの初期投入を許可する。端末内に既に同じ案件番号のローカル案件がある場合は、ローカルのfirestoreProjectIdを優先して開き、JSONのsurveyでローカル状態を上書きしない。JSON側とローカル側のfirestoreProjectIdが食い違う場合は自動修正せず、警告を表示して処理を停止する
+  - uploadSurveyBackup(): survey フィールドを文字列ではなくオブジェクト形式で書き込むよう統一(JSON.parseを挟む形に変更)。読み込み側(readSurveyJsonFromFolder)は引き続き文字列・オブジェクト両形式に対応し、既存の文字列形式JSONも読み込める
+  - formalizeActiveProject(): 正式化時にmeta.firestoreProjectIdを案件番号へ書き換える処理(v0.14.19由来)を廃止。firestoreProjectIdは案件作成時のまま変更しない。これに伴い、idChanged判定は現行仕様では常にfalseとなり、v0.14.24-Eで実装した未送信キュー移管ロジック(movePendingOpsProject・formalizeQueueAction分岐・withFormalizeTimeout・hasSaveFailure)は到達不能になるが、旧temp_...形式のIDを持つ既存案件との後方互換のため、コードは削除せずコメントで明記するに留めた。正式化完了後、survey-data.jsonを即時更新(uploadSurveyBackup呼び出し)するよう追加
+  - 設定画面の「案件情報」に「技術情報」の展開欄(詳細情報)を追加。同期先ID・端末内案件ID・OneDrive案件フォルダID・現在接続中のFirestore ID(appState.currentProjectId)・Firestore接続状態を表示し、各IDにコピーボタンを付与。同期先IDと現在接続中のFirestore IDが一致しない場合は警告を表示する
+  - 既存案件(既にtemp_...または旧方式のfirestoreProjectIdを持つ案件)の同期先IDを新形式へ変換する処理は行っていない(既存IDはそのまま使い続ける、仕様通り)

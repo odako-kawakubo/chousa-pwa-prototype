@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA v0.14.24</title>
+<title>調査システムPWA v0.14.25</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer;position:relative;padding-right:46px}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.project-delete-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fff;color:#b91c1c;font-size:16px;line-height:1;cursor:pointer}.project-delete-btn:hover{background:#fef2f2}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1473,7 +1473,19 @@ input[list]::-webkit-calendar-picker-indicator{
       <div class="panel">
         <div class="panel-head"><h3>設定 <span class="mock-badge">構成確認モック</span></h3><span class="hint">案件情報・保存先・端末・入力候補・システム設定を整理</span></div>
         <div class="settings-wrap mock-settings">
-          <div class="settings-box"><h4>案件情報</h4><div class="settings-section-note">看板・写真保存・Excel出力の共通情報</div><div class="settings-grid"><label>案件番号</label><input id="settingsProjectNo" value="26070101" readonly><label>案件名</label><input id="settingsProjectName" value="ODKワールドアスベスト調査" onblur="updateProjectMetaField('name',this.value)"><label>住所</label><input id="settingsProjectAddress" value="神奈川県小田原市" onblur="updateProjectMetaField('address',this.value)"><label>調査日</label><input type="date" id="settingsSurveyDate" value="2026-07-22"><label>台帳連携</label><div class="settings-value" id="settingsLedgerStatus">同期済み</div></div><button class="btn small" id="formalizeProjectButton" style="display:none;margin-top:9px" onclick="openFormalizeProjectDialog()">正式案件に切替</button></div>
+          <div class="settings-box"><h4>案件情報</h4><div class="settings-section-note">看板・写真保存・Excel出力の共通情報</div><div class="settings-grid"><label>案件番号</label><input id="settingsProjectNo" value="26070101" readonly><label>案件名</label><input id="settingsProjectName" value="ODKワールドアスベスト調査" onblur="updateProjectMetaField('name',this.value)"><label>住所</label><input id="settingsProjectAddress" value="神奈川県小田原市" onblur="updateProjectMetaField('address',this.value)"><label>調査日</label><input type="date" id="settingsSurveyDate" value="2026-07-22"><label>台帳連携</label><div class="settings-value" id="settingsLedgerStatus">同期済み</div></div><button class="btn small" id="formalizeProjectButton" style="display:none;margin-top:9px" onclick="openFormalizeProjectDialog()">正式案件に切替</button>
+            <details class="tech-info-details" id="techInfoDetails" style="margin-top:9px">
+              <summary>技術情報</summary>
+              <div class="settings-grid tech-info-grid">
+                <label>同期先ID</label><div class="settings-value tech-id-row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span id="techSyncId">-</span><button class="btn small" type="button" onclick="copyTechInfoValue('techSyncId')">コピー</button></div>
+                <label>端末内案件ID</label><div class="settings-value tech-id-row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span id="techLocalId">-</span><button class="btn small" type="button" onclick="copyTechInfoValue('techLocalId')">コピー</button></div>
+                <label>OneDrive案件フォルダID</label><div class="settings-value tech-id-row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span id="techFolderId">-</span><button class="btn small" type="button" onclick="copyTechInfoValue('techFolderId')">コピー</button></div>
+                <label>現在接続中のFirestore ID</label><div class="settings-value tech-id-row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span id="techConnectedId">-</span><button class="btn small" type="button" onclick="copyTechInfoValue('techConnectedId')">コピー</button></div>
+                <label>Firestore接続状態</label><div class="settings-value" id="techConnState">-</div>
+              </div>
+              <div class="tech-id-warning" id="techIdWarning" style="display:none;color:#b00020;margin-top:6px;font-size:0.9em"></div>
+            </details>
+          </div>
           <div class="settings-box"><h4>OneDrive・バックアップ</h4><div class="settings-section-note">写真本体と復旧用の調査情報を案件フォルダへ保存</div><div class="settings-grid"><label>案件フォルダ</label><div class="settings-value" id="settingsProjectFolderValue">26070101　ODKワールドアスベスト調査</div><label>目視フォルダ</label><div class="settings-value">目視</div><label>採取フォルダ</label><div class="settings-value">採取</div><label>最終バックアップ</label><div class="settings-value backup-time" id="settingsLastBackup">-</div></div><button class="btn small primary" id="manualBackupButton" style="margin-top:9px" onclick="runManualSurveyBackup()">今すぐバックアップ</button></div>
           <div class="settings-box"><h4>端末・アカウント</h4><div class="settings-section-note">写真IDは「区分-端末-連番」で採番</div><div class="settings-grid"><label>端末コード</label><input id="settingsDeviceCode" value="IP01" onblur="setDeviceCode(this.value)"><label>端末名</label><div class="settings-value"><b id="settingsDeviceName"></b></div><label>Microsoft</label><div class="settings-value">ログイン済み（確認用）</div></div><button class="btn small" style="margin-top:9px" onclick="changeDeviceName()">端末名を変更</button></div>
           <div class="settings-box"><h4>システム設定</h4><div class="settings-section-note">同期・表示・バックアップの動作設定</div><div class="settings-grid"><label>カラー表示</label><select><option>ON</option><option>OFF</option></select><label>自動同期</label><select><option>ON</option><option>OFF</option></select><label>バックアップ</label><select><option>10分ごと</option><option>30分ごと</option><option>手動のみ</option></select><label>バージョン</label><div class="settings-value" id="settingsVersionValue">0.14.14</div></div></div>
@@ -1877,6 +1889,35 @@ window.MicrosoftPhotoUpload = {
     const children=await this.listChildItems(root.driveId,root.itemId);
     return children.filter(x=>x&&x.folder).map(x=>({driveId:root.driveId,id:x.id,name:x.name||'',webUrl:x.webUrl||''}));
   },
+  // v0.14.25: 既知のfolderオブジェクト(driveId・id)を受け取り、
+  // 「案件フォルダ→調査システム→調査情報→survey-data.json」の正しい3階層でJSONを読む。
+  // folder.systemFolderId/infoFolderIdが既知であればそれを優先し、無ければ名前で探索する(両対応)。
+  // JSONが存在しない場合はnullを返す。
+  async readSurveyJsonFromFolder(folder){
+    if(!folder||!folder.driveId||!folder.id)return null;
+    let systemFolderId=folder.systemFolderId||'';
+    let infoFolderId=folder.infoFolderId||'';
+    if(!infoFolderId){
+      if(!systemFolderId){
+        const projectChildren=await this.listChildItems(folder.driveId,folder.id);
+        const sysFolder=projectChildren.find(x=>x&&x.folder&&x.name==='調査システム');
+        if(!sysFolder)return null;
+        systemFolderId=sysFolder.id;
+      }
+      const sysChildren=await this.listChildItems(folder.driveId,systemFolderId);
+      const infoFolder=sysChildren.find(x=>x&&x.folder&&x.name==='調査情報');
+      if(!infoFolder)return null;
+      infoFolderId=infoFolder.id;
+    }
+    const infoChildren=await this.listChildItems(folder.driveId,infoFolderId);
+    const backupFile=infoChildren.find(x=>x&&x.file&&x.name==='survey-data.json');
+    if(!backupFile)return null;
+    const url='https://graph.microsoft.com/v1.0/drives/'+encodeURIComponent(folder.driveId)+'/items/'+encodeURIComponent(backupFile.id)+'/content';
+    const raw=await graphFetch(url);
+    const payload=typeof raw==='string'?JSON.parse(raw):raw;
+    const survey=(payload&&payload.survey!=null)?(typeof payload.survey==='string'?JSON.parse(payload.survey):payload.survey):null;
+    return {payload,survey,infoFolderId,systemFolderId};
+  },
   async readSurveyLedgerRows(){
     const root=await this.getLedgerFolder();
     const children=await this.listChildItems(root.driveId,root.itemId);
@@ -1906,7 +1947,7 @@ window.MicrosoftPhotoUpload = {
       appVersion: APP_VERSION,
       exportedAt: new Date().toISOString(),
       project: cloneData(meta),
-      survey: cloneData(projectStore[activeProjectId] || snapshotState())
+      survey: JSON.parse(projectStore[activeProjectId] || snapshotState())
     };
     const body = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
     const url = 'https://graph.microsoft.com/v1.0/drives/' + encodeURIComponent(folders.driveId) + '/items/' + encodeURIComponent(folders.infoFolderId) + ':/' + graphPathSegment('survey-data.json') + ':/content';
@@ -2167,7 +2208,7 @@ window.FirebaseSync = {
 </script>
 
 <script>
-const APP_VERSION='0.14.24';
+const APP_VERSION='0.14.25';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -5488,11 +5529,12 @@ installReliableSaves();
 
 function yymmdd(date=new Date()){return String(date.getFullYear()).slice(-2)+String(date.getMonth()+1).padStart(2,'0')+String(date.getDate()).padStart(2,'0');}
 function nextTemporaryNumber(){const d=yymmdd();const nums=Object.values(projectMeta).map(x=>String(x?.no||'')).filter(x=>x.startsWith(d+'-')).map(x=>Number(x.split('-')[1])||0);return d+'-'+String((nums.length?Math.max(...nums):0)+1).padStart(2,'0');}
+function generateProjectSyncId(){return 'pj_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);}
 createMockProject=async function(){
   if(!guardProjectChange({allowKeepPending:true}))return;
   const name=prompt('案件名を入力してください','');if(name===null)return;const projectName=String(name).trim();if(!projectName)return alert('案件名を入力してください');
   const addr=prompt('住所を入力してください','');if(addr===null)return;const address=String(addr).trim();
-  const no=nextTemporaryNumber();const firestoreProjectId='temp_'+no+'_'+Date.now();
+  const no=nextTemporaryNumber();const firestoreProjectId=generateProjectSyncId();
   const id='project_'+Date.now();const folderName=no+'-'+projectName;
   try{
     if(!window.MicrosoftPhotoUpload)throw new Error('Microsoft連携が未初期化です');
@@ -5501,8 +5543,16 @@ createMockProject=async function(){
     projectMeta[id]={no,name:projectName,address,sub:address,folderName,isTemporary:true,firestoreProjectId,ledgerOverrides:{name:true,address:true}};
     activeProjectId=id;window.activeProjectId=id;resetStateForBlankProject();projectStore[id]=snapshotState();
     const folders=await window.MicrosoftPhotoUpload.ensureProjectFolders(firestoreProjectId);projectMeta[id].oneDrive=folders;
+    let jsonBackupFailed=false;
+    try{
+      await window.MicrosoftPhotoUpload.uploadSurveyBackup(id);
+    }catch(jsonErr){
+      jsonBackupFailed=true;
+      console.warn('新規案件の共有用JSON即時作成に失敗',jsonErr);
+    }
     persistenceEnabled=true;saveStateToStorage();renderProjectList();renderAll();closeProjectSide();
     await registerProjectInFirebase(id).catch(()=>{});connectFirebaseForActiveProject({allowBootstrap:true});setTimeout(()=>scheduleProjectStateSync('新規案件'),500);
+    if(jsonBackupFailed)alert('案件は作成されましたが、共有用JSONの作成に失敗しました。\n設定画面の「今すぐバックアップ」から後で再試行してください。');
   }catch(err){delete projectMeta[id];delete projectStore[id];alert('現場新規案件を作成できませんでした。\n'+(err?.message||err));}
 };
 
@@ -5590,11 +5640,55 @@ async function selectSharedProject(projectNo){
     status:(ledger&&ledger.status)||''
   };
   if(sharedProjectMode==='formalize')return formalizeActiveProject(row,folder);
-  if(!guardProjectChange({allowKeepPending:true}))return;const status=document.getElementById('sharedProjectStatus');status.className='project-restore-status show warn';status.textContent='クラウドデータを確認中…';
-  try{const probe=await window.FirebaseSync.probeProject(projectNo);let id=localProjectIdByNo(projectNo);if(!probe.exists){const ok=confirm('この案件は調査システムでまだ開始されていません。\n新しい調査案件として開始しますか？');if(!ok)return;}
-    if(!id){id='project_'+projectNo.replace(/[^A-Za-z0-9_-]/g,'_');projectMeta[id]={no:projectNo,name:row.name,address:row.address,sub:row.address,firestoreProjectId:projectNo,isTemporary:false,ledgerValues:{name:row.name,address:row.address},ledgerOverrides:{name:false,address:false},oneDrive:{driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};projectStore[id]=blankProjectSnapshot();}
-    else{const previous=projectMeta[id]||{};const nextAddress=row.address||previous.address||'';projectMeta[id]={...previous,name:row.name||previous.name||'',address:nextAddress,sub:nextAddress||previous.sub||'',firestoreProjectId:previous.firestoreProjectId||projectNo,isTemporary:false,ledgerValues:{name:row.name||previous.name||'',address:row.address||previous.ledgerValues?.address||''},oneDrive:{...(previous.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};}
-    saveActiveProject();activeProjectId=id;window.activeProjectId=id;loadProject(id);await window.MicrosoftPhotoUpload.ensureProjectFolders(projectMeta[id].firestoreProjectId);persistenceEnabled=true;saveStateToStorage();renderProjectList();renderAll();connectFirebaseForActiveProject({allowBootstrap:!probe.exists});if(!probe.exists)setTimeout(()=>scheduleProjectStateSync('案件開始'),500);closeSharedProjectPicker();closeProjectSide();
+  if(!guardProjectChange({allowKeepPending:true}))return;const status=document.getElementById('sharedProjectStatus');status.className='project-restore-status show warn';status.textContent='バックアップJSONを確認中…';
+  try{
+    let id=localProjectIdByNo(projectNo);
+    const knownOneDrive=(id&&projectMeta[id]&&projectMeta[id].oneDrive)||{};
+    const folderWithKnownIds={...folder,systemFolderId:knownOneDrive.systemFolderId||'',infoFolderId:knownOneDrive.infoFolderId||''};
+    const jsonResult=await window.MicrosoftPhotoUpload.readSurveyJsonFromFolder(folderWithKnownIds);
+    let firestoreProjectId='';
+    if(jsonResult&&jsonResult.payload){
+      const remoteMeta=jsonResult.payload.project||{};
+      const remoteFirestoreProjectId=String(remoteMeta.firestoreProjectId||'');
+      if(id){
+        const localFirestoreProjectId=String(projectMeta[id].firestoreProjectId||'');
+        if(remoteFirestoreProjectId&&localFirestoreProjectId&&remoteFirestoreProjectId!==localFirestoreProjectId){
+          status.className='project-restore-status show error';
+          status.textContent='端末内の同期先IDと、OneDrive JSONの同期先IDが一致しません。データ分裂の可能性があるため、案件を開けません。';
+          return;
+        }
+        const previous=projectMeta[id];const nextAddress=row.address||previous.address||'';
+        projectMeta[id]={...previous,name:row.name||previous.name||'',address:nextAddress,sub:nextAddress||previous.sub||'',isTemporary:false,ledgerValues:{name:row.name||previous.name||'',address:row.address||previous.ledgerValues?.address||''},oneDrive:{...(previous.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};
+        firestoreProjectId=previous.firestoreProjectId;
+      }else{
+        if(!remoteFirestoreProjectId){
+          status.className='project-restore-status show error';
+          status.textContent='OneDrive上のバックアップJSONに同期先IDが記録されていません。ファイルを確認してください。';
+          return;
+        }
+        id='project_'+projectNo.replace(/[^A-Za-z0-9_-]/g,'_');
+        firestoreProjectId=remoteFirestoreProjectId;
+        projectMeta[id]={...remoteMeta,no:projectNo,name:row.name||remoteMeta.name||'',address:row.address||remoteMeta.address||'',sub:row.address||remoteMeta.sub||remoteMeta.address||'',firestoreProjectId,isTemporary:!!remoteMeta.isTemporary,oneDrive:{...(remoteMeta.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};
+        projectStore[id]=JSON.stringify(jsonResult.survey||JSON.parse(blankProjectSnapshot()));
+      }
+    }else{
+      if(id){
+        const previous=projectMeta[id];const nextAddress=row.address||previous.address||'';
+        projectMeta[id]={...previous,name:row.name||previous.name||'',address:nextAddress,sub:nextAddress||previous.sub||'',isTemporary:false,ledgerValues:{name:row.name||previous.name||'',address:row.address||previous.ledgerValues?.address||''},oneDrive:{...(previous.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};
+        firestoreProjectId=previous.firestoreProjectId;
+      }else{
+        const ok=confirm('バックアップJSONがありません。空の案件として開始しますか？');
+        if(!ok){status.className='project-restore-status show warn';status.textContent='';return;}
+        id='project_'+projectNo.replace(/[^A-Za-z0-9_-]/g,'_');
+        firestoreProjectId=generateProjectSyncId();
+        projectMeta[id]={no:projectNo,name:row.name,address:row.address,sub:row.address,firestoreProjectId,isTemporary:false,ledgerValues:{name:row.name,address:row.address},ledgerOverrides:{name:false,address:false},oneDrive:{driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl}};
+        projectStore[id]=blankProjectSnapshot();
+      }
+    }
+    status.textContent='クラウドデータを確認中…';
+    const probe=await window.FirebaseSync.probeProject(firestoreProjectId);
+    const allowBootstrap=!probe.exists;
+    saveActiveProject();activeProjectId=id;window.activeProjectId=id;loadProject(id);await window.MicrosoftPhotoUpload.ensureProjectFolders(firestoreProjectId);persistenceEnabled=true;saveStateToStorage();renderProjectList();renderAll();connectFirebaseForActiveProject({allowBootstrap});if(allowBootstrap)setTimeout(()=>scheduleProjectStateSync('案件開始'),500);closeSharedProjectPicker();closeProjectSide();
   }catch(err){status.className='project-restore-status show error';status.textContent='クラウドデータを取得できませんでした。\n通信状態を確認して、もう一度お試しください。\n'+(err?.message||err);}
 }
 let formalizeQueueAction=null;
@@ -5616,11 +5710,15 @@ function openFormalizeProjectDialog(){
 function withFormalizeTimeout(promise,ms,label){return Promise.race([promise,new Promise((_,reject)=>{setTimeout(()=>reject(new Error(`${label}がタイムアウトしました`)),ms);})]);}
 function hasSaveFailure(results){return !Array.isArray(results)||results.some(r=>r.status==='rejected'||(r.status==='fulfilled'&&r.value===false));}
 async function formalizeActiveProject(row,folder){const meta=projectMeta[activeProjectId];if(!meta?.isTemporary)return;try{const children=await window.MicrosoftPhotoUpload.listChildItems(folder.driveId,folder.id);const sys=children.find(x=>x&&x.folder&&x.name==='調査システム');if(!sys)throw new Error('正式案件フォルダ内に「調査システム」フォルダが見つかりません。仮案件フォルダから移動後、もう一度お試しください。');const nextAddress=row.address||meta.address||'';const oldFirestoreProjectId=meta.firestoreProjectId;meta.no=row.projectNo;meta.name=row.name||meta.name||'';meta.address=nextAddress;meta.sub=nextAddress||meta.sub||'';meta.folderName=folder.name;meta.isTemporary=false;
-  // v0.14.19: 正式案件切替時、firestoreProjectIdがtemp_XXX_timestampのまま残っていたため、
+  // v0.14.19: (旧仕様、v0.14.25で廃止) 正式案件切替時、firestoreProjectIdがtemp_XXX_timestampのまま残っていたため、
   // 別端末が同じ案件を「既存案件を開く」で開いた時(案件番号そのものをfirestoreProjectIdにする)と
   // 接続先のFirestoreドキュメントが食い違い、お互いの入力が反映されない不具合があった。
-  // 案件番号に揃えて、旧tempドキュメントの内容を新ドキュメントへ書き込み直す。
-  meta.firestoreProjectId=row.projectNo;
+  // 案件番号に揃えて、旧tempドキュメントの内容を新ドキュメントへ書き込み直していた。
+  // v0.14.25: firestoreProjectIdは案件作成時に1回だけ発行し、以後(正式化を含め)変更しない設計に変更。
+  // そのため、正式化時にmeta.firestoreProjectIdを書き換える処理は廃止した。
+  // これに伴い、以下のidChanged判定は現行仕様では常にfalseとなり、
+  // movePendingOpsProject・formalizeQueueAction分岐・withFormalizeTimeout・hasSaveFailureを使う
+  // ID移行ロジックは到達不能になる。旧temp_...形式のIDを持つ既存案件の後方互換のため、削除せずに残している。
   meta.ledgerValues={name:row.name||meta.name||'',address:row.address||''};meta.ledgerOverrides={name:false,address:!row.address&&!!meta.address};meta.oneDrive={...(meta.oneDrive||{}),driveId:folder.driveId,projectFolderId:folder.id,projectFolderName:folder.name,projectFolderUrl:folder.webUrl,systemFolderId:sys.id};saveStateToStorage();
   const idChanged=!!(oldFirestoreProjectId&&oldFirestoreProjectId!==meta.firestoreProjectId);
   let idMigrationSucceeded=true;
@@ -5655,6 +5753,7 @@ async function formalizeActiveProject(row,folder){const meta=projectMeta[activeP
     }
   }
   else scheduleProjectStateSync('正式案件切替');
+  try{await window.MicrosoftPhotoUpload.uploadSurveyBackup(activeProjectId);}catch(jsonErr){console.warn('正式案件切替後の共有用JSON即時更新に失敗',jsonErr);}
   renderAll();renderProjectList();closeSharedProjectPicker();
   if(migrationWarningMessage){
     alert(migrationWarningMessage);
@@ -5666,7 +5765,25 @@ async function formalizeActiveProject(row,folder){const meta=projectMeta[activeP
 const originalUpdateProjectMetaField=updateProjectMetaField;
 updateProjectMetaField=function(field,value){const meta=projectMeta[activeProjectId];if(!meta||field==='no')return;const v=String(value||'').trim();meta[field]=v;meta.sub=meta.address||meta.sub||'';meta.ledgerOverrides=meta.ledgerOverrides||{};if(field==='name'||field==='address')meta.ledgerOverrides[field]=true;renderProjectList();scheduleStateSave();renderSettings();scheduleProjectStateSync('案件情報');registerProjectInFirebase(activeProjectId).catch(()=>{});};
 const originalRenderSettings=renderSettings;
-renderSettings=function(){originalRenderSettings();const meta=projectMeta[activeProjectId]||{};const status=document.getElementById('settingsLedgerStatus');const pending=!!(meta.ledgerOverrides?.name||meta.ledgerOverrides?.address);if(status){status.textContent=pending?'台帳未反映':'同期済み';status.classList.toggle('ledger-pending',pending);}const btn=document.getElementById('formalizeProjectButton');if(btn)btn.style.display=meta.isTemporary?'inline-flex':'none';};
+function copyTechInfoValue(elId){const el=document.getElementById(elId);if(!el)return;const text=el.textContent||'';if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).catch(()=>{});}
+renderSettings=function(){
+  originalRenderSettings();
+  const meta=projectMeta[activeProjectId]||{};
+  const status=document.getElementById('settingsLedgerStatus');const pending=!!(meta.ledgerOverrides?.name||meta.ledgerOverrides?.address);if(status){status.textContent=pending?'台帳未反映':'同期済み';status.classList.toggle('ledger-pending',pending);}
+  const btn=document.getElementById('formalizeProjectButton');if(btn)btn.style.display=meta.isTemporary?'inline-flex':'none';
+  const syncId=String(meta.firestoreProjectId||'');
+  const connectedId=String(appState.currentProjectId||'');
+  const elSyncId=document.getElementById('techSyncId');if(elSyncId)elSyncId.textContent=syncId||'-';
+  const elLocalId=document.getElementById('techLocalId');if(elLocalId)elLocalId.textContent=String(activeProjectId||'-');
+  const elFolderId=document.getElementById('techFolderId');if(elFolderId)elFolderId.textContent=String(meta.oneDrive?.projectFolderId||'-');
+  const elConnectedId=document.getElementById('techConnectedId');if(elConnectedId)elConnectedId.textContent=connectedId||'-';
+  const elConnState=document.getElementById('techConnState');if(elConnState)elConnState.textContent=appState.firebaseReady?'接続中':'未接続';
+  const warn=document.getElementById('techIdWarning');
+  if(warn){
+    if(syncId&&connectedId&&syncId!==connectedId){warn.style.display='';warn.textContent='警告: 同期先IDと現在接続中のFirestore IDが一致していません。';}
+    else{warn.style.display='none';warn.textContent='';}
+  }
+};
 async function refreshActiveLedgerInfo({silent=false}={}){const meta=projectMeta[activeProjectId];if(!meta||meta.isTemporary||!meta.no||!window.MicrosoftPhotoUpload)return false;try{const rows=await window.MicrosoftPhotoUpload.readSurveyLedgerRows();const row=rows.find(r=>r.projectNo===meta.no);if(!row)return false;meta.ledgerValues={name:row.name,address:row.address};meta.ledgerOverrides=meta.ledgerOverrides||{};for(const field of ['name','address']){if(meta.ledgerOverrides[field]){if(String(meta[field]||'')===String(row[field]||''))meta.ledgerOverrides[field]=false;}else meta[field]=String(row[field]||'');}meta.sub=meta.address||meta.sub||'';scheduleStateSave();scheduleProjectStateSync('台帳情報');renderProjectList();renderSettings();return true;}catch(err){if(!silent)console.warn('台帳確認失敗',err);return false;}}
 const LEDGER_CHECK_HOURS=[8,12,15,18];
 function ledgerSlotKey(d=new Date()){const h=LEDGER_CHECK_HOURS.filter(x=>x<=d.getHours()).pop();if(h===undefined)return '';return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}-${h}`;}
