@@ -5697,13 +5697,7 @@ function openFormalizeProjectDialog(){
   formalizeQueueAction=null;
   if(hasPendingOps()){
     const count=pendingOps().length;
-    if(!confirm(`未送信の変更が${count}件あります。このまま正式案件への切り替えを進めますか？`))return;
-    if(confirm('未送信データを保持したまま進めますか？\n(OK：保持して進む→正式化成功後、新しい同期先へ自動的に引き継がれます\nキャンセル：破棄の確認へ進む)')){
-      formalizeQueueAction='keep';
-    }else{
-      if(!confirm(`本当に未送信データ(${count}件)を破棄しますか？この操作は取り消せません。`))return;
-      formalizeQueueAction='discard';
-    }
+    if(!confirm(`未送信の変更が${count}件あります。\n同期先IDは正式化後も変わらないため、未送信データはそのまま保持されます。\n正式案件への切替を続けますか？`))return;
   }
   openSharedProjectPicker('formalize');
 }
@@ -5777,7 +5771,7 @@ renderSettings=function(){
   const elLocalId=document.getElementById('techLocalId');if(elLocalId)elLocalId.textContent=String(activeProjectId||'-');
   const elFolderId=document.getElementById('techFolderId');if(elFolderId)elFolderId.textContent=String(meta.oneDrive?.projectFolderId||'-');
   const elConnectedId=document.getElementById('techConnectedId');if(elConnectedId)elConnectedId.textContent=connectedId||'-';
-  const elConnState=document.getElementById('techConnState');if(elConnState)elConnState.textContent=appState.firebaseReady?'接続中':'未接続';
+  const elConnState=document.getElementById('techConnState');if(elConnState)elConnState.textContent=(appState.firebaseReady&&navigator.onLine)?'接続済み':(navigator.onLine?'接続中':'オフライン');
   const warn=document.getElementById('techIdWarning');
   if(warn){
     if(syncId&&connectedId&&syncId!==connectedId){warn.style.display='';warn.textContent='警告: 同期先IDと現在接続中のFirestore IDが一致していません。';}
