@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>調査システムPWA v0.14.26</title>
+<title>調査システムPWA v0.14.27</title>
 <style>
 :root{--bg:#f5f7fb;--panel:#fff;--line:#d6dce8;--text:#1f2937;--muted:#64748b;--main:#2563eb;--main2:#eaf1ff;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--head:#e8edf6;--section:#dbeafe;--simple:#fff8c5;--record:#f8fafc;--registered:#eefaf1;--edit:#fff7ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}button,input,select{font-family:inherit}header{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:sticky;top:0;z-index:50}h1{font-size:15px;margin:0;white-space:nowrap}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--orange)}.hint{font-size:12px;color:var(--muted);line-height:1.45}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}.btn.primary{background:var(--main);border-color:var(--main);color:#fff}.btn.ghost{background:#f8fafc}.btn.small{font-size:11.5px;padding:3px 7px;border-radius:7px}.btn.icon{width:34px;height:34px;padding:0}.app{display:flex;min-height:calc(100vh - 54px)}.side{width:280px;background:#fff;border-right:1px solid var(--line);padding:12px;transition:.18s ease;overflow:hidden}.side.closed{width:48px;padding:9px 7px}.side.closed .side-body{display:none}.side-toggle{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}.project-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;margin-top:9px;cursor:pointer;position:relative;padding-right:46px}.project-card.active{background:var(--main2);border-color:var(--main)}.project-card strong{font-size:13px;display:block}.project-card span{font-size:12px;color:var(--muted)}.project-delete-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fff;color:#b91c1c;font-size:16px;line-height:1;cursor:pointer}.project-delete-btn:hover{background:#fef2f2}.main{flex:1;min-width:0}.toolbar{padding:12px 16px 0}.case-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.case-title h2{font-size:18px;margin:0}.tabs{display:flex;gap:5px;margin-top:12px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:1px solid var(--line);border-bottom:0;background:#fff;border-radius:9px 9px 0 0;padding:8px 13px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--main);border-color:var(--main);color:#fff}.content{padding:14px 16px 26px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcff}.panel-head h3{margin:0;font-size:15px}.sheet-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}.sheet-toolbar .left,.sheet-toolbar .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-height:calc(100vh - 202px)}.finish-table{border-collapse:separate;border-spacing:0;min-width:1440px;width:100%;font-size:11.5px}.finish-table th,.finish-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:#fff;vertical-align:top}.finish-table th{position:sticky;top:0;background:var(--head);z-index:7;text-align:center;font-weight:700;padding:4px 3px;height:26px}.section-row td{background:var(--section)!important;font-weight:700;padding:5px 8px;height:28px}.section-title{display:flex;align-items:center;gap:8px}.collapse-btn{border:1px solid #b8c3d8;border-radius:6px;background:#fff;min-width:28px;height:22px;cursor:pointer}.simple-row td{background:var(--simple)!important;padding:6px 9px;min-height:32px}.room-start td{border-top:2px solid #b8c3d8}.room-sub td{background:#fff}.room-line{font-size:10px;color:#94a3b8;text-align:center;min-width:20px}.room-no,.room-name,.floor{background:#f8fafc!important}.floor{width:58px;min-width:58px;text-align:center;position:sticky;left:0;z-index:6}.room-no{width:72px;min-width:72px;text-align:center;position:sticky;left:58px;z-index:6}.room-name{width:92px;min-width:92px;position:sticky;left:130px;z-index:6}.finish-table th.floor{z-index:8}.finish-table th.room-no{z-index:8}.finish-table th.room-name{z-index:8}.id-col{width:54px;min-width:54px}.name-col{width:142px;min-width:142px}.other-part{width:74px;min-width:74px}.other-name{width:140px;min-width:140px}.cell{height:27px;min-height:27px;padding:2px 3px;display:flex;align-items:center;gap:3px}.cell.stack{height:42px;align-items:stretch;flex-direction:column;justify-content:center}.cell input{width:100%;height:22px;border:1px solid transparent;border-radius:5px;background:transparent;padding:2px 4px;font-size:11.5px}.cell input:focus{outline:none;border-color:var(--main);background:#fff}.cell.record{background:var(--record)}.cell.registered{background:var(--registered)}.cell.editing{background:var(--edit)}.id-input{text-align:center}.reg-mark{font-size:10px;color:#166534;white-space:nowrap}.tag{font-size:10px;border-radius:999px;padding:1px 5px;background:#eef2f7;color:#475569;white-space:nowrap}.tag.reg{background:#dcfce7;color:#166534}.tag.rec{background:#f1f5f9}.register-btn{white-space:nowrap}.chips{display:flex;gap:5px;flex-wrap:wrap}.material-chip{background:#eefaf1;border:1px solid #bbf7d0;color:#166534;border-radius:999px;padding:3px 7px;font-size:11.5px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.data-table th{background:#f8fafc}.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.15);z-index:80}.drawer{position:fixed;right:-360px;top:0;width:340px;max-width:90vw;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(15,23,42,.12);z-index:90;transition:.18s ease;display:flex;flex-direction:column}.drawer.open{right:0}.drawer-backdrop.open{display:block}.drawer-head{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.drawer-body{padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}.drawer-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcff}.drawer-box h4{margin:0 0 8px;font-size:13px}.drawer-box .btn{width:100%;margin-top:7px;text-align:left}.photo-layout{display:grid;grid-template-columns:280px 1fr;gap:14px}.room-list{border-right:1px solid var(--line);padding:12px}.room-item{padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.room-item.active{background:var(--main2);border-color:var(--main)}.photo-area{padding:12px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}.photo-box{height:96px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#64748b}.sync-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.update-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:120;align-items:center;justify-content:center}.update-card{width:360px;max-width:92vw;background:#fff;border-radius:14px;border:1px solid var(--line);padding:18px;box-shadow:0 12px 32px rgba(15,23,42,.2)}.update-card h3{margin:0 0 8px}.update-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:850px){.app{display:block}.side{width:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.side.closed{height:45px;width:auto}.side.closed .side-body{display:none}.tabs{position:sticky;top:54px;background:var(--bg);z-index:30;padding-top:5px}.photo-layout{grid-template-columns:1fr}.room-list{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:8px;overflow:auto}.room-item{min-width:155px}.table-wrap{max-height:calc(100vh - 236px)}}
@@ -1484,6 +1484,20 @@ input[list]::-webkit-calendar-picker-indicator{
                 <label>Firestore接続状態</label><div class="settings-value" id="techConnState">-</div>
               </div>
               <div class="tech-id-warning" id="techIdWarning" style="display:none;color:#b00020;margin-top:6px;font-size:0.9em"></div>
+              <div class="tech-write-stats" style="margin-top:10px;border-top:1px solid var(--line);padding-top:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                  <b style="font-size:12px">書き込み統計(本日)</b>
+                  <button class="btn small" type="button" onclick="resetWriteStats()">リセット</button>
+                </div>
+                <div class="hint" style="margin-top:6px">[A層: 論理操作]</div>
+                <table class="data-table compact" id="techWriteStatsA"></table>
+                <div class="hint" style="margin-top:8px">[B層: 物理Write]</div>
+                <table class="data-table compact" id="techWriteStatsB"></table>
+                <div class="hint" style="margin-top:8px">初期投入ログ</div>
+                <div id="techBootstrapLog" style="font-size:12px;line-height:1.6"></div>
+                <div class="hint" style="margin-top:8px">削除状態再送</div>
+                <div id="techDeleteResendStats" style="font-size:12px;line-height:1.6"></div>
+              </div>
             </details>
           </div>
           <div class="settings-box"><h4>OneDrive・バックアップ</h4><div class="settings-section-note">写真本体と復旧用の調査情報を案件フォルダへ保存</div><div class="settings-grid"><label>案件フォルダ</label><div class="settings-value" id="settingsProjectFolderValue">26070101　ODKワールドアスベスト調査</div><label>目視フォルダ</label><div class="settings-value">目視</div><label>採取フォルダ</label><div class="settings-value">採取</div><label>最終バックアップ</label><div class="settings-value backup-time" id="settingsLastBackup">-</div></div><button class="btn small primary" id="manualBackupButton" style="margin-top:9px" onclick="runManualSurveyBackup()">今すぐバックアップ</button></div>
@@ -2023,6 +2037,88 @@ window.toggleMicrosoftAuth = async function(){
   }
 };
 
+// v0.14.27: Firestore書き込み計測基盤(A層=論理操作、B層=物理Write)。Firestoreへは保存せず、localStorage/メモリのみに記録する。
+// v0.14.27差し戻し: 日付が変わったら計測用localStorageを自動リセットする。まだ他の計測変数が定義されていないため、ここでは削除とフラグ設定のみ行う。
+window.writeStatsDateKey=function(){
+  const d=new Date();
+  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+};
+window.writeStatsDateResetOccurred=false;
+(function checkWriteStatsDate(){
+  const today=window.writeStatsDateKey();
+  const savedDate=localStorage.getItem('chousa-write-stats-date');
+  if(savedDate!==today){
+    window.writeStatsDateResetOccurred=true;
+    localStorage.removeItem('chousa-write-stats');
+    localStorage.removeItem('chousa-write-ops-inflight');
+    localStorage.removeItem('chousa-bootstrap-log');
+    localStorage.removeItem('chousa-delete-resend-stats');
+    localStorage.removeItem('chousa-delete-resend-last-sent');
+  }
+  localStorage.setItem('chousa-write-stats-date',today);
+})();
+window.writeOpSeq=0;
+window.writeStats={};
+window.writeOpsInFlight={};
+window.persistWriteStats=function(){try{localStorage.setItem('chousa-write-stats',JSON.stringify(window.writeStats));localStorage.setItem('chousa-write-ops-inflight',JSON.stringify(window.writeOpsInFlight));}catch(_){}};
+window.countWriteAttempt=function(type,meta){
+  meta=meta||{};
+  const now=Date.now();
+  if(!window.writeStats[type])window.writeStats[type]={attempts:0,success:0,failure:0,pending:0,previousSessionPending:0,recent:[],lastMeta:null};
+  const s=window.writeStats[type];
+  const opId='op'+(++window.writeOpSeq);
+  s.attempts++;s.pending++;
+  s.recent.push(now);s.recent=s.recent.filter(t=>now-t<60000);
+  s.lastMeta={...meta,at:new Date(now).toISOString()};
+  window.writeOpsInFlight[opId]={type,startedAt:now};
+  window.persistWriteStats();
+  return opId;
+};
+window.countWriteSuccess=function(opId){
+  const info=window.writeOpsInFlight[opId];if(!info)return;
+  const s=window.writeStats[info.type];if(s){s.success++;s.pending=Math.max(0,s.pending-1);}
+  delete window.writeOpsInFlight[opId];
+  window.persistWriteStats();
+};
+window.countWriteFailure=function(opId){
+  const info=window.writeOpsInFlight[opId];if(!info)return;
+  const s=window.writeStats[info.type];if(s){s.failure++;s.pending=Math.max(0,s.pending-1);}
+  delete window.writeOpsInFlight[opId];
+  window.persistWriteStats();
+};
+(function restoreWriteStats(){
+  if(window.writeStatsDateResetOccurred){window.persistWriteStats();return;}
+  try{
+    const raw=localStorage.getItem('chousa-write-stats');
+    if(raw){
+      const parsed=JSON.parse(raw)||{};
+      Object.keys(parsed).forEach(type=>{
+        const entry=parsed[type]||{};
+        window.writeStats[type]={attempts:entry.attempts||0,success:entry.success||0,failure:entry.failure||0,pending:0,previousSessionPending:entry.pending||0,recent:[],lastMeta:entry.lastMeta||null};
+      });
+    }
+  }catch(_){}
+  // ページ再読み込み直後は、実際には存在しないPromiseの保留を引きずらないよう、in-flightは必ず空から始める。
+  window.writeOpsInFlight={};
+  try{localStorage.removeItem('chousa-write-ops-inflight');}catch(_){}
+  window.persistWriteStats();
+})();
+window.bootstrapLog={};
+window.recordBootstrapFire=function(source,meta){
+  meta=meta||{};
+  const projectId=String(meta.projectId||'');
+  const key=source+'|'+projectId;
+  if(!window.bootstrapLog[key])window.bootstrapLog[key]={source,projectId,count:0};
+  const entry=window.bootstrapLog[key];
+  if(meta.fired)entry.count++;
+  entry.last={...meta,at:new Date().toISOString()};
+  try{localStorage.setItem('chousa-bootstrap-log',JSON.stringify(window.bootstrapLog));}catch(_){}
+};
+(function restoreBootstrapLog(){
+  if(window.writeStatsDateResetOccurred)return;
+  try{const raw=localStorage.getItem('chousa-bootstrap-log');if(raw)window.bootstrapLog=JSON.parse(raw)||{};}catch(_){window.bootstrapLog={};}
+})();
+
 window.FirebaseSync = {
   projectId: null,
   async connectMaterialRecords(projectId, onRecords){
@@ -2043,11 +2139,18 @@ window.FirebaseSync = {
   async saveMaterialRecord(projectId, materialId, data){
     if (!projectId || !materialId) return;
     const ref = doc(db, 'projects', projectId, 'materialRecords', materialId);
-    await setDoc(ref, {
-      ...data,
-      materialId,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
+    const opId = window.countWriteAttempt('materialRecords.setDoc', {projectId, recordId:materialId});
+    try{
+      await setDoc(ref, {
+        ...data,
+        materialId,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      window.countWriteSuccess(opId);
+    }catch(err){
+      window.countWriteFailure(opId);
+      throw err;
+    }
   },
   async connectPhotos(projectId, onPhotos){
     if (!projectId) return;
@@ -2069,38 +2172,66 @@ window.FirebaseSync = {
   async savePhotoRecord(projectId, photoId, data){
     if (!projectId || !photoId) return;
     const ref = doc(db, 'projects', projectId, 'photos', photoId);
-    await setDoc(ref, {
-      ...data,
-      photoId,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
-    if (data && data.materialId) {
-      const materialRef = doc(db, 'projects', projectId, 'materialRecords', data.materialId);
-      await setDoc(materialRef, {
-        materialId: data.materialId,
-        photoRefs: arrayUnion(photoId),
+    const opId1 = window.countWriteAttempt('photos.setDoc', {projectId, recordId:photoId, op:'savePhotoRecord'});
+    try{
+      await setDoc(ref, {
+        ...data,
+        photoId,
         updatedAt: serverTimestamp()
       }, { merge: true });
+      window.countWriteSuccess(opId1);
+    }catch(err){
+      window.countWriteFailure(opId1);
+      throw err;
+    }
+    if (data && data.materialId) {
+      const materialRef = doc(db, 'projects', projectId, 'materialRecords', data.materialId);
+      const opId2 = window.countWriteAttempt('materialRecords.photoRefsSetDoc', {projectId, recordId:data.materialId, op:'savePhotoRecord.arrayUnion'});
+      try{
+        await setDoc(materialRef, {
+          materialId: data.materialId,
+          photoRefs: arrayUnion(photoId),
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        window.countWriteSuccess(opId2);
+      }catch(err){
+        window.countWriteFailure(opId2);
+        throw err;
+      }
     }
   },
   async deletePhotoRecord(projectId, photoId, data){
     if (!projectId || !photoId) return;
     const ref = doc(db, 'projects', projectId, 'photos', photoId);
-    await setDoc(ref, {
-      ...(data || {}),
-      photoId,
-      deleted: true,
-      uploadStatus: 'deleted',
-      deletedAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
-    }, { merge: true });
-    if (data && data.materialId) {
-      const materialRef = doc(db, 'projects', projectId, 'materialRecords', data.materialId);
-      await setDoc(materialRef, {
-        materialId: data.materialId,
-        photoRefs: arrayRemove(photoId),
+    const opId1 = window.countWriteAttempt('photos.setDoc', {projectId, recordId:photoId, op:'deletePhotoRecord'});
+    try{
+      await setDoc(ref, {
+        ...(data || {}),
+        photoId,
+        deleted: true,
+        uploadStatus: 'deleted',
+        deletedAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       }, { merge: true });
+      window.countWriteSuccess(opId1);
+    }catch(err){
+      window.countWriteFailure(opId1);
+      throw err;
+    }
+    if (data && data.materialId) {
+      const materialRef = doc(db, 'projects', projectId, 'materialRecords', data.materialId);
+      const opId2 = window.countWriteAttempt('materialRecords.photoRefsSetDoc', {projectId, recordId:data.materialId, op:'deletePhotoRecord.arrayRemove'});
+      try{
+        await setDoc(materialRef, {
+          materialId: data.materialId,
+          photoRefs: arrayRemove(photoId),
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        window.countWriteSuccess(opId2);
+      }catch(err){
+        window.countWriteFailure(opId2);
+        throw err;
+      }
     }
   },
   async connectRoomRecords(projectId, onChanges){
@@ -2121,19 +2252,36 @@ window.FirebaseSync = {
   async saveRoomRecord(projectId, roomId, data){
     if (!projectId || !roomId) return;
     const ref = doc(db, 'projects', projectId, 'roomRecords', roomId);
-    await setDoc(ref, {
-      ...data,
-      roomId,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
+    const opId = window.countWriteAttempt('roomRecords.setDoc', {projectId, recordId:roomId});
+    try{
+      await setDoc(ref, {
+        ...data,
+        roomId,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      window.countWriteSuccess(opId);
+    }catch(err){
+      window.countWriteFailure(opId);
+      throw err;
+    }
   },
   async patchRoomRecord(projectId, roomId, patch){
     if (!projectId || !roomId || !patch) return;
     const ref = doc(db, 'projects', projectId, 'roomRecords', roomId);
+    const opId1 = window.countWriteAttempt('roomRecords.updateDoc', {projectId, recordId:roomId});
     try{
       await updateDoc(ref, {...patch, updatedAt: serverTimestamp()});
+      window.countWriteSuccess(opId1);
     }catch(err){
-      await setDoc(ref, {roomId, ...patch, updatedAt: serverTimestamp()}, {merge:true});
+      window.countWriteFailure(opId1);
+      const opId2 = window.countWriteAttempt('roomRecords.setDocFallback', {projectId, recordId:roomId});
+      try{
+        await setDoc(ref, {roomId, ...patch, updatedAt: serverTimestamp()}, {merge:true});
+        window.countWriteSuccess(opId2);
+      }catch(err2){
+        window.countWriteFailure(opId2);
+        throw err2;
+      }
     }
   },
   deleteFieldValue(){ return deleteField(); },
@@ -2151,10 +2299,17 @@ window.FirebaseSync = {
   async saveProjectState(projectId, data){
     if (!projectId) return;
     const ref = doc(db, 'projects', projectId, 'appState', 'main');
-    await setDoc(ref, {
-      ...data,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
+    const opId = window.countWriteAttempt('appState.setDoc', {projectId});
+    try{
+      await setDoc(ref, {
+        ...data,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      window.countWriteSuccess(opId);
+    }catch(err){
+      window.countWriteFailure(opId);
+      throw err;
+    }
   },
   async probeProject(projectId){
     if(!projectId)throw new Error('案件IDがありません');
@@ -2186,29 +2341,43 @@ window.FirebaseSync = {
   async saveProjectRegistryRecord(projectNo, data){
     if (!projectNo) return;
     const ref = doc(db, 'projects', '_registry', 'projectList', String(projectNo));
-    await setDoc(ref, {
-      ...data,
-      projectNo:String(projectNo),
-      deleted:false,
-      updatedAt:serverTimestamp()
-    }, {merge:true});
+    const opId = window.countWriteAttempt('registry.setDoc', {recordId:String(projectNo)});
+    try{
+      await setDoc(ref, {
+        ...data,
+        projectNo:String(projectNo),
+        deleted:false,
+        updatedAt:serverTimestamp()
+      }, {merge:true});
+      window.countWriteSuccess(opId);
+    }catch(err){
+      window.countWriteFailure(opId);
+      throw err;
+    }
   },
   async deleteProjectRegistryRecord(projectNo, data){
     if (!projectNo) return;
     const ref = doc(db, 'projects', '_registry', 'projectList', String(projectNo));
-    await setDoc(ref, {
-      ...(data||{}),
-      projectNo:String(projectNo),
-      deleted:true,
-      deletedAt:serverTimestamp(),
-      updatedAt:serverTimestamp()
-    }, {merge:true});
+    const opId = window.countWriteAttempt('registry.deleteSetDoc', {recordId:String(projectNo)});
+    try{
+      await setDoc(ref, {
+        ...(data||{}),
+        projectNo:String(projectNo),
+        deleted:true,
+        deletedAt:serverTimestamp(),
+        updatedAt:serverTimestamp()
+      }, {merge:true});
+      window.countWriteSuccess(opId);
+    }catch(err){
+      window.countWriteFailure(opId);
+      throw err;
+    }
   }
 };
 </script>
 
 <script>
-const APP_VERSION='0.14.26';
+const APP_VERSION='0.14.27';
 function applyAppVersionDisplay(){
   const header=document.getElementById('headerVersion');
   if(header)header.textContent='v'+APP_VERSION;
@@ -2459,7 +2628,9 @@ document.addEventListener('focusout',e=>{
 function applyFirebaseMaterialRecords(changes, isEmpty){
   const list=Array.isArray(changes)?changes:[];
   if(isEmpty && !Object.keys(appState.materialRecords||{}).length){
-    if(appState.allowBootstrap && !appState.bootstrappedProjects[appState.currentProjectId]){
+    const willBootstrap=appState.allowBootstrap && !appState.bootstrappedProjects[appState.currentProjectId];
+    recordBootstrapFire('materials',{projectId:appState.currentProjectId,allowBootstrap:appState.allowBootstrap,isEmpty,fired:willBootstrap,count:(state.materials||[]).length});
+    if(willBootstrap){
       appState.bootstrappedProjects[appState.currentProjectId]=true;
       setTimeout(()=>saveAllMaterialRecordsToFirebase('初期投入'),300);
     }
@@ -2548,8 +2719,12 @@ function applyRoomRecord(rec){
   }
 }
 function applyFirebaseRoomRecords(changes,isEmpty){
-  if(isEmpty&&appState.allowBootstrap&&!appState.roomRecordsBootstrapped){appState.roomRecordsBootstrapped=true;setTimeout(()=>saveAllRoomRecordsToFirebase('初期投入'),350);return;}
-  if(isEmpty)return;
+  if(isEmpty){
+    const willBootstrap=appState.allowBootstrap&&!appState.roomRecordsBootstrapped;
+    recordBootstrapFire('rooms',{projectId:appState.currentProjectId,allowBootstrap:appState.allowBootstrap,isEmpty,fired:willBootstrap,count:roomsForArea('外部').length+roomsForArea('内部').length});
+    if(willBootstrap){appState.roomRecordsBootstrapped=true;setTimeout(()=>saveAllRoomRecordsToFirebase('初期投入'),350);}
+    return;
+  }
   appState.applyingRemote=true;
   try{for(const change of (changes||[])){const rec=change.record||{};const id=rec.roomId||rec.id;if(!id)continue;if(change.type==='removed'){for(const area of ['外部','内部'])state.roomsByArea[area]=(state.roomsByArea[area]||[]).filter(r=>r.id!==id);for(const k of Object.keys(state.cells))if(k.startsWith(id+'|'))delete state.cells[k];}else applyRoomRecord(rec);}}finally{appState.applyingRemote=false;}
   requestRemoteRenderAll();
@@ -2822,7 +2997,8 @@ async function handlePhotoFileSelected(event){
     Object.assign(localRecord,uploaded,{uploadStatus:'uploaded'});
     const remote={...localRecord};
     delete remote.dataUrl; delete remote.localPreviewUrl; delete remote.thumbnailUrl;
-    await window.FirebaseSync.savePhotoRecord(projectId,photoId,remote);
+    const photoSaveOpId=countWriteAttempt('savePhotoRecord',{projectId,recordId:photoId,reason:'写真アップロード'});
+    await window.FirebaseSync.savePhotoRecord(projectId,photoId,remote).then(()=>countWriteSuccess(photoSaveOpId),err=>{countWriteFailure(photoSaveOpId);throw err;});
     setFirebasePill('写真共有済','ok');
   }catch(err){
     console.error(err);
@@ -3753,7 +3929,14 @@ function registryProjectPayload(id){
 }
 async function registerProjectInFirebase(id){
   if(!window.FirebaseSync?.saveProjectRegistryRecord || !projectMeta[id]?.no)return;
-  await window.FirebaseSync.saveProjectRegistryRecord(projectMeta[id].no,registryProjectPayload(id));
+  const opId=countWriteAttempt('saveProjectRegistryRecord',{projectId:projectMeta[id].firestoreProjectId||'',recordId:projectMeta[id].no,reason:'案件一覧登録'});
+  try{
+    await window.FirebaseSync.saveProjectRegistryRecord(projectMeta[id].no,registryProjectPayload(id));
+    countWriteSuccess(opId);
+  }catch(err){
+    countWriteFailure(opId);
+    throw err;
+  }
 }
 async function syncLocalProjectsToRegistry(){
   if(!window.FirebaseSync?.saveProjectRegistryRecord)return;
@@ -4795,8 +4978,12 @@ async function setRepPhoto(prefix,key,stage,index){
   const projectId=appState.currentProjectId||currentFirestoreProjectId();
   try{
     setFirebasePill('代表写真を保存中','warn');
-    const tasks=[window.FirebaseSync.savePhotoRecord(projectId,photoIdOf(selected),{isRepresentative:true,representativeGroupKey:groupKey,updatedBy:getDeviceName(),appVersion:APP_VERSION})];
-    if(previous)tasks.push(window.FirebaseSync.savePhotoRecord(projectId,photoIdOf(previous),{isRepresentative:false,representativeGroupKey:groupKey,updatedBy:getDeviceName(),appVersion:APP_VERSION}));
+    const repOpId1=countWriteAttempt('savePhotoRecord',{projectId,recordId:photoIdOf(selected),reason:'代表写真設定'});
+    const tasks=[window.FirebaseSync.savePhotoRecord(projectId,photoIdOf(selected),{isRepresentative:true,representativeGroupKey:groupKey,updatedBy:getDeviceName(),appVersion:APP_VERSION}).then(()=>countWriteSuccess(repOpId1),err=>{countWriteFailure(repOpId1);throw err;})];
+    if(previous){
+      const repOpId2=countWriteAttempt('savePhotoRecord',{projectId,recordId:photoIdOf(previous),reason:'代表写真設定'});
+      tasks.push(window.FirebaseSync.savePhotoRecord(projectId,photoIdOf(previous),{isRepresentative:false,representativeGroupKey:groupKey,updatedBy:getDeviceName(),appVersion:APP_VERSION}).then(()=>countWriteSuccess(repOpId2),err=>{countWriteFailure(repOpId2);throw err;}));
+    }
     await Promise.all(tasks);setFirebasePill('代表写真を同期済','ok');
   }catch(err){console.error('代表写真同期エラー',err);setFirebasePill('代表写真同期エラー','warn');}
 }
@@ -4846,12 +5033,13 @@ async function deleteOnePhotoRecord(photoId, opts){
     if(!opts.forceAppOnly)throw err;
   }
   if(window.FirebaseSync && window.FirebaseSync.deletePhotoRecord){
+    const deleteOpId=countWriteAttempt('deletePhotoRecord',{projectId,recordId:photoId,reason:'写真削除'});
     await window.FirebaseSync.deletePhotoRecord(projectId,photoId,{
       materialId:p.materialId||'',
       deletedBy:getDeviceName(),
       physicalDeleted,
       physicalDeleteError:physicalError
-    });
+    }).then(()=>countWriteSuccess(deleteOpId),err=>{countWriteFailure(deleteOpId);throw err;});
   }
   state.photos=(state.photos||[]).filter(x=>photoIdOf(x)!==photoId);
   return {photoId, physicalDeleted, physicalError};
@@ -5158,7 +5346,8 @@ async function uploadIntegratedPhotoRecord(record){
     delete remoteRecord.baseDataUrl;
     delete remoteRecord.thumbnailUrl;
     delete remoteRecord.localPreviewUrl;
-    await window.FirebaseSync.savePhotoRecord(projectId,record.photoId,remoteRecord);
+    const integratedOpId=countWriteAttempt('savePhotoRecord',{projectId,recordId:record.photoId,reason:'統合写真アップロード'});
+    await window.FirebaseSync.savePhotoRecord(projectId,record.photoId,remoteRecord).then(()=>countWriteSuccess(integratedOpId),err=>{countWriteFailure(integratedOpId);throw err;});
     await persistIntegratedPhotoRecord(record);
     return true;
   }catch(err){console.error('統合写真アップロード失敗',err);record.uploadStatus='再送待ち';await persistIntegratedPhotoRecord(record);return false;}
@@ -5521,9 +5710,9 @@ deleteProject=function(id){
 
 function installReliableSaves(){
   saveMaterialRecordToFirebase=function(id,reason){if(appState.applyingRemote)return Promise.resolve();const m=materialById(id);if(!m||!window.FirebaseSync)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeMaterialRecord(m),dedupeKey='material:'+id;return window.FirebaseSync.saveMaterialRecord(projectId,id,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();if(!hasPendingOps())setSimpleSyncState('同期済み');}).catch(err=>{queuePendingOp({type:'material',projectId,recordId:id,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
-  saveRoomRecordToFirebase=function(roomId,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const room=findRoom(roomId);if(!room)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeRoomRecord(room,roomArea(roomId)),dedupeKey='room:'+roomId;return window.FirebaseSync.saveRoomRecord(projectId,roomId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{queuePendingOp({type:'room',projectId,recordId:roomId,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
-  saveRoomSlotToFirebase=function(roomId,area,part,line,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const projectId=pendingProjectKey(),sk=roomSlotKey(part,line),slot=roomSlotPayload(roomId,area,part,line),has=slot.id||slot.name||slot.partCell,payload={updatedBy:getDeviceName(),updatedAtClient:new Date().toISOString(),appVersion:APP_VERSION};payload['slots.'+sk]=has?slot:window.FirebaseSync.deleteFieldValue();const dedupeKey='roomPatch:'+roomId+':'+sk;return window.FirebaseSync.patchRoomRecord(projectId,roomId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{const serial={...payload};if(!has)serial['slots.'+sk]={__delete:true};queuePendingOp({type:'roomPatch',projectId,recordId:roomId,payload:serial,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
-  saveProjectStateToFirebase=function(reason){if(appState.applyingRemote||!window.FirebaseSync?.saveProjectState)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeProjectState(),dedupeKey='projectState';return window.FirebaseSync.saveProjectState(projectId,payload).then(()=>{removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{queuePendingOp({type:'projectState',projectId,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
+  saveRoomRecordToFirebase=function(roomId,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const room=findRoom(roomId);if(!room)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeRoomRecord(room,roomArea(roomId)),dedupeKey='room:'+roomId;const opId=countWriteAttempt('saveRoomRecord',{projectId,recordId:roomId,reason});return window.FirebaseSync.saveRoomRecord(projectId,roomId,payload).then(()=>{countWriteSuccess(opId);removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{countWriteFailure(opId);queuePendingOp({type:'room',projectId,recordId:roomId,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
+  saveRoomSlotToFirebase=function(roomId,area,part,line,reason){if(appState.applyingRemote||!window.FirebaseSync)return Promise.resolve();const projectId=pendingProjectKey(),sk=roomSlotKey(part,line),slot=roomSlotPayload(roomId,area,part,line),has=slot.id||slot.name||slot.partCell,payload={updatedBy:getDeviceName(),updatedAtClient:new Date().toISOString(),appVersion:APP_VERSION};payload['slots.'+sk]=has?slot:window.FirebaseSync.deleteFieldValue();const dedupeKey='roomPatch:'+roomId+':'+sk;const opId=countWriteAttempt('patchRoomRecord',{projectId,recordId:roomId,reason});return window.FirebaseSync.patchRoomRecord(projectId,roomId,payload).then(()=>{countWriteSuccess(opId);removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{countWriteFailure(opId);const serial={...payload};if(!has)serial['slots.'+sk]={__delete:true};queuePendingOp({type:'roomPatch',projectId,recordId:roomId,payload:serial,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
+  saveProjectStateToFirebase=function(reason){if(appState.applyingRemote||!window.FirebaseSync?.saveProjectState)return Promise.resolve();const projectId=pendingProjectKey(),payload=serializeProjectState(),dedupeKey='projectState';const opId=countWriteAttempt('saveProjectState',{projectId,reason});return window.FirebaseSync.saveProjectState(projectId,payload).then(()=>{countWriteSuccess(opId);removePendingOp(projectId,dedupeKey);scheduleSyncedQueueClear();}).catch(err=>{countWriteFailure(opId);queuePendingOp({type:'projectState',projectId,payload,dedupeKey});beginReconnect(isQuotaError(err));throw err;});};
 }
 installReliableSaves();
 
@@ -5769,6 +5958,41 @@ const originalUpdateProjectMetaField=updateProjectMetaField;
 updateProjectMetaField=function(field,value){const meta=projectMeta[activeProjectId];if(!meta||field==='no')return;const v=String(value||'').trim();meta[field]=v;meta.sub=meta.address||meta.sub||'';meta.ledgerOverrides=meta.ledgerOverrides||{};if(field==='name'||field==='address')meta.ledgerOverrides[field]=true;renderProjectList();scheduleStateSave();renderSettings();scheduleProjectStateSync('案件情報');registerProjectInFirebase(activeProjectId).catch(()=>{});};
 const originalRenderSettings=renderSettings;
 function copyTechInfoValue(elId){const el=document.getElementById(elId);if(!el)return;const text=el.textContent||'';if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).catch(()=>{});}
+const WRITE_STATS_A_TYPES=[['saveMaterialRecord','saveMaterialRecord'],['saveRoomRecord','saveRoomRecord'],['patchRoomRecord','patchRoomRecord'],['saveProjectState','saveProjectState'],['saveProjectRegistryRecord','saveProjectRegistryRecord'],['savePhotoRecord','savePhotoRecord'],['deletePhotoRecord','deletePhotoRecord']];
+const WRITE_STATS_B_TYPES=[['materialRecords.setDoc','materialRecords.setDoc'],['roomRecords.setDoc','roomRecords.setDoc'],['roomRecords.updateDoc','roomRecords.updateDoc'],['roomRecords.setDocFallback','roomRecords.setDocFallback'],['photos.setDoc','photos.setDoc'],['materialRecords.photoRefsSetDoc','materialRecords.photoRefsSetDoc'],['appState.setDoc','appState.setDoc'],['registry.setDoc','registry.setDoc'],['registry.deleteSetDoc','registry.deleteSetDoc']];
+function renderTechWriteStats(){
+  const stats=window.writeStats||{};
+  const header='<tr><th>種別</th><th>試行</th><th>成功</th><th>失敗</th><th>現在保留</th><th>前回終了時保留</th><th>直近1分</th></tr>';
+  const rowsFor=(list)=>list.map(([type,label])=>{
+    const s=stats[type]||{attempts:0,success:0,failure:0,pending:0,previousSessionPending:0,recent:[]};
+    return `<tr><td>${esc(label)}</td><td>${s.attempts||0}</td><td>${s.success||0}</td><td>${s.failure||0}</td><td>${s.pending||0}</td><td>${s.previousSessionPending||0}</td><td>${(s.recent||[]).length}</td></tr>`;
+  }).join('');
+  const elA=document.getElementById('techWriteStatsA');if(elA)elA.innerHTML=header+rowsFor(WRITE_STATS_A_TYPES);
+  const elB=document.getElementById('techWriteStatsB');if(elB)elB.innerHTML=header+rowsFor(WRITE_STATS_B_TYPES);
+  const bootstrap=window.bootstrapLog||{};
+  const bootstrapText=['materials','rooms'].map(source=>{
+    const entries=Object.keys(bootstrap).filter(k=>bootstrap[k]&&bootstrap[k].source===source).map(k=>bootstrap[k]);
+    const total=entries.reduce((sum,e)=>sum+(e.count||0),0);
+    const latest=entries.map(e=>e.last).filter(Boolean).sort((a,b)=>String(b.at||'').localeCompare(String(a.at||'')))[0];
+    const label=source==='materials'?'建材':'部屋';
+    const latestText=latest?`projectId=${latest.projectId||''} 対象件数=${latest.count!=null?latest.count:'-'} allowBootstrap=${!!latest.allowBootstrap} fired=${!!latest.fired}`:'-';
+    return `${label}: 累積発火回数${total}件 / 直近: ${latestText}`;
+  });
+  const elBoot=document.getElementById('techBootstrapLog');if(elBoot)elBoot.innerHTML=bootstrapText.map(t=>esc(t)).join('<br>');
+  const dr=window.deleteResendStats||{judged:0,executed:0,suppressed:0};
+  const elDr=document.getElementById('techDeleteResendStats');if(elDr)elDr.textContent=`判定回数${dr.judged||0} 実行許可${dr.executed||0} 抑制${dr.suppressed||0}`;
+}
+window.resetWriteStats=function(){
+  window.writeStats={};
+  window.writeOpsInFlight={};
+  try{localStorage.removeItem('chousa-write-stats');localStorage.removeItem('chousa-write-ops-inflight');}catch(_){}
+  window.bootstrapLog={};
+  try{localStorage.removeItem('chousa-bootstrap-log');}catch(_){}
+  if(window.deleteResendStats){window.deleteResendStats.judged=0;window.deleteResendStats.executed=0;window.deleteResendStats.suppressed=0;}
+  if(window.deleteResendLastSent)window.deleteResendLastSent.clear();
+  try{localStorage.removeItem('chousa-delete-resend-stats');localStorage.removeItem('chousa-delete-resend-last-sent');}catch(_){}
+  renderSettings();
+};
 renderSettings=function(){
   originalRenderSettings();
   const meta=projectMeta[activeProjectId]||{};
@@ -5786,6 +6010,7 @@ renderSettings=function(){
     if(syncId&&connectedId&&syncId!==connectedId){warn.style.display='';warn.textContent='警告: 同期先IDと現在接続中のFirestore IDが一致していません。';}
     else{warn.style.display='none';warn.textContent='';}
   }
+  renderTechWriteStats();
 };
 async function refreshActiveLedgerInfo({silent=false}={}){const meta=projectMeta[activeProjectId];if(!meta||meta.isTemporary||!meta.no||!window.MicrosoftPhotoUpload)return false;try{const rows=await window.MicrosoftPhotoUpload.readSurveyLedgerRows();const row=rows.find(r=>r.projectNo===meta.no);if(!row)return false;meta.ledgerValues={name:row.name,address:row.address};meta.ledgerOverrides=meta.ledgerOverrides||{};for(const field of ['name','address']){if(meta.ledgerOverrides[field]){if(String(meta[field]||'')===String(row[field]||''))meta.ledgerOverrides[field]=false;}else meta[field]=String(row[field]||'');}meta.sub=meta.address||meta.sub||'';scheduleStateSave();scheduleProjectStateSync('台帳情報');renderProjectList();renderSettings();return true;}catch(err){if(!silent)console.warn('台帳確認失敗',err);return false;}}
 const LEDGER_CHECK_HOURS=[8,12,15,18];
@@ -6033,13 +6258,68 @@ saveMaterialRecordToFirebase=function(id,reason){
   const m=materialById(id); if(!m)return Promise.resolve(false);
   const queued=queueMaterialPayload(m);
   if(!navigator.onLine||!window.FirebaseSync?.saveMaterialRecord){beginReconnect?.();return Promise.resolve(false);}
+  const opId=countWriteAttempt('saveMaterialRecord',{projectId:queued.projectId,recordId:id,reason});
   return window.FirebaseSync.saveMaterialRecord(queued.projectId,id,queued.payload).then(()=>{
+    countWriteSuccess(opId);
     removePendingOp(queued.projectId,queued.dedupeKey);v1414LastSync=Date.now();
     try{localStorage.setItem('chousa-pwa-last-sync',String(v1414LastSync));}catch(_){}
     if(!hasPendingOps())setSimpleSyncState('同期済み');renderSync();return true;
-  }).catch(err=>{beginReconnect?.(isQuotaError(err));renderSync();throw err;});
+  }).catch(err=>{countWriteFailure(opId);beginReconnect?.(isQuotaError(err));renderSync();throw err;});
 };
 saveAllMaterialRecordsToFirebase=function(reason){return Promise.allSettled((state.materials||[]).map(m=>saveMaterialRecordToFirebase(m.id,reason||'全件保存')));};
+
+// v0.14.27: 削除状態再送(削除巻き戻り防止)の重複送信抑制。判定ロジック自体は変更しない。
+// 注意: <script type="module">はdocument解析完了後まで実行が遅延されるため、この時点では
+// window.writeStatsDateResetOccurred(module script側で設定)はまだ未設定(undefined)である。
+// そのため、この場所では日付判定を自前で(冪等に)再実行してから復元する。
+// module script側が後から同じ判定を行っても、既にリセット済みならlocalStorageは空のままなので害はない。
+(function ensureWriteStatsDateFreshHere(){
+  try{
+    const d=new Date();
+    const today=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+    const savedDate=localStorage.getItem('chousa-write-stats-date');
+    if(savedDate!==today){
+      localStorage.removeItem('chousa-write-stats');
+      localStorage.removeItem('chousa-write-ops-inflight');
+      localStorage.removeItem('chousa-bootstrap-log');
+      localStorage.removeItem('chousa-delete-resend-stats');
+      localStorage.removeItem('chousa-delete-resend-last-sent');
+    }
+    localStorage.setItem('chousa-write-stats-date',today);
+  }catch(_){}
+})();
+const deleteResendInFlight=new Set(); // key: projectId|materialId|payloadHash (再読み込み時は復元しない)
+const deleteResendLastSent=new Map(); // key -> timestamp
+const deleteResendStats={judged:0,executed:0,suppressed:0};
+try{
+  const raw=localStorage.getItem('chousa-delete-resend-stats');
+  if(raw)Object.assign(deleteResendStats,JSON.parse(raw)||{});
+}catch(_){}
+try{
+  const raw=localStorage.getItem('chousa-delete-resend-last-sent');
+  if(raw){
+    for(const [key,time] of JSON.parse(raw)){
+      deleteResendLastSent.set(key,Number(time)||0);
+    }
+  }
+}catch(_){}
+function persistDeleteResendStats(){
+  try{
+    localStorage.setItem('chousa-delete-resend-stats',JSON.stringify(deleteResendStats));
+    localStorage.setItem('chousa-delete-resend-last-sent',JSON.stringify([...deleteResendLastSent.entries()]));
+  }catch(_){}
+}
+function deleteResendKey(projectId,id,payloadHash){return `${projectId}|${id}|${payloadHash}`;}
+function shouldResendDeleteState(projectId,id,payloadHash){
+  const key=deleteResendKey(projectId,id,payloadHash);
+  if(deleteResendInFlight.has(key))return false; // 送信中
+  if(typeof pendingOps==='function' && pendingOps(projectId).some(op=>op.dedupeKey==='material:'+id))return false; // 未送信キューに既にある
+  const last=deleteResendLastSent.get(key);
+  if(last && Date.now()-last<60000)return false; // 直近60秒以内に送信完了済み
+  return true;
+}
+window.deleteResendStats=deleteResendStats;
+window.deleteResendLastSent=deleteResendLastSent;
 
 // Local tombstones always win over an older active remote record.
 const applyRemoteBase=applyFirebaseMaterialRecords;
@@ -6050,7 +6330,27 @@ applyFirebaseMaterialRecords=function(changes,isEmpty){
     if(local?.deleted===true && r.deleted!==true){
       const localTime=Date.parse(local.deletedAt||local.updatedAtClient||0)||0;
       const remoteTime=Date.parse(r.deletedAt||r.updatedAtClient||0)||0;
-      if(localTime>=remoteTime){saveMaterialRecordToFirebase(id,'削除状態再送').catch(()=>{});continue;}
+      if(localTime>=remoteTime){
+        deleteResendStats.judged++;persistDeleteResendStats();
+        const payloadHash=JSON.stringify({deleted:local.deleted,deletedAt:local.deletedAt,updatedAtClient:local.updatedAtClient});
+        const projectId=pendingProjectKey();
+        const key=deleteResendKey(projectId,id,payloadHash);
+        if(shouldResendDeleteState(projectId,id,payloadHash)){
+          deleteResendStats.executed++;persistDeleteResendStats();
+          deleteResendInFlight.add(key);
+          saveMaterialRecordToFirebase(id,'削除状態再送').then(()=>{
+            deleteResendLastSent.set(key,Date.now());
+            persistDeleteResendStats();
+          }).catch(err=>{
+            console.warn('削除状態再送失敗',err);
+          }).finally(()=>{
+            deleteResendInFlight.delete(key);
+          });
+        }else{
+          deleteResendStats.suppressed++;persistDeleteResendStats();
+        }
+        continue;
+      }
     }
     filtered.push(change);
   }

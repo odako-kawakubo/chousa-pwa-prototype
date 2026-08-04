@@ -1,0 +1,16 @@
+v0.14.27
+
+- Firestore書き込みの2層計測基盤(A層=論理操作、B層=物理Write)を追加(実施日: 2026-08-03)
+  - window.countWriteAttempt/countWriteSuccess/countWriteFailure/persistWriteStatsを新設(module scriptの先頭、window.FirebaseSync定義の直前に配置し、B層・A層の両方から参照できるようにした)。Firestoreへは保存せず、localStorage(chousa-write-stats/chousa-write-ops-inflight)とメモリのみに記録する
+  - B層: window.FirebaseSync内のsaveMaterialRecord・savePhotoRecord(photos.setDoc+materialRecords.photoRefsSetDocの2回)・deletePhotoRecord(同2回)・saveRoomRecord・patchRoomRecord(updateDoc試行+setDocフォールバック試行を別カウント)・saveProjectState・saveProjectRegistryRecordの各setDoc/updateDoc呼び出し直前直後に計測を追加
+  - A層: saveMaterialRecordToFirebase・saveRoomRecordToFirebase・saveRoomSlotToFirebase・saveProjectStateToFirebase(いずれも最終有効版のみ)・registerProjectInFirebase、および統一ラッパーが存在しないsavePhotoRecord/deletePhotoRecordの直接呼び出し5箇所(写真アップロード・代表写真設定×2・写真削除・統合写真アップロード)に計測を追加
+  - 起動時、localStorageから復元したpendingは「前回終了時保留(previousSessionPending)」として分離し、現在のpendingは0からリセット。writeOpsInFlightは再読み込みのたびに必ず空から開始する
+  - 初期投入(bootstrap)の発火回数計測(recordBootstrapFire)を追加。applyFirebaseMaterialRecords・applyFirebaseRoomRecords(いずれも基底版)のisEmpty分岐に、projectId・allowBootstrap・isEmpty・実際に発火したか・対象件数を記録。初期投入自体の仕様(停止・件数変更)は一切変更していない
+- 削除状態再送の重複送信抑制(唯一の挙動変更、実施日: 2026-08-03)
+  - applyFirebaseMaterialRecords最終有効版の削除巻き戻り防止ロジック自体は変更せず、実際の再送実行部分にprojectId+materialId+payloadHashをキーとしたin-flight管理(Set)・直近送信60秒クールダウン(Map)・未送信キュー確認による重複抑制を追加
+  - 判定回数(judged)・実行許可(executed)・抑制(suppressed)をlocalStorage(chousa-delete-resend-stats)へ永続化。in-flight状態(Set)は実際のPromiseと対応するため、再読み込み時は復元せず必ず空から開始する
+  - saveMaterialRecordToFirebase自体の書き込み計測(A層)と二重計上しないよう、Phase 3側は判定カウンターのみを別途記録した
+- 設定画面の技術情報欄に、書き込み統計(A層・B層それぞれの試行/成功/失敗/現在保留/前回終了時保留/直近1分)・初期投入ログ(部屋・建材の累積発火回数と直近の発火内容)・削除状態再送(判定/実行許可/抑制)を追加。リセットボタンで全カウンターをクリアできる
+- 前回検討していた「新規案件作成時の空の初期部屋レコード投入の停止」は撤回し、実装していない。初期投入は仕上表の初期テンプレートとして正常な処理であることを確認した上で、今回は発火回数・条件の計測のみを行った
+- 監査(コード変更なし): 正本・キャッシュ・バックアップ経路の一覧、全Firestore書き込み経路の一覧、appState/mainとroomRecordsの二重保存・materialRecords.finishTablePositionsとroomRecords.slotsの二重保持を確認。削除・統合は今回行っていない(詳細は変更報告を参照)
+- queuePendingOpについて、ご指摘の「2箇所連続の重複定義」は現在のファイルには存在せず、1箇所のみの定義であることを確認した(過去の版の情報と思われる)
