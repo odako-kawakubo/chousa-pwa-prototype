@@ -1,0 +1,8 @@
+v0.14.28
+
+- Phase A: セル編集経路の一本化「既存建材をセルに配置しただけでは建材レコードを送信しない」(実施日: 2026-08-05)
+  - pendingCreatedMaterialSync(セル位置込みの一時マーカー)を新設。registerName()が新規にcreateMaterial()で建材を作成した直後にのみ{materialId,roomId,area,part,line}を記録する。既存建材呼び出し(existing分岐)・無変更判定によるreturn false分岐ではセットしない
+  - registerName()の冒頭で、呼び出しのたびにまずこのマーカーをnullへリセットしてから処理を開始する(古いマーカーの誤引き継ぎ防止)
+  - syncCurrentRecordAfterCell()を、マーカーと今回の呼び出し引数(roomId・area・part・line)およびセルのmaterialIdが完全一致した場合にのみsaveMaterialRecordToFirebase()を呼ぶ形に変更。一致しない場合(既存建材をセルに配置しただけ等)は建材レコードを送信しない。マーカーのリセットも、セル位置が一致した場合にのみ行い、対応関係の無い呼び出しで誤って消費しないようにした
+  - wrap('onNameBlur'/'onIdBlur'/'registerName',...)側の呼び出し内容自体は変更していない(syncCurrentRecordAfterCell側の判定のみ変更)
+  - saveRoomSlotToFirebase(部屋スロットへの差分patch)・建材リストからの直接編集(updateMaterialRecord等のwrap経由の別経路)・写真・listener構造・削除/統合経路・死んでいるコードの整理は今回変更していない(v0.14.27の監査計画のPhase B以降として別途対応予定)
