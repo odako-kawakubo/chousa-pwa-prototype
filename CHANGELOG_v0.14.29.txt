@@ -1,0 +1,14 @@
+v0.14.29 - 同期再入・listener再接続抑止
+
+変更内容
+- flushPendingOpsをsingle-flight化し、複数トリガーから同時に呼ばれても送信ループを1本に限定。
+- pending opにqueueRevisionを付与し、送信中に同じdedupeKeyが更新された場合、古い送信完了で最新payloadを削除しないよう修正。
+- 同一projectIdがconnecting/readyの場合、connectFirebaseForActiveProjectの再購読をスキップ。
+- 案件切替または明示的forceReconnect時のみ旧listenerを解除して再購読。
+- Write再送のリトライとlistener再接続を分離し、通常の未送信再送ではlistenerを張り直さない。
+- online復帰・syncNow・switchProject後付けフックから同一案件へ接続要求が重なっても、接続中Promiseを共有。
+
+対象外
+- 建材フィールド単位patch
+- 写真保存経路の統一
+- 全件保存関数・死んだコードの整理
